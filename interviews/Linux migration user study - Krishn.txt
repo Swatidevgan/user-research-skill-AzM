@@ -1,0 +1,803 @@
+Linux migration user study - Krishn-20260218_160809-Meeting Recording
+18 February 2026, 10:38am
+50m 42s
+
+Swati Devgan started transcription
+
+Krishn Mohan, Vodafone   0:03
+Workloads, I mean it's an entire data set data center migration happening from on premises to Azure and yeah we are working on that. But other than that and there's a new program that has started but before prior to that I have done a lot of migrations so so I am as a cloud.
+I'm working as a cloud architect and AI manager here in Vodafone and my job is primarily to look after business requirement for designing your solutions, implementing it on the cloud, be it any cloud provider like AWS, Azure, GCP, it doesn't matter. And I'm also responsible for migrating any legacy.
+Applications from on premises to cloud as a part of digital transformation or let's say Greenfield or broadfield migrations based on the strategy that business produces, what they want to achieve, what their ROIs are and based on that we take up the migration. From a technical point of view, I have dealt Linux and Windows migration.
+I haven't done container migration, so I'm not sure whether that would be your break point. OK, so Linux and Windows has been the primary workloads that we have at our site. And apart from that I was telling to Swati also, sorry Deepa also.
+
+   1:08
+That's OK.
+You got.
+
+Krishn Mohan, Vodafone   1:22
+That I have my personal interest in doing fin OPS wherein I have been doing for three to four years fin OPS putting blueprints of how the cloud optimization should happen, how you reduce a cloud waste and I closely work with DevOps team as well wherein you know we.
+We work with a lot of Terraform modules on how you should deploy any resources and infrastructure as a code in any cloud environment. So that's a very high level view of what I do.
+
+   1:53
+Got it.
+Sounds good.
+
+Speaker 1   1:54
+So I think since since you spoke about the deep experience that you have with migrations, if you can, if you can sort of start with and and it's great that you come with experience across both the OSS, because I would love to learn about how the practices custom.
+Preferences and migration strategies differ, which further govern the tooling choices.
+Also, let's say across these two OSS where I'm coming from.
+Is that when it comes to Azure in terms of our tooling and in general also because it's Microsoft, we do pretty well in terms of attracting the time for Windows.
+
+Krishn Mohan, Vodafone   2:25
+Yeah.
+Mhm.
+
+Speaker 1   2:31
+But but, but that's not the story when it comes to Linux.
+And that's what we're trying to solve for, right?
+So given that context.
+Talk maybe from your current experience of migration and modernization and.
+Also adding the the previous experience, if you can help me understand what are the tooling that you you guys use at the start of the migration journey which is which is where discovery and asset discovery is the biggest piece to asset to discover what all.
+You know, servers or workloads exist in your data center.
+How does that journey look like?
+What are the toolkits that you use?
+
+Krishn Mohan, Vodafone   3:06
+Correct. So first of all it completely depends on you know what we are trying to migrate, which means if there is a Linux workload then we have a different planning and strategy. If it's a Windows workload then we you know deal it as a separate. So if I talk about Linux based workload then definitely we.
+We go for a discovery phase first of all, which is followed by a planning. Oh, sorry, just a second. I need to put this on charge.
+
+   3:33
+Yeah.
+
+Krishn Mohan, Vodafone   3:35
+Right, right. So definitely we go for a discovery phase and discovery is what I have felt is discovery for Linux environment is far more difficult than Windows because in Linux we have a lot of, you know, complexities of libraries.
+Kernel versions, packages that we install, application stacks that is running on the Linux, lot of services, cron jobs, startup scripts. So there are numerous things that goes around when we talk about Linux migration. So during the discovery phase we had to.
+Put a lot of time. I mean one of the area where we put a good amount of time to do the discovery because if we miss anything then we have problems later down the line. So from Linux perspective, we really focus on the discovery phases where we talk about these things that I said.
+Linux distributions, those kernel versions, those packages and and those dependencies. So everything has to be figured out during the discovery phase. But for Windows it is, you know, pretty much easier on the side because we know which Windows version it is, what group policies are.
+What enforcement we have to do, which images we have to take and then it's very easy to package the windows as an image, put it onto the cloud and then you know have those network connectivity sorted out to all the sources that connects to that machine. So so yeah, from discovery phase point of view I think.
+Linux workloads are having much more items involved than Windows and it involves a lot of things like you know, custom builds and ******** IPS services that a box connects to you know as a source because the application that gets installed on the.
+
+   5:15
+Commentary.
+
+Krishn Mohan, Vodafone   5:28
+Linux, it's probably fetching data from and different number of sources. So we also need to ensure that connectivity is also there when we move the workload to the cloud. So the cloud should have same level of connectivity, same level of bandwidth, same level of network coverage and we shouldn't have latencies. I'll give an example.
+What we are currently doing with Microsoft, we have servers in the data center and we are doing exactly same thing with respect to Linux that we are identifying all the dependencies and how it should happen. The only thing which is worrying at the moment for us is the network latency because currently the servers are on Prem, so we get a very good bandwidth of.
+Of input output, but how it will happen when it will move to the cloud, when it will have a lot of servers over there because we have been told that you will be having your separate racks, right? But if that rack gets busy down the line during the migration then it may affect your.
+Bandwidth, your input, output. So all those things we have to consider because if there is a business critical application then we need to ensure that the server sits in a dedicated rack where there shouldn't be any noisy neighbors, right? There shouldn't be any servers who.
+Whose application traffic is causing problem to us. So so all those things has to be kept in mind before we, you know, think about migration, especially for Linux Windows, it is still, you know, it's.
+Works on a core of CPU and RAM, so I mean network always comes as a factor for both of the workloads, but from my perspective Linux is far more complex than a Windows workload.
+
+Speaker 1   7:11
+No. So how does the tooling, what kind of tooling or methodology that you use?
+
+Krishn Mohan, Vodafone   7:14
+Yeah, sorry, I didn't touch on that. Yeah. So from a tooling perspective, it differs how we are, where we are moving basically. So if we are moving Azure, then definitely we are using Azure Migrate where we use the agents installed and then you know it moves the library, it moves the dependencies from.
+One server to another for other cloud providers for a WS we have used a WS migrate and for GCP it completely depends like how much we are migrating. I mean in terms of volume I'm saying so usually we use storage transfer services.
+
+   7:43
+Need.
+
+Krishn Mohan, Vodafone   7:54
+Or we try to do the appliance transfer, but we haven't invoked appliance transfer because we haven't had that kind of volume. So from a GCP perspective and I work a lot in GCP because that's our company strategy. We do have Azure and AWS, but.
+
+   8:12
+Got it.
+
+Krishn Mohan, Vodafone   8:12
+A lot of workloads are in GCP because of the data analytics. So what we do is from a GCP strategy is we identify because we have to spend a lot of time in discovery. So we identify what would be the dependencies in the packages and try to install the same as a.
+As a cloud VM inside the inside GCP and then ensure that you know you have same to same kind of machines running over there with the same boot script, startup script. So because in GCP we don't have a migrate service like we don't have an agent based.
+Approach over there. So we have to ensure that we are spending much more time on discovery to identify everything so that we have everything installed in the GCP cloud. And then usually how our organization work is they don't permit.
+Instance to instance or machine to machine connection from on Prem to GCP because of some security policies. So it becomes difficult for us to invoke even the Rsync features so that we sync network drive from here to there. But it becomes quite easier from Azure and AWS perspective because it becomes an agent based.
+Where agent takes load of everything what you want to do and most stuff from one place to another.
+
+Speaker 1   9:27
+So just just ensuring that I understand it correctly, the the agent based approach when let's say we take the example of Azure migrate, are you talking about the the the replication methodology where we replicate block by block OK.
+
+Krishn Mohan, Vodafone   9:38
+Yes, yes, yes, yes.
+
+Speaker 1   9:40
+So that's what you use in terms of migrating the machines from on Prem. OK, got it.
+
+Krishn Mohan, Vodafone   9:43
+Yes, yes.
+
+Speaker 1   9:47
+Talking about the the experience where you've used Azure migrate to discover the appliance based approach to discover your Linux estate while you were on this journey to migrate to Azure.
+
+   9:57
+Azure.
+
+Speaker 1   9:59
+I'm interested in knowing more about what are the authentication mechanisms that are the most comfortable that the customer is more most comfortable in terms of providing, because that's that's an integral step when you start discovery in order to have that line of sight into your on Prem Environ.
+So what are the authentication mechanisms that the Linux for your Linux servers you're most comfortable in terms of sharing?
+Also, there is this notion of user permissions, right? The appliance needs to have those user permissions and you spoke about security policies. So are there any struggles due to which these user permissions do not struggle, not struggles but the security policies block you from providing those user per.
+To the appliance and.
+And correspondingly impact the decision making of which auth you're choosing to sort of provide the appliance to.
+
+Krishn Mohan, Vodafone   10:51
+So the appliance connectivity is usually done by one of our network experts, so we don't deal the appliance connectivity. However, if you if you're interested to know that how we provide connectivity to a Linux machine for our.
+
+   10:57
+OK.
+
+Krishn Mohan, Vodafone   11:07
+OPS team or for any COE team, then I can talk about that. You know, we kind of use the S Yeah, so, so, yeah. So basically we use the SSH managers or we use the putty approach to have that connectivity. Now there is.
+
+Speaker 1   11:11
+Yeah, that'll help. That should help.
+That's similar experience, so yeah.
+
+   11:20
+OK.
+
+Krishn Mohan, Vodafone   11:24
+There is a difference when it comes to connective, when it comes, sorry, there's a difference when it comes to connectivity of server of on Prem to the cloud because if we are talking about on Prem then the server is in the data center. Now the data center has got a very crude approach of using Citrix and.
+And put inside it so that you know you can access the servers because to have a to have access to the servers over SSH you need to have those kind of RSA keys over you know in the in the servers for the username and then you can you know do a tunneling and then you can connect to but for cloud.
+Usually you know it has a disputed approach of whether we should use putty or something else or RDP, you know as a RDP for the windows basically. So we have a disputed approach about the the cloud based usage because for AWS we use SSH Manager or the instance connect over there.
+For Azure, as Azure is very closely related to our data center, we still use PuTTY over there and for Google we use IAP which is identity aware proxy tool for connecting to this Linux or Windows workload. But for appliance based we don't.
+Manage that connectivity, we just we get those connectivity sorted out in advance before we start the migration work.
+
+   12:50
+Got it, got it.
+
+Speaker 1   12:51
+Yeah, I think up until quite some time ago, migrate was just supporting user even password based credentials for authentication even for Linux and and I recently we've and I think your networking team would know better when they were setting up their clients for migration to Azure recently we.
+Introduced SSH keybased mechanism to the fact that that's very famous in the Linux world, so yeah.
+
+Krishn Mohan, Vodafone   13:14
+OK so so currently with the associate we are talking from Microsoft. We are we are having approach of username and password based approach where we have been given a migration user details.
+
+   13:25
+OK.
+
+Krishn Mohan, Vodafone   13:30
+So that we can start working on that. So that's why I said you know our network team sort this out and provide the credentials to you know basically the gateway they set up and we just use that gateway to you know do our migrations, whatever discovery we have done, whatever we have to move in. But currently we use the username password you correctly highlighted that.
+That there is a SSH also coming in. We have not been introduced from that associate, but yeah, it says user name is.
+
+Speaker 1   13:57
+Would you mind sharing who this associate is?
+Maybe I would know this person.
+
+Krishn Mohan, Vodafone   14:00
+Yeah, why not?
+You up?
+I'll find out and let you know. I'll just done search.
+
+   14:18
+Yeah, sure.
+No worries.
+
+Speaker 1   14:20
+Yeah, you can maybe drop it in the in the chat later.
+
+Krishn Mohan, Vodafone   14:22
+Yeah, yeah.
+
+Speaker 1   14:23
+We'll we'll continue the conversation. So slightly switching gears while sticking while ensuring to stick to the Linux world in terms of the questions and discussion, Krishna.
+I I would.
+I'm interested in understanding how the Linux topology in your on Prem or Azure looks like or cloud looks like from the perspective of the distros considering Linux world is fairly like diverse there are.
+
+Krishn Mohan, Vodafone   14:48
+Mhm.
+
+Speaker 1   14:48
+So many distributions existing out there, of course, predominantly REL 1 to being the ones. And does the fact that it is fairly diverse compared to, let's say a Windows OS which is fairly I would say under one single umbrella, does that sort of impact the migration and modern?
+
+Krishn Mohan, Vodafone   15:03
+Correct. Mm-hmm.
+
+Speaker 1   15:06
+Journey also in any way.
+
+Krishn Mohan, Vodafone   15:07
+I mean, I would say yes and no, because if the distribution is different, then we have to ensure that, you know, we do have those kernels, we do have those dependencies and libraries installed as a part of, you know, migration, but you.
+Usually we have whatever I have out is REHL, Ubuntu and CentOS. OK, these three we usually work and with respect to the dependencies and the libraries, yes, it definitely differs on the way we authenticate and way we, you know, manage those servers, so.
+So that's how the topology looks like at our site or whatever server I manage here in Vodafone or that has been done in the past. So any dependent libraries or any custom libraries that we would have installed as a part of an application requirement, any locally compiled binaries.
+That we have, we all use it during the discovery phase and pass it on as a dependencies for any Linux based workload that we have at our site.
+
+   16:16
+Got it, got it.
+
+Speaker 1   16:18
+So there is one.
+There's a consistent theme that that has been there and I'm interested because you spoke about CentOS.
+That exists when it comes to Linux test tools, which is where these versions the major OS versions for Linux.
+Are are either sort of approaching or have already reached an end of life? End of support scenario, right?
+And does that does that in any which way impact the migration migration approach?
+Or even even the handling of these mistrals while they are either in your private data center on Prem or on cloud for example.
+Why I ask this?
+CentOS has already reached end of life about two years ago.
+So what was the approach that Vodafone took in terms of ensuring that there is continuity when it comes to the base OS image?
+
+Krishn Mohan, Vodafone   17:07
+Yes, yes. So I'll tell you. So there are a lot of legacy applications that we have sitting on CentOS, right. And since we have servers in the data center, which means we lock into a particular version, I understand the support goes off. It's just like an Oracle, right? Oracle will keep moving on, keep moving on their versions.
+
+   17:07
+Here.
+
+Krishn Mohan, Vodafone   17:27
+And if we are sitting on a 12C or a 19, then Oracle continues the support for those older versions. So there has been the extended support for CentOS and we have been getting from Microsoft Tamps. Now when it comes to, I'm not sure whether you are aware, but we recently had.
+10 year or 11 year of partnership with Microsoft and as a part of that we are moving the entire data center, which is why the migrations are happening at a rapid pace. Now as a part of migrations, what we are doing is we are either replanning rehosting.
+Or we are thinking to re platform now the areas where we have the low sorry the older versions installed. We are looking for refactoring that or you know re platforming that because.
+We know that you know those versions are outdated and we have to upgrade them, right? So for those areas it is taking quite considerable amount of time because the replatforming when you're going on to the cloud, you are having a new servers, new versions, how the application will behave on that. So that is going to be.
+
+   18:32
+Yeah.
+
+Krishn Mohan, Vodafone   18:37
+A lengthy process because there would be a time where we have we might have to, you know, quite an extensive parallel run for an older system and a newer system, but for the versions which are outdated, especially for CentOS because these older versions not only comes as a a risk of going.
+Out of server but also getting vulnerable because if we move things onto the cloud then it is more prone to the attacks because we are in the public cloud space now we are no more in the data center. So we can't risk our servers to have an older version and.
+
+   19:01
+Amen. Amen.
+
+Krishn Mohan, Vodafone   19:14
+Just pretend that we we can't upgrade. So for those there is a separate discussions where you know if we are doing a re platforming then what kind of efforts, what kind of dependencies, what kind of you know risk and challenges we face. Definitely we are not going ahead with the version especially for Linux workloads. We are not going at the version which is.
+Outdated and they would be, you know, upgraded when we move on to the cloud. Yeah, because because the only thing which we care from our point of view a lot is data security and sharing, which means if we have anything deployed in the cloud, there are.
+
+   19:38
+Exposed.
+Yeah.
+
+Krishn Mohan, Vodafone   19:51
+Dumerous layers of Aether, governance, security in place because we are in public cloud, right? We can't trust when we are in public cloud, any public cloud provider, it's just not Azure. So we have to be extra cautious that when we are putting things onto the cloud, what kind of securities and policies we are enforcing.
+Hosting at a server level, at a machine level, at a data level to ensure that you know when we when it is not, when it is prone to attack, then we have layers in place so that we can stop the attacks happening and not compromise our data.
+
+   20:27
+Got it.
+
+Speaker 1   20:28
+It's interesting that you spoke about upgrading it and for all the the right reasons, which which I gathered from you, but upgrading it, let's say it's a cent OS and you plan to upgrade it to the latest version of REL, whichever is available 1112.
+
+Krishn Mohan, Vodafone   20:39
+Mm-hmm, mm-hmm.
+
+Speaker 1   20:42
+But that's based on my limited understanding and that's where I want to learn from you that that's a fairly time-consuming process, because as you spoke about the legacy apps, you would want to sort of do.
+
+Krishn Mohan, Vodafone   20:51
+Yes.
+
+Speaker 1   20:55
+Conduct like app by app.
+App compatibility tests ensure that there's nothing that's left around left out to ensure that it seamlessly runs as and when you migrate it, move it to the newer version.
+So has Vodafone dabbled into doing this particular exercise?
+And what are the practices?
+That that maybe are toolkits that you've considered using for conducting these inplace OS upgrades.
+
+Krishn Mohan, Vodafone   21:21
+So before migration to Azure, we already started this activity at our data center, yes. So because we know that it is out of outdated, so we have to start you know early. Now you are right in understanding that it does take a lot of time and.
+
+   21:28
+OK.
+
+Speaker 1   21:28
+So you do it for migration, OK.
+
+Krishn Mohan, Vodafone   21:40
+Yes, it it because of the different kind of application that runs the dependencies it has. However, what we have to be mindful is the base is same, right? The base OS is same, so the libraries that gets attached to that.
+Is gonna impact applications for sure, but the way applications are built and designed are, you know, it's flexible to adapt based on the changes that we're doing in the OS. So yes, it is going to take time, which is why we have started I think last.
+
+   22:06
+OK.
+
+Krishn Mohan, Vodafone   22:13
+Last year or beyond that because we saw that migration coming in and we saw that risks and vulnerabilities coming in because at our side whenever solution goes live or whatever existing solution we have, it always go through a security model or security approval or security by design phase and.
+It is. It usually lasts for a year or three, but after that you have to reassess that. And as a part of reassessment, security always is a question why you are outdated. You should think of an upgrade. So there is always a constant push coming from security to ensure that we are not on an outdated version and we keep on, you know, refactoring.
+Based on the the server getting, you know, upgraded to a different version and we shouldn't be sitting on quite longer period of time on an outdated version because if we do that then it raises the security risk at our side and.
+If there is a risk, then it automatically engaged a lot of senior stakeholder C-suites to approve those kind of risks, you know. So there is always a factor that we have to upgrade and we have to move on to a version which is latest.
+
+   23:15
+Yeah.
+Got it.
+
+Speaker 1   23:23
+So if I gather it correctly, there is a in terms of preference of doing it on your own in terms of this end to end testing whether your next like the latest OS image to which you will be upgrading is compatible with your current app configuration.
+Your leadership would prefer doing it in in House versus outsourcing it is. Has there ever been that decision making where this this whole effort can be outsourced to a vendor?
+
+Krishn Mohan, Vodafone   23:45
+Yeah.
+
+Speaker 1   23:50
+What's the outlook over there?
+
+Krishn Mohan, Vodafone   23:52
+I mean we have been doing it in house because we have, we have a dedicated team, data center team who is looking after the servers, right? I mean we we are a cloud architect for an application perspective, right? We we go to an extent where we take the server, we install things and but when it.
+
+   24:00
+Does this.
+
+Krishn Mohan, Vodafone   24:12
+When it comes to the actual server provisioning, maintenance of those racks, clusters, that is somewhere there is a dedicated team from a data center perspective and when it comes to migration then.
+We just not only take participate in the migration because we from an application or cloud architecture perspective, we propose what's gonna happen, right. The dependencies and the server has to be provided by our cloud infrastructure team. So we go hand in hand basically that whatever requirement we have.
+They fulfill us and then we sit together. We see if there are any dependencies from an OS perspective which is causing a problem at an application level. We try to debug it and we do all in house because we have a very big infrastructure team. Now when it comes to Azure migration, yes, we are routing this to a Microsoft.
+Who is working with us? Not one Microsoft, there are multiple who are working with us. Yeah, so that team is working with us and helping us in Azure perspective because our infrastructure team somehow lacks knowledge of the Azure. But I mean, it's not that we don't have Azure because.
+
+   25:07
+Got it.
+
+Speaker 1   25:09
+It's a team I I I know of the team.
+Yeah, got it.
+
+Krishn Mohan, Vodafone   25:23
+We follow SSO authentication across our application stack, so our SSO sits in Azure, right? Because all those Intune application, all those you know app registration happens at Azure. So you know our single sign on is on Azure. So it's not about they don't know, it's just like you know there has to be someone sitting between on Prem and.
+
+Speaker 1   25:42
+Hand holding? Yeah, got it. Got it. Got it.
+
+Krishn Mohan, Vodafone   25:43
+Hand holding exercises so so that's what happens. But most of the work is done in house. Even we you know from my point of view when I'm dealing a windows workload and I have to move from 16 to 19 then you know you know we do it on our own because we know what needs to happen but.
+There is a very important factor that comes into play is we don't deploy on public images. We do have an images created in house by our infrastructure team or we call public Cloud Services team custom images because those are.
+
+   26:14
+Customer.
+
+Krishn Mohan, Vodafone   26:18
+Those are images which is PCI proof and it's already hardened, so we don't have to worry about all those group policies and etcetera. Yeah, same happens with Linux workload as well, right? We work on the images part. We just not start installing anything on the on the server, we use the images and then.
+
+   26:24
+Got it.
+Security aspects.
+
+Krishn Mohan, Vodafone   26:37
+Inside the images we work on that.
+
+Speaker 1   26:39
+Got me, got me. Got me another thing, Krishna.
+I'll just want to bring the migration strategies now in perspective because as I'm doing all these conversations here, one of the very few people who spoke about.
+Applying all the kind of migration strategies in the earlier half of the conversation you spoke about using replication IP by Azure migrate for rehosting scenarios where you just lift and shift and then of course as part of the modernization strategy.
+Replatting and refactoring your legacy applications as you move to Azure or any other cloud.
+Considering bringing these 3R strategies into perspective, how does Vodafone decide which one to choose when what, what section of the servers would undergo A rehost versus what section would undergo a a pure redeploy play?
+Where you just do like a clean install and then carry whatever files and data is required to be carried from your on Prem environment.
+How do you sort of segregate? What's the differentiating strategy?
+Across these are based approaches.
+
+Krishn Mohan, Vodafone   27:43
+OK. I would probably take examples from my previous work as well because it's been three years in Vodafone, but there were 13 years back in PT. So, so during those phases, I mean or or probably the this phase also what we have at each organization, what I felt is that we have a cloud council.
+
+   27:48
+Yeah, sure.
+Please yeah.
+Yeah, of course, of course.
+
+Krishn Mohan, Vodafone   28:03
+Right. And that Cloud Council decides what kind of workload goes where. So that's the first step like you know if you have, if you have a mainframe then they say OK go to AWS. If you have a stricter Windows based deployment which has to follow, you know a very.
+Quite strict evidence, they say you know go to Azure, right? If you have a data analytics getting deployed, you have to use a lot of databases. Then they say you know go to BigQuery or GCP, right? So these are the very high level approach that happens. Now based on that we align that what kind of migration we are doing.
+Right. And first of all, what the business requirement is because we heavily rely on business requirement because they have to fund it. You know, it all boils down to the funding because there is an substantial effort of migration. Even if you do a lift and shift, even if you do a replatforming, there is an.
+
+   28:56
+Yeah.
+
+Krishn Mohan, Vodafone   28:59
+Cost involved, right. So we have, we often have a discussion with business and that's that is our driving factor. So during the requirement gathering phase, we talk about you know how do you want to foresee your migration, right. You want a Greenfield deployment or a brownfield deployment, right. So based on that we have to understand.
+Which approach we need to follow right that if they want a lift and shift or if they want a part lift and shift and part you know leave it on the on Prem. If they want a complete refactoring then what should be our strategy. So based on the business requirement we actually follow because.
+
+   29:31
+Yeah. OK.
+
+Krishn Mohan, Vodafone   29:36
+It all boils down to the cost, right? How they want to do and if the cost is not a problem and if you're so, there are multiple combinations happening. It's just not one factor. I can just simply tell you if the cost is not a problem and I will give you an example back in 2018 or 19.
+Wherein we had a legacy applications running in on Prem on Linux and Oracle and there was a business requirement where they said oh I don't want a whole 80 terabyte of your database or your Linux, I want a chunk of that because of my business requirement sitting in AWS, but I don't want to use your.
+Legacy methodology of processing data and I don't want a time wasted over there because you take, let's say, six hours to process. I want the cloud technologies to process the data faster and make the data available much faster than what you're doing at the moment. So what we had to do is we had to take a chunk of the data.
+Using an ETL tool called Streamsets. So we connected on Prem to the cloud and then we refactored the whole thing to a different database called Amazon Postgres, which is Amazon RDS database and then we had to have those EMR clusters the data.
+
+   30:47
+Do you see?
+
+Krishn Mohan, Vodafone   30:53
+Clusters of doing loading those Apache and Hadoop workloads, right? So we completely refactored that chunk of data that we used to pick from on premise. So it again it depends on what the business requirement do they need faster. So it depends on mean time to provide right how we are.
+So do they need a faster workaround and an approach which is yielding the results faster? Then we think of refactoring because we do have a team who were quite fast-paced and I mean I was part of the team anyway during.
+So yeah, we used to work at a quite fast pace that you know how you should be putting those data, what technology should, don't worry about the cost, right. And then the cloud optimization, the cost cost optimization come at a later phase wherein whatever you've built in, you see how you optimize that and then you know you grow out from you grow from there. So that is.
+It's one of the example, but again it's on the business requirement and again from Vodafone perspective, I'll give you an example that we have a data analytics workload running in on Prem and you know a business decided that oh I my data is in you know BigQuery now. So how should I connect to on Prem And then there was a latency.
+And all sorts of problems from on Prem to cloud. So we decided that if the cost is not a problem, let's have another instance running in Google Cloud, right? And we did. So we moved the whole application from on Prem to GCP. But we had the fresh deployment, we had fresh windows, fresh set up, fresh network.
+
+   32:20
+Yeah.
+Connect.
+
+Krishn Mohan, Vodafone   32:32
+Connectivity, everything from scratch. Same thing happened with AWS also. So we have running, we have data analytics clusters running in AWS because for UK there is a data called SOM data secure operating by model. They don't want their data to go outside of the UK areas or UK boundaries and when it connect, sorry.
+When it comes to having servers in a different region, usually UK, Ireland and Europe is treated as one single unit, right? So during those stricter cases where data should not move outside the UK boundary, we had to do the AWS deployment. Then again, fresh EC2, fresh connectivity, fresh storage, everything starts from.
+So it depends on, you know, business requirements, how, how they want to proceed and based on that we take the approach of the migration and then we assess which one would be an easier approach, which one would be a cost friendly approach and then you know the proposal is used. Sorry I took a lot of examples but.
+
+Speaker 1   33:28
+No, no, that helps.
+That helps contextualize for sure.
+I think we have we since we are at the top of the hour, maybe I'll just.
+Limit to limit my questions, a single question to.
+
+Krishn Mohan, Vodafone   33:40
+We can, we can continue for five more, 5-10 minutes. That's fine. That's alright.
+
+   33:43
+OK. OK, perfect.
+
+Speaker 1   33:45
+So basically across the three journeys, I think I that with which I started in the beginning, which is discover plan and and of course execute migrations, you've used Azure migrate if you have.
+To contextualize, put Linux as a as a theme across these three stages, and then and based on the experience of using Azure migrate tooling while sort of defining the ideal experience in your mind, what are the capabilities?
+These are what are the gaps that you would want to sort of highlight for me to take a note on which we can of course sort of in green as we think of improving the end to end experience across these three stages for us to realize, deliver good.
+It comes to Linux migrations.
+
+Krishn Mohan, Vodafone   34:29
+Sorry, I I missed your three stages part because I was looking for a contact over here. Somebody ping me. Sorry about that. Can you please repeat that?
+
+Speaker 1   34:35
+No, no worries, no worries.
+So the three stages, basically discovering your estate and in on Prem. Then of course assessing it for where to move what, which I think that's the stage you spoke about also deciding what what will go where which also involves the business requirement aspect and then actually executing.
+
+Krishn Mohan, Vodafone   34:39
+It's probably OK.
+Yeah.
+
+Speaker 1   34:53
+Executing migrations either via the host approach or via redeploy or replan approach.
+So these are three broad, broad strokes stages that we look at across these three stages.
+Is keeping Linux into perspective as as the team in terms of the OS. What would you sort of want Azure migrate as a team to focus on to enhance the experience?
+
+Krishn Mohan, Vodafone   35:16
+OK, so first of all, I don't know whether Azure Migrate can help in discovery phase. I have no idea about that because we did discovery on our own without any tooling.
+
+Speaker 1   35:26
+How how did you do that? If if I may?
+
+Krishn Mohan, Vodafone   35:29
+Yeah. So what happens is in the discovery phase, so whatever servers we have at our side, we there is an internal tool that Vodafone has developed that runs and collects all the information about those distributions, those versions, those.
+
+   35:44
+Inventory. OK.
+
+Krishn Mohan, Vodafone   35:48
+Package managers, those list of your file system, your symlinks, your authentication. Yeah, yeah, yes, yes, yes, yes. So that's why I said we never used Azure Migrate for discovery purpose. We have used our internal in house scripts for discovery and that works well because we come to know everything that what we.
+
+Speaker 1   35:51
+Is it like a script Krishna?
+Is it like a script of sorts? OK, OK.
+
+   36:02
+Thank you.
+
+Krishn Mohan, Vodafone   36:08
+Because we have I think 10 parameters where we work on and those are distribution, version, packages, application stack, background services, file structure, network dependencies, boots, boot up and start up scripts. So I think there is a list on which it assesses and.
+The details. So that's how we do in the discovery phase. We use Azure Migrate to move things block by block and that's where I feel that it should. I mean, I should not be saying like that, but it appears a little sluggish at this phase because it.
+
+   36:31
+OK.
+
+Krishn Mohan, Vodafone   36:47
+It may happen because we are migrating a lot of servers at the moment, but it may not happen. I mean, it shouldn't be the case of if you put one server to Azure Migrate, then it's faster enough to deal those kind of migrations. So for me it is a little bit of kind of sluggish at the moment when we.
+Move things and then the connectivity is a major part. You know where in we need to ensure that the cloud, the new, the new, the landing zone that has been built for those those servers, yes, in the Azure for those servers, the landing zone that has been built.
+
+   37:20
+OK.
+
+Krishn Mohan, Vodafone   37:27
+Should have you know those SSH secured SSH connectivities in place. You know the the access. If we are using username or password or if you're using SSH keys, you know it should follow. So what whatever.
+Access methodology we use that should be there and then the bandwidth of movement, whether we are getting a good bandwidth when it the when the blocks are moved from one place to another and then the final bit is in the landing zone.
+Ideally the landing zone should have all the connectivities in place. What my actual server was in the on Prem. This is what we are struggling a lot at the moment because we have applications connecting to you know, DMZ Internet via reverse proxy, forward proxy, all those kind of you know.
+Older concept that we have which we.
+
+Speaker 1   38:23
+Rebuilding those in Azure is is struggle.
+
+Krishn Mohan, Vodafone   38:25
+Correct. Because because you would probably not have heard about forward proxy or reverse proxy, right? Because these days when you call forward proxy we say it's a squid, right? Or it's a it's a cloud router which routes your traffic towards the Internet. So we call it as a forward proxy in in on Prem.
+That will not know that that won't be there because when we are in the cloud then everything has to be routed through a squid proxy, right? So we're no more calling it as a forward proxy or reverse proxy. So we have to ensure that you know whatever servers we deploy in that landing zone.
+That landing zone should have connectivities either single direction or bidirectional to whatever sources we hook on, right? So that is something we are struggling a lot, wherein we are having a lot of blockers we just because.
+Vodafone has created a lot of securities and enforcement that is not letting us unblock those things. So we are still working on that unfortunately. But wherever, wherever we are getting to the point where you know it's a straightforward, there is no.
+
+   39:27
+Got it.
+
+Krishn Mohan, Vodafone   39:33
+Source connectivity towards the Linux machine. Linux machine actually acts as a platform to host a workload, just like you know you have a Linux to host a Postgres instance. Yeah, absolutely. So in those cases we are fine because.
+
+   39:43
+Database or?
+
+Krishn Mohan, Vodafone   39:49
+We're moving the whole workload from one place to another, which means if I move OS from data center to Azure, then I'm also moving my application as a part of that, which is fair enough to have a complete lift and shift. So that is helping, but if application sits in on Prem.
+Which as an example, you have a application service running, you have a DNS and people are using it and that is routing the traffic from on Prem to Azure. Now that's the point where you know the network latency is coming in and if all the sources doesn't have the same level of connectivity then we are facing a lot of problem and we have seen this now.
+
+   40:20
+Yeah.
+
+Krishn Mohan, Vodafone   40:26
+Because that lady told us that oh, your service which has been migrated to Azure would be fast enough. I said yes, it is fast, but will you be able to give a guarantee that it will be this fast down the line? Because when a lot of servers will be moved to that particular rack, it's going to be slow and.
+In data center we don't have that kind of problems because you know we are managing it within our own network and you know if there is an issue then and and if we are using cloud VM which is CI cloud infrastructure VMS then it is easy to move those.
+From one rack to another instead of having a physical machine. Physical machine is impossible to move, but if you have to because in our data center we have a mix and match of physical machines and what do you say the cloud VMS within the data center? Yes, VMware, yes.
+
+   41:15
+VM Ware.
+
+Speaker 1   41:16
+VM Ware is a VM Ware based. OK OK.
+
+Krishn Mohan, Vodafone   41:18
+Yes, yes. So it's easy to move those, but first physical machines are are very harder. So anyway, back to the point of Azure Migrate. So we use Azure Migrate to move things from one place to another. Discovery is being done internally because we have.
+I mean, you you can, you can imagine that we have thousands of servers in data center. There will be, you know, some other kind of script developed to manage those things, right? So we cannot rely on vendors for everything. Sorry, go ahead.
+
+Speaker 1   41:47
+So yeah, so is your migraine does have a very end to end tooling to Discovery agent of sorts.
+
+Krishn Mohan, Vodafone   41:55
+OK.
+
+Speaker 1   41:55
+There are multiple capabilities.
+We call them.
+We distinguish them across online and offline.
+Online would entail you to sort of deploy an appliance, which is an which is a VM that is deployed, let's say in your vcenter with the name to create a limited line of into your V Center with and you spoke about the 10 parameters, right? That's the kind.
+
+Krishn Mohan, Vodafone   42:03
+OK.
+
+Speaker 1   42:14
+Of schema inventory schema we tried to fetch.
+
+Krishn Mohan, Vodafone   42:16
+Oh, OK.
+
+Speaker 1   42:16
+To give you a topology view.
+
+Krishn Mohan, Vodafone   42:18
+OK.
+
+Speaker 1   42:19
+But I I suspected a company like Vodafone going to the security and compliance mandates would not be super comfortable with with deploying these out like like.
+
+Krishn Mohan, Vodafone   42:28
+No.
+
+Speaker 1   42:33
+Providing that kind of access to Azure for just for the mere discovery.
+
+Krishn Mohan, Vodafone   42:37
+I mean, it's not like, you know, we we won't provide the point is if you have to manage, you know, 501 thousand 1500 servers, then you shouldn't live with with a mindset that, oh, you don't have anything to do a discovery, right? Because.
+Even if we if, even if we didn't sign a contract for migration from data center to Azure, if we have our own data center and we never thought of migration, there should be a way that we should be managing our own inventories, right? How we are so at and at that enterprise level.
+
+   43:09
+Got it.
+
+Krishn Mohan, Vodafone   43:13
+context.
+Expect that we won't have anything right because then security will chase you back that why you don't have it. Because when applications are deployed then as I said to you that we just don't deploy on a public image, we have those images created by our infrastructure team. So it's quite a well.
+
+Speaker 1   43:16
+Of course, of course.
+
+   43:20
+Right.
+
+Krishn Mohan, Vodafone   43:34
+Instinctive setup that we have at our site and it's quite exhaustive. We tend to do things on our own considering we have to manage things on our own. Now we are moving to Azure, which is a different fact that then we have to slightly use those Azure Migrate discovery part as well, which we haven't done.
+
+   43:38
+Yeah.
+
+Krishn Mohan, Vodafone   43:54
+As of now, because we have been relying on those and we are pretty confident that those are helping us to move things. But those complicated setups or there are legacy applications where you have tons and tons of custom libraries installed or where your CentOS is outdated and.
+You had to upgrade one or two libraries to make your application working. Those were the places where you know probably we you know we will have issues. So over there Azure Migrate can help us. So we don't know at this stage, right? So we are still in the phase of migration.
+
+Speaker 1   44:28
+Yeah, that's that's basically the value. I mean, that's a very valid point and a great learning for me that you know for an enterprise which is Manning's managing so many servers in on Prem. Of course a company like Vodafone will have some arms and ammunitions in the.
+
+Krishn Mohan, Vodafone   44:42
+Yeah, absolutely.
+
+Speaker 1   44:42
+Form of scripts to sort of gauge.
+The topology, the only value.
+Azure migrate that I can sort of see that Azure migrate tooling discovery tooling can help is it's a connected experience Krishna in the sense that once you discover it through Azure.
+
+Krishn Mohan, Vodafone   44:54
+Yeah.
+
+Speaker 1   44:56
+It will infuse the data into our assessment reports to tell you that, hey, what is the goodness?
+What is the readiness state and readiness state would improve these signals that we spoke about that whether you're what, what percentage of your servers are outdated or nearing end of life, end of support state?
+
+Krishn Mohan, Vodafone   45:06
+Yeah.
+
+Speaker 1   45:15
+And then of course, telling you recommending you which are strategy, whether rehost free plat would be beneficial.
+So it's it's just a connected experience because of which discovering it. Also if we shift left and start your day zero journey.
+Right from discovering via our tooling, it'll be really helpful.
+
+Krishn Mohan, Vodafone   45:32
+Yeah, I agree with you. Correct. I I agree with you. It's just that, you know, we have been so much reliant on our internal setup. It is quite difficult for us to move away from that and start. So where we have the quick wins, we are using this right where it's a straightforward migration that, oh, you have this.
+
+   45:32
+To sort of, yeah.
+
+Speaker 1   45:39
+Of course, of course.
+
+Krishn Mohan, Vodafone   45:52
+REHL 9 these are the libraries, nothing custom, use a script and you know simply move it. But as I said, like you know where you have applications which is running from years, things are not upgraded. You had to, you know, pick few libraries to upgrade so that the application keep running, but you don't want to put the same amount of effort to upgrade the whole infrastructure.
+Those are the problems where you know those are the scenarios where we'll face the problem because scripts are built in to pick up those things. But I think there would be a person who would remember that who has updated those bespoke libraries to make that application.
+
+   46:17
+OK.
+
+Krishn Mohan, Vodafone   46:27
+Running right and we have done that kind of things in past because back in you know 2018 when we used to run these Linux machines and if anything has happened wrong that an application says that oh this binaries cannot, this binary needs to be updated. So we just updated those binaries because that's a.
+
+   46:28
+Yeah, yeah, yeah.
+
+Krishn Mohan, Vodafone   46:44
+Quick win for us instead of you know migrating the whole dependencies or whole package. So and that is something you know becomes very much bespoke when you when you when you upgrade those things and.
+Those things doesn't usually gets picked up because you actually pick up the package versions and you know those dependencies. But within the package, if you're updating a library, that is, you know, become very difficult to understand and I'm not sure whether Azure migrate.
+
+   47:15
+God.
+
+Krishn Mohan, Vodafone   47:17
+Actually can deep dive into that level and find out the differences.
+
+Speaker 1   47:21
+It can to certain extent, and that's where the offline discovery comes into picture. Like I'm just thinking out loud with you.
+
+Krishn Mohan, Vodafone   47:25
+OK.
+
+Speaker 1   47:27
+You spoke about the the script that exists that you run to sort of track what all inventory the 1011 parameters.
+So we have.
+We have a CSV import.
+
+Krishn Mohan, Vodafone   47:36
+OK, OK.
+
+Speaker 1   47:37
+Method also where this this schema Vodafone can provide us the schema we imported.
+Let that Discovery Engine run its its magic. On top of that, and then give this this assessment report of sorts.
+
+Krishn Mohan, Vodafone   47:45
+Mhm.
+
+Speaker 1   47:49
+Which will not maybe complete, which will not cover all the signals that you just sort of spoke about as examples, but it covers a good bit.
+
+Krishn Mohan, Vodafone   47:50
+Understood.
+
+Speaker 1   47:57
+So I think that that's that's where we it's a offline mechanisms of discovery where you bring your own inventory of sorts where you give us the input and we do not deploy anything.
+
+Krishn Mohan, Vodafone   47:57
+OK.
+Yeah, OK.
+
+Speaker 1   48:08
+Comes into picture, yeah.
+
+Krishn Mohan, Vodafone   48:10
+OK, I'll, I'm, I will. I will raise that anyway because there's something new I came to know from you. So I'm gonna raise it when we'll have our next discussion with Microsoft for, you know, these migrations.
+
+   48:11
+Yeah.
+Yeah, yeah, yeah.
+
+Speaker 1   48:21
+Were you by any chance able to find the POC? That's OK, not a I will find out. I'll I'll find out. Internally, Vodafone as an account.
+
+Krishn Mohan, Vodafone   48:23
+No, I I have to look at other side to do that.
+
+Speaker 1   48:31
+Who's the who's the person?
+Because we work.
+That's our internal partner team who actively engages with the customers to help with the migration efforts.
+
+Krishn Mohan, Vodafone   48:34
+Not there.
+
+Speaker 1   48:39
+I'll. I'll find out who's managing the Vodafone account and maybe we can we can.
+
+Krishn Mohan, Vodafone   48:44
+OK, yeah. After this call, if I find anything, I will ping on this same chat.
+
+Speaker 1   48:50
+I think the way the invite has been curated, Krishna, you may not have access to the chat afterwards.
+
+Krishn Mohan, Vodafone   48:55
+Yeah, OK.
+
+Speaker 1   48:57
+But if if if the time.
+
+Krishn Mohan, Vodafone   48:59
+If you if you give me a second, I'm if you give me a second, I'm going to ping someone to get that name.
+Uh, do you know the name of who is involved with Microsoft?
+
+Speaker 1   49:14
+Otherwise, I've taken a note of your e-mail ID as well.
+
+Krishn Mohan, Vodafone   49:17
+Yeah.
+
+Speaker 1   49:18
+I will write to you afterwards and we can maybe have conversation centered around the engagement that you're having with Microsoft because I'm and and feel free to sort of reach out to me around any migration efforts because I'm part of a full time part of the migrate team.
+
+Krishn Mohan, Vodafone   49:34
+OK. Oh, OK. That's nice. That's nice. That's nice.
+
+Speaker 1   49:36
+Yeah, we'll happy to help. Yeah.
+
+Krishn Mohan, Vodafone   49:41
+I haven't had a response. I don't expect to reply them instantly.
+
+   49:43
+That's OK.
+I will.
+
+Speaker 1   49:44
+I'm planning to write write an e-mail to you as a follow up to this conversation.
+
+Krishn Mohan, Vodafone   49:48
+OK.
+
+Speaker 1   49:48
+It has been extremely helpful and you feel free to sort of engage with me on that e-mail.
+
+Krishn Mohan, Vodafone   49:51
+But.
+
+Speaker 1   49:54
+Maybe you can help as and when you find the POC contact you can share that over there as well.
+So it should be fine.
+
+Krishn Mohan, Vodafone   49:59
+Yeah, I mean, she she's, she's dealing quite a significant amount of migration at our side. So yeah, so but how come? I don't see the name. Oh dear. Anyway, yeah, we'll send it across to.
+
+   50:05
+I see.
+Got it.
+
+Speaker 1   50:16
+Sure, I'll, I'll write to you.
+
+Krishn Mohan, Vodafone   50:17
+Oh, he's typing. Oh, no. Oh, no. Anastasia. Anastasia. Anastasia.
+
+Speaker 1   50:22
+I see. I heard that name. Yeah. OK yeah.
+
+Krishn Mohan, Vodafone   50:24
+Yeah.
+Anyway, I'll I'll write down to you and.
+
+Speaker 1   50:29
+Sure, I'll. I'll shoot an e-mail.
+
+Krishn Mohan, Vodafone   50:29
+OK.
+
+Speaker 1   50:31
+Yeah, sure. All right.
+
+Krishn Mohan, Vodafone   50:32
+OK, perfect. Thank you. Thanks for talking.
+
+   50:32
+Thank you.
+
+Speaker 1   50:33
+Thank you, vishnath.
+Thank you for your time.
+It was a very useful conversation.
+
+   50:36
+Yeah. Bye, bye.
+
+Krishn Mohan, Vodafone   50:36
+Thank you. Bye.

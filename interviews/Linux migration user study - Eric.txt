@@ -1,0 +1,409 @@
+Linux migration user study - Eric-20260221_161528-Meeting Recording
+21 February 2026, 10:45am
+41m 37s
+
+Swati Devgan started transcription
+
+Swati Devgan   0:03
+Start with a brief introduction of mine along with setting a context of the kind of conversation we are looking for as part of this Linux migrations research that we are conducting and then maybe we can go ahead and understand your current rule and how it's pertinent.
+Into migrations and modernizations and I do have some hypothesis lead questions which can become the part of the conversation as we go ahead. All right, so I'm Swati. I'm a product manager with the Azure Migrate, which is one of the end to end Azure native tooling that helps.
+Customers to conduct end to end migrations predominantly encompassing the three critical customer journeys right from discovery which is essentially doing an end to end inventory scanning of what all exists in your on premise environment or other clouds from which basically your.
+
+Guzman, Eric   0:58
+Boom.
+
+Swati Devgan   1:02
+Source environment from where you're migrating to cloud. In our case it's Azure. After the deep discovery and that end to end inventory scanning is done, this inventory becomes our building blocks for doing a decide in planning of what all exists in your source environment and how do you want to sort of migrate what kind.
+Approach you want to take for migrations, what are the input parameters that sort of govern your decision making. So that's the decide and plan phase where we try to equip the customers with all those right assessment reports to pin down on the decision making. And the 3rd and the last stage is obviously the execution of the migration.
+Based on the plan that has been finalized by the customer. So I in the capacity of this role, I focus majorly on the migration scenarios for Linux OS and containerization based approach which is where I focus both on container instances that exist.
+Within source environment and how customers are planning to sort of containerize them as they plan to migrate to cloud. And my research right now is predominantly around understanding what are the active pain points pertaining to Linux OS migrations and containers.
+And understanding the behavioral patterns across these two themes. So with that, I'll take a pause. If you can sort of introduce yourself, tell me a little bit about your role, current role, past role where?
+Where your job description has been in in relevance with migrations and modernization, that'll be great.
+
+Guzman, Eric   2:43
+Yeah, sure, no problem. Yeah, Eric Guzman, I've been in the industry for many years now, over 20 years. I've done various migrations, migrations to 'cause we're in both. I'm sorry, we're in all three cloud providers, Google, AWS and GCP.
+In Azure and then we have private cloud, right? So my when it comes to migrations.
+Because you want me to focus on migration specifically, right? Like that's just what this topic's about. But I'm cloud engineering, basically responsible for all infrastructure, private cloud or on Prem, I mean or the cloud, so.
+As when it comes to migrations, we have had several migrations over the years. Lift and shift, backup and restore, various type of migrations, various tool sets, third party tools, native tools.
+One of the bigger tools back in the day previously was Velostrata that we would use to lift and shift. We've also had tools to do discoveries and analysis that were third party tools, but also do have experience with Azure Migrate migrating VMS to the cloud as well, Linux and Windows.
+Also do have experience migrating VMS from VMware to Azure Local as well. Those are all the the different type of migrations that that we've done and obviously there's a lot of planning, preplanning that that goes into the the process.
+Just making sure you know their compatibility, application mapping, dependencies, latency requirements are factored in to make sure that the workloads do make sense to migrate or should be compatible and should be.
+In a good in a good spot to be moved to the cloud if they are coming from the on Prem side of the house. So a lot of a lot of different experience doing variations of migrations over the years. So I could certainly dive deeper into specific aspects of it. Like if you want me to do that, let me just stop there.
+
+Swati Devgan   4:57
+Yeah. So as yeah, yeah, that that that was helpful. So just just aligning my understanding here, Azure Migrate has been one of the tools that you've used all these years for migrations or the toolkit has been different?
+
+Guzman, Eric   4:57
+Does does it help?
+OK.
+It's been a combination. We just started using Azure Migrate like this past year. Before that we used to use a tool called Velostrata. It was a third party paid tool that basically would allow us to move from private from the private cloud. You know we call it private cloud, but it's on Prem.
+
+Swati Devgan   5:18
+OK.
+OK.
+
+Guzman, Eric   5:31
+To the public cloud, whether it be GCPAWS or Azure at that time, you know that was that was more years back. But recently we started using Azure Migrate for two purposes. One is to move from VMware to Azure Local, right, which is Azure Stack.
+And then to also move VMS from on Prem to the public cloud in Azure. So those were the two use cases. Yep. Mm-hmm.
+
+Swati Devgan   5:56
+Got it.
+And and have you dealt with managing the migrations for Linux operating system? And if yes, what are the distributions that you've predominantly worked with?
+
+Guzman, Eric   6:08
+Yes, yes, we do do a couple of those as well. It's Linux. It's for Linux. It's Red Hat and Rocky. Those are the two, the two versions. We don't do, we don't do Ubunto or some of the other Linux ones.
+
+Swati Devgan   6:16
+Got it.
+That sounds all right. So maybe I think the the experience you spoke about is highly pertinent for the conversation that I'm looking for and for my own learning also of of this relevance relevant to this search study. So maybe we can start from the discovery phase, which is what I spoke about, which is the.
+
+Guzman, Eric   6:22
+Mhm.
+
+Swati Devgan   6:39
+The very more of a starting point as and when an enterprise is looking for migrating to to cloud, any cloud platform, what are the guiding principles in terms of?
+Discovering an estate when it comes to the customers you deal with or when you do it in house for your own company that you're working with, where I'm going at is are there any security and compliance mandates which govern the?
+The extent of the line of sight that any tooling or migration tooling is supposed to be provisioned with when a migration is to be started, is there are those mandates in place to sort of restrict the the availability of.
+Information, permissions or accesses that are required to conduct the discovery.
+
+Guzman, Eric   7:39
+Yeah, leading up to the the whole discovery, I think, you know, right before we even start the migration, we start just, let me just call it the discovery of the environment, you know, compatibility, readiness, right. That's the kind of stuff that we kind of go through. And what what comes to my mind is, OK, we're gonna move these workloads, right, whatever they may.
+Maybe Linux, Windows. The first thing we do is, OK, cool, we're gonna migrate this to the public cloud. What do we need to do? What are the dependencies? What are the network requirements, right? What network connectivity do they need? Are they, for example, DMZ? Are they micro segmented in their network?
+What kind of dependencies with other, you know, servers, databases that they need to talk to. So what we do is we basically, you know, set up the Azure environment to make sure that it's ready to support this workload as we migrate, right? Make sure connectivity's there, firewall ports.
+Connectivity, what's the V net that it's going to use when it gets to the, you know the the migration. All those requirements are basically kind of pre set up. We did we assess networking, we accept security like what ports and you know what are we going to whitelist for specific access.
+
+Swati Devgan   8:45
+And.
+
+Guzman, Eric   8:58
+You know, we're very micro segmented, very secure in our environment, so there's a lot of time invested in just preparing the landing place in Azure where they're going to go, right? What's what subscription, where resource groups are they going to fall into, things of that nature and what the network setup looks like.
+Once we have all that stuff set up and then we make, we're making sure that as part of our assessment is, hey, you know, have we done an inventory on the the compute, right, CPU, memory, disks, version compatibility. Obviously if it's a very legacy OS that's not supported, we're, you know, it's not gonna, it's not gonna be allowed.
+In that case, we'll recommend, you know, building that new and and migrate the data, but if we can lift and shift it, we're making sure compatibility checks out. What are the requirements are needed, making sure that the kernel modules and drivers.
+Are going to be removed and replaced as part of that process and confirm Cloudinet is present for that VM as we kind of continue to to migrate. So that's kind of, I know I said a lot there, but that's kind of basically what it is, is it's it's a discover an assessment, it's preparation in the landing.
+
+Swati Devgan   10:00
+OK.
+
+Guzman, Eric   10:13
+Place in in Azure to make sure that we're ready to support the migration for that VM. Kind of go from there.
+
+Swati Devgan   10:21
+No, that that that was fairly comprehensive and helpful would help me sort of steer the discussion across various themes I'm looking forward to. You spoke about how the starting point is essentially understanding the network topology of what exists in your source environment, let's say VMware.
+So how do you, what are the tools you've used to sort of do that scanning and come up with that visualization? Because I suspect your VMware environment must be a mix of various workloads, databases, web apps, servers, maybe standalone container instances as well, so.
+To get get like a view of how the network topology looks like, what tools or maybe scripts that you've used so far. Another layer to that is.
+These tools would require some and this is specifically in the context of Linux. These tools would require some sort of authentication mechanisms to access this data to provide the network topology. So what are the based on your experience, what are the most preferred authentication mechanisms that the?
+Customers prefer um uh to provide access specifically for the Linux workloads as per your experience.
+
+Guzman, Eric   11:41
+So like a network discovery tool, I mean honestly a lot of the the the tools that we use, we we kind of just pull reports on communication patterns. We use Splunk a lot. That's one of the tools that we'll just give it a source IP or you know or destination IP. You know in this case let's just say it's the source, you know.
+
+Swati Devgan   11:51
+OK.
+
+Guzman, Eric   12:01
+Hey, like just help me understand egress, ingress traffic on this communication, like what dependencies of other devices in the network does it has it talked to in the last month. So those reports will be able to pull up and it'll tell us like, hey, this server that we want to migrate talks to these devices or these workloads.
+On these ports and that's how we're able to determine this. Obviously we check with the application team and say, hey, look, you know, talk to your vendor on this application. Help us understand what are the port requirements just to make sure we've captured it, but we also.
+In addition to that, run a report on communication patterns to understand interdependencies of communication. So then prior to the migration, we already know like this, this workload, when we move it, it's gonna need to talk to these other workloads on these ports.
+So when it when it gets migrated and and landed over those ports and those firewall requirements are already set up and some of them are very granular where it's specifically only allowed to to talk to certain devices on specific IPS. So so Splunk I I think I think from a reporting tool perspective.
+
+Swati Devgan   13:08
+And.
+
+Guzman, Eric   13:12
+Provides that analysis, but we still check in with the app teams to identify port requirements for that server and what its function is.
+
+Swati Devgan   13:20
+Got it. More specifically, Eric, has you or your team used the Azure Migrate Discovery capability in the in the recent past since the time you've started using our tooling? Is that do you have exposure to?
+To that particular tooling. If not, that's OK. But if yes, then I would want to sort of gather your perspectives and take feedback on how the discovery agent works.
+
+Guzman, Eric   13:45
+So we started kind of piloting it. Yeah, it's like a lightweight appliance that that we could put on premises and we've we've we haven't really like like validated it to production use, but it is currently being assessed and like I said we're kind of kind of new to the Azure migrant. We just started doing it last year towards the end.
+
+Swati Devgan   13:50
+Right, right.
+
+Guzman, Eric   14:05
+In the last year and it was more really focused. Our focus right now is a lot of Azure local migrations and the Azure Local Migrate tool just became GA for Azure Local like in November. So we're still kind of learning a lot and building a lot, but it's I'm going to be honest with you, it's a little painful.
+
+Swati Devgan   14:06
+OK.
+I see.
+Correct.
+
+Guzman, Eric   14:25
+To migrate to Azure Local to Azure to Azure Cloud is a lot easier, but this is 1 tool that we've we've talked about and we've we've threw it in the lab to pilot it, but we haven't really gone through extensive testing. But it is a tool that I think we're going to start looking at because.
+
+Swati Devgan   14:26
+Yeah.
+
+Guzman, Eric   14:42
+We're missing some dependencies and I think that's where this tool is gonna help us because Splunk's capturing most of it. But I think this tool kind of provide us a more of a of a good visual of of dependencies, right. An assessment of the environment. Yeah, but I don't have too much experience with it to talk about it.
+
+Swati Devgan   14:56
+I think.
+OK. Would you mind sharing who the customer is, the name of the customer who's interested in sort of moving to Azure Local?
+
+Guzman, Eric   15:08
+Yeah, it's yeah, it's my company, Cardinal Health.
+
+Swati Devgan   15:12
+OK, got it. Um, so.
+
+Guzman, Eric   15:13
+Yeah, we're a we're a big, big company. Yeah, we're we're moving 120 clusters to Azure Local like over the next three to five years. Yeah, Yep.
+
+Swati Devgan   15:19
+Oh.
+OK, amazing. Got it. No, that that was helpful, at least in terms of understanding or understanding the methodology used to discover your source environment. Moving a little ahead again, again.
+Corresponding to how the customer journey evolves, once you have a visibility into how your network topology looks like, how the servers, various workloads with a new source environment are talking to each other. Post that of course comes the deciding planning stage.
+What has your methodology or strategy been in terms of you? You spoke, you touched based a little bit when you were telling me about your work experience. You touched based upon the various migration strategies like lift and shift or replat or refactoring.
+So that's of course the execution of that comes in the third stage, but the decision making on what moves where, what would be the right target within cloud and the how part of it is in which our strategy so to speak would be used to execute these migrations. That's where the deciding plan.
+And stage becomes quite crucial. So how does, how does that happen? What are the tools you've used and what has been the guiding principle to sort of make progress in this stage, if you can walk me through that?
+
+Guzman, Eric   16:43
+Yeah, I would say, I don't know, we have a specific toolset for that. It's just more the migration approach, right. It's really, we're really determining the and assessing the workload and say, hey, like what is the best fit? Is this a lift and shift right? We basically that's just minimal changes.
+
+Swati Devgan   16:56
+Right.
+
+Guzman, Eric   17:01
+We replicate them at the VM as is and just flip it over to the cloud, right? Using the migration tool and then there's like, hey, is this workload? Can it be, you know, refactored and broken up to different services? And just to give you some examples, hey, this is a SQL database server.
+Do we want to migrate it to SQL as is right? Do we want to just lift the shift or is this better suited to break up and move into a platform as a service and then just do like an Azure SQL for example? So some of those conversations, you know, we sit down, we evaluate, hey.
+How long has this workload been around? Where's words? What's the road map of this application or this database? And what is better suited to align with the company's vision of where we want to be in the next three to five years? And it basically just says, hey, is this is it worth?
+Doing a refactor? Is it worth just lifting and shifting because they they have, you know, bigger plans for this application or this database? So it's really more of a discussion with the application team, the vendors involved.
+To do an assessment and and it's really just a planning phase like hey, what makes the most sense? Should we just kick the kick, kick the can down the road and just move it over to Azure? Just because hey, it's it's end of life and if it's in Azure it gets free extended support and we just need it around for another year or two.
+
+Swati Devgan   18:13
+Got it.
+
+Guzman, Eric   18:25
+Or do we refactor and break up and go into a platform as a service like Azure SQL? Or do we re architect and rebuild this depending on the road map of the application and turn it into a Kubernetes or microservices?
+Those are the the planning session conversations that happen. These are all initially right, even before migrations even start to see what's the best use case. And then once the planning phase is completed, then the determination of where that's going to go is going to is going to be migrated in that approach, right, whether it be lift and shift, refactor or rearchitect.
+Slash rebuild. That makes sense.
+
+Swati Devgan   19:02
+Got it. So based on your experience, if I have to demarcate between lift and shift and PaaS services, which is cloud native services, which kind of applications usually undergo a lift and shift process which is more of a rehosting and what are the?
+Applications which take the path of adopting A Paas target, is it? Is it connected to as I gather and correct me if I'm wrong, it's connected to the longevity or the lifecycle of the application itself? Is is that a fair understanding or there are more aspects to it as well due to which?
+Companies or customers choose one over the other.
+
+Guzman, Eric   19:41
+Yeah, you know you it's it's a combination of everything you said. But yeah, it it is that it's like hey this, you know we evaluated the the application, it makes sense to go to a a pass, right. Or hey this, this, this application. And and here's the thing is we have so many applications like hundreds of them, right, 'cause we're a big enterprise company.
+So it it really determines on where where does the application or the business unit would need to be and we just put it on them or like hey check with your business and and what is what? Because we always ask them what is your road map like where do you guys want to be? What is what is application XYZ?
+Going to be in the next three to five years. Are they do they have a SAS solution? Do they have a PaaS solution? And that's and that's really what it comes down Swati is is it's just a conversation like because and here's the thing is a lot of these business units that have teams, they're not very technical, so they don't even know, they don't even ask. So we have to get on the phone and say let's get your application team.
+Teams on the phone and let's talk to them. So I'm gonna give you an example. So we have a big application called a mission critical application called Ames. Ames is a pick, pack and ship distribution software application and a SQL database at a facility.
+
+Swati Devgan   20:45
+Hmm.
+
+Guzman, Eric   20:52
+So over the years we're like, hey, like they keep, you know, upgrading their versions. We're like, hey, this application is now available as a SAS solution from the vendor or they're working towards that SAS solution. So then we will like have conversations and say look.
+For now we got to get off this old hardware or the version is kind of old. Let's do a lift and shift and we migrated them over to Azure and says look but the the the end state of this application is will it eventually will go to a SAS solution and we will decommission and phase these out.
+So we lifted and shifted to buy them time and then the end state goal will be that they will eventually go to SaaS and will be decommissioned from the cloud, right. But they move to on Prem to cloud and they're going to go from cloud to SaaS. So it's really every application aspect is very different.
+And and and obviously as as cloud engineers, we always recommend, hey, let's assess the native. If the native services make more sense and it's, you know, less administration, less overhead, it's probably even more cost effective than running this on Prem. Then you know that also kind of factors into it is cost.
+Because sometimes they're like, hey, well, we don't really care. We just want our database. OK, well, if you run it in the cloud, you know and oh, we have tools. We do have cost analysis tools for that that we use that are third party like Morpheus is what we use that helps us assess also workloads. So as as we're having these planning phases.
+We're also factoring cost, right? So because that's what they asked. Well, what is it gonna cost me? Well, here's what you pay now and here's what you would pay if you go there, right? If you go native services like pass as, here's what that looks like if you if your application supports it.
+So we the the options are laid out, but we also come in there with the recommendations where it also it's not only more efficient around where it's sitting there and obviously high availability and all those things come come into play, but also is it cost effective right and what makes the most sense.
+
+Swati Devgan   22:55
+Got it, got it. I think that was like immensely useful. Thanks Eric. Thanks for setting, laying out the ground with that example. Just a follow up to one of the aspects you spoke about which is where apart from any other open questions that get answered in this decide in plan phase, one of the one of them is.
+Sort of closing on what strategy to adopt to to handle the extended support scenario where a lot of OSQ's and over here I'm deeply interested in the Linux OSQ's. As we all know it's it's a fairly heterogeneous.
+Ecosystem when it comes to the distributions you spoke about RHEL being the one which is most predominant in terms of your migration and modernization experience. But when it comes to Linux as an OS ecosystem, there are every now and then there would be OS SKUs which are.
+Are either hitting end of support or end of life scenario. So keeping that in mind how if at all you have come across the situation, so how have you and your team dealt with it? Of course upgrades is one of the options at the disposal in terms of upgrading to the latest.
+Version of the image clean install, which is the redeploy option is another one, but how have you and your team dealt with it and where exactly in the migration journey the efforts to sort of get rid of the older skew happens predominantly?
+
+Guzman, Eric   24:32
+Yeah, typically for like really like like, yeah, depending on where the the, I guess the end of life date is of that OS for for example like RHEL 7, we don't even, we don't even give them, we don't even give folks an option like hey, this is end of life, it's not even supported.
+You know, maintenance ended and you know like in I think it was 2024, it's end of life. I say that's it. This is where we draw the line in the sand. So they don't, they don't have an ultimatum there or we give them, sorry, we give them an ultimatum like either you decommission the server or you in place upgraded to Rele.
+Or or in this case we actually sometimes we even double hop them. We could get them from row 7 to 8 or 9. But if if if if in place upgrades are not an option then we basically give them a hard requirement of hey it's it's either gonna you so if if if it if the work.
+
+Swati Devgan   25:15
+Mm.
+
+Guzman, Eric   25:26
+Workload continues to live. We usually put on what we call Archer. We have an Archer system that kind of tracks compliance and now they have, they're being monitored and they're kind of getting notifications and they have to justify why the workload it needs to stay in the environment.
+And they have to justify it and they kind of, they kind of, they're kind of on the naughty list, right. So we really want to, we really don't want to continue to encourage them to to to stay on an end of life OS. It's either, hey, you're gonna in place upgrade or you know decommission.
+
+Swati Devgan   25:50
+Yeah.
+
+Guzman, Eric   26:01
+Now if it's Windows, for example, because if we're moving them to Azure, they get the extended support for another few years for free. And not to encourage them to stay on the old OS, but that kind of gives them a little more flexibility if it's Windows. But I know your focus is on is on Red Hat, right? So like yes, we we we give them an option.
+
+Swati Devgan   26:16
+Right.
+
+Guzman, Eric   26:21
+Hey, let's in place upgrade you guys. And if not, then we're gonna have to sunset this server at some point. Or you're gonna have to have a compliance Archer thing attached to your workload to make sure that we're tracking it and you're working on a remediation plan for this server because it's gonna.
+It's obviously unsecure and vulnerable to the environment.
+
+Swati Devgan   26:44
+Got it.
+
+Guzman, Eric   26:45
+Yeah. So that's how we track it and stuff. So yeah, we actually have a whole big team that does in-place upgrades as an option. Not saying that, hey, we encourage in-place upgrades is it is a, it is a path, right, to get you to a more supported version.
+But at least if they want to take the initiative to upgrade their server to be compliant, then that's great. Usually my company wants to support N -1 N meaning the new version, right? In this case REL set REL 10.
+
+Swati Devgan   27:15
+Right.
+
+Guzman, Eric   27:16
+-1 will be row nine. Those are the the ideal versions. 9 or 10 eight is still supported, but it'll you know is is coming end of support maintenance here. It's actually in in the full support, but it's still the end of life yet for you know several years but.
+
+Swati Devgan   27:27
+You.
+
+Guzman, Eric   27:32
+You know, as long as you're on it, you're good. But we if you want to deploy something new, let's say they want to do a rebuild, then hey, you need to go to at least version 9. You know, that's how we that's how we handle it.
+
+Swati Devgan   27:42
+Thanks.
+Got it. That that was fairly structured. Just just to follow up, you spoke about how how you have a fairly big team which is sort of conducting which has expertise in conducting these in place OS upgrades. Based on my understanding Eric, this is a fairly time consuming process because you have to do it bit by.
+In terms of testing the app compatibility or whatever is hosted on app files which are hosted on the server which is undergoing the upgrades, you have to sort of test out these compatibility checks iteratively. Is that something that holds in your scenario as well or have you?
+And your team built some some level of automation to sort of streamline and expedite this process. I would love to learn more on those lines.
+
+Guzman, Eric   28:32
+Yeah. So as far as far as the application testing that after migration, is that what you're saying or or just during migrations?
+
+Swati Devgan   28:38
+Yeah, yeah. And the the process of the process of OS upgrades, which you spoke about the in place OS upgrades, let's say it's a REL 7, if you have to upgrade it to REL 8 and then in a two step process and then afterwards through REL 9.
+The the process of upgrading it in itself is, in my understanding is fairly time consuming. So wanted to understand a bit more on the details of how do you do it, what are the toolkits you're using and is there any automation applied to expedite this process?
+
+Guzman, Eric   29:11
+Yeah, you're talking about the migrations for like Red Hat to do an in place scripted fashion, right? Is that what you're talking? Yeah, there was a tool called Leap that that we've used successfully in the past that that helped with migrations and and automating the process of those migrations.
+
+Swati Devgan   29:15
+Yes, yes, yes, yeah.
+
+Guzman, Eric   29:29
+So it's all a scripted process that kind of checks a bunch of different things. This space, this size, all the all the various requirements and compatibility to make sure that these are ready to go from an upgrade perspective.
+I didn't write that automation tool myself as one of my engineers that kind of did it, but that's the tool that we were using to to streamline migrations.
+
+Swati Devgan   29:52
+Got it, got it. No, that was helpful. Do you think it's, it's, I'm well aware that it's a little bit of a leading question, but do you think an end to end cloud native tool which is which is providing end to end migration and modernization capabilities such as ours?
+The customers who are using this tooling would benefit from providing the solution for OS upgrades considering is this a scenario which is worthy enough to solve for an end to end migration scenario or customers based on your experience prefer to do it on their own.
+Did they want that level of access and control in terms of doing the in place of OS upgrades for their servers on their own?
+
+Guzman, Eric   30:40
+No, I mean if you guys could provide a tool that would that would be great. That's the tool that we've been using and then we have partial scripts for Windows, but no we that would that would be great if you guys would offer something like that obviously any other tool that's native to.
+
+Swati Devgan   30:47
+Mm.
+
+Guzman, Eric   30:55
+You know where we're going, right, let's just say we're migrating these to Azure, you guys could provide a in place upgrade tool would be very beneficial because we're a big company where we have, we actually we're actually creating a program in in our environment just to basically do upgrades because there's so many of them happening every year, hundreds.
+You know, like and then now with for example, 2016's going end of life in January of next year. So we do both of our Linux and and and Windows. So there's always a constant, you know, like OK this year.
+You know it's it's it's with this you're coming up as Windows and then Red Hat 8 will be coming up later and it's like there's always a constant flux of and The thing is not all of them go upgrade at the same time, right. So there you were up doing in place upgrades throughout one or two years to get out of that version.
+Right. And then the next version goes into life and then we do it again. So there's. So we created a program where there's a constant, a team, a few guys just dedicated that, hey, this is an on an ongoing thing and we're trying to, you know, self-service it and automate it as well. So like we're trying to get it to the point where.
+We want the application teams, the business units, hey go to this, go to this dashboard and let's just say it's ServiceNow, fill out this catalog and then we're going to we're going to in place upgrade your your server in an orchestrated fashion. We want to get it to a point where it's self-service and fully automated.
+So if we could leverage an Azure in place upgrade tool that could do this, that'll be a huge win, right? If we could, you know, tie it into our our pipelines to to perform those automations.
+
+Swati Devgan   32:34
+Right. Got it, got it. That helps. Eric, you spoke about the lift and shift methodology as well in terms of I'm switching gears a little bit towards executions now wanting to understand the methodologies over there you spoke about lift and shift.
+
+Guzman, Eric   32:50
+Yeah.
+
+Swati Devgan   32:52
+Being one of the ways to sort of move your workloads or servers from on Prem to cloud, just trying to understand what kind of technology that you're using to sort of lift and shift. Of course, Azure Migrate has its own IP in terms of a replication engine, but want to understand what are the other tools.
+You may have considered used to lift and shift your servers historically.
+
+Guzman, Eric   33:20
+Yeah, so prior to like Azure Migrate and stuff like that, like with other cloud providers, let's just say I'm moving an on Prem device to let's just say Google the the tool and it was a third party tool. The tool we used back then, you know a couple years ago was called Velostrata.
+
+Swati Devgan   33:38
+Right.
+
+Guzman, Eric   33:38
+And you know, GCP now has their own like migration tool and stuff to that. But like that was a third party tool that we would use that hey, we would set this up. It would basically be just think of it, it'll be an appliance in in both locations.
+You know, one of them is talking to the other one and they're basically just replicating, kind of almost like a VM snapshot, replicating the VM. And then obviously once everything's been fully seeded or replicated, then it's it's just a matter of coordinating, you know, the the final sync of the delta and then cutting it.
+But that was the tool that we used a lot, very heavy. At that time there was a big effort to just, hey, let's get everything to the cloud. We actually created a program for it too, because it was called the Cloud Migration Program and.
+
+Swati Devgan   34:23
+Right.
+
+Guzman, Eric   34:30
+It was just a lot of heavy planning assessment. We built a whole team around it. The goal was get us over to the cloud and that was the tool that really helped assess the environment, gather information to to plan it all out. But there was also other tools involved, like I told you Splunk and some other tools.
+Assessing communications and network patterns and things of that nature.
+
+Swati Devgan   34:54
+Got it. Yeah.
+Got it. Understood. Just just letting you know, I think even Azure Migrate has has its own replication engine which helps sort of replicate your your servers from on Prem to cloud block by block as is and then there's a there's a.
+This is cut over point which is where you sort of define that everything has been has been migrated to cloud. And then of course once everything is your your network, your infrastructure has been set up in Azure, you can sort of set up your Vnet subnet in order to get going.
+With your server that has been migrated to cloud. So yeah, with that I think I would want to sort of spend last 9 to 10 minutes on on your exposure or experience with containers as a team in terms of migration and modernization both from the point of view of.
+What are the top scenarios, top container runtimes or orchestration layers that you've you've come across as part of containerization approach in on Prem and how exactly these are sort of how exactly the customers or your company has?
+Has decided to sort of modernize them as you move to move these containerized servers to cloud.
+
+Guzman, Eric   36:19
+Yeah, it's really sitting down and and talking to the app teams and understanding, you know, applications and hey, is this, could this be, you know, broken down into microservices? Could this could be in containers? So yeah, we have a whole team that that's kind of responsible for that. I I I do get involved and consulted. I'm not really on the.
+
+Swati Devgan   36:23
+Right.
+
+Guzman, Eric   36:38
+The the AKS team you know but basically it's it's hey they it's identifying the application dependencies you know research usage things of that nature and what required sort of what cloud services are needed but but moving moving containers as is is something that they that is done.
+
+Swati Devgan   36:42
+Right.
+
+Guzman, Eric   36:58
+I'm not too involved in those processes, but I'm familiar with what they do as it's kind of the same thing we do as lift and shift, refactor and rearchitect things and it's just really sitting on understanding what the services are being provided then and how they could be broken up.
+But they they do go through a whole modification process of assessments, you know, hey, so does this, is this better supported, you know, and or is it cloud native features that could kind of address this and then they just refactor it at that point?
+
+Swati Devgan   37:29
+I wonder.
+
+Guzman, Eric   37:30
+Yeah, I don't have too, too much, too much detail on it, 'cause I'm not. That's another team that is involved with it. But go ahead. Sorry, Swati.
+
+Swati Devgan   37:32
+What is the?
+Got it. But based on the limited experience, let's say where you are overviewing the the migrations, would you, would you be able for containers, would you be able to maybe comment or share some inputs on whether there is value in sort of provisioning?
+A clear discovery of which servers or workloads are containerized in your on Prem environment is a starting point. I'm talking about the discovery state. Is there value that customers will have to sort of have that information inventory based information explicitly and then?
+From there on, taking the journey further in terms of being able to decide and plan for containerized servers accordingly and then of course providing recommendations of where to move, whether it should be a serverless option like to handle standalone containers versus a full-fledged Kubernetes service that is required.
+Handle a big container clusters. Would you? Would you have any point of view on that?
+
+Guzman, Eric   38:38
+Yeah, it's just they they usually take the same approach we do as a just a full assessment of of of the services being provided and what's the best best fit model. And it's really just sitting down and understanding also where where where the where the service or the application's gonna be.
+
+Swati Devgan   38:46
+OK.
+
+Guzman, Eric   38:56
+You know one to three years and then based on that it'll they'll it'll decision will be made of hey what makes the most sense to to lift and shift refactor or rearchitect that that services right that that's really what it is I would say they would follow the same typical process.
+And say, hey look this, this is gonna be serverless microservices or what? You know what? How's this gonna be set up right from a container application perspective?
+
+Swati Devgan   39:25
+Understood and um.
+
+Guzman, Eric   39:26
+So.
+
+Swati Devgan   39:28
+Is would you? Would you have any insight into how the host OS kernel? Is there a host OS kernel preference when it comes to containerizing your your estate? Is it more tilted towards Linux or Windows? Just trying to understand the landscape from?
+From the OS perspective.
+
+Guzman, Eric   39:49
+Yeah, I would say it's from everything I've seen, it's always been Linux, not as much Windows. Some some use case, small use cases will be Windows.
+
+Swati Devgan   39:58
+Got it, got it. Yeah, I think with that I'm, I'm largely done with what I was looking for. Eric, this this has been quite useful. Thank you for your time and I think I'll just take a note of your e-mail ID as well if in future.
+Any of my colleagues, we are an Azure Migrate team and there are a bunch of other PM's working on different areas of of this service and considering you and your team have recently embarked on the journey of engaging with this tooling to move to Azure Local. Move your estate to Azure Local I think.
+Um, a lot of my colleagues may benefit from a conversation in future as well, so I hope it's fine for them to sort of reach out, e-mail you or something. Is that OK?
+
+Guzman, Eric   40:43
+Yeah, that that that tool I from to go to get to Azure local with the migration tool is is very challenging. We're we're actually with multiple support cases with your product team or the Microsoft product team. I guess we're kind of leading the path is what I'm what I'm being told because we're a big company moving.
+We're building several clusters a month and we're moving from VMware to Azure Local. So it's this tool is is is continuously being utilized weekly and we're learning and and and enhancements are being made to the product because it just became GA and there's still some bugs.
+
+Swati Devgan   41:02
+No.
+
+Guzman, Eric   41:16
+But yeah, if you guys want to pull me into that conversation, that would have a lot of a lot of information around that as as I continue to work with it too, you know, so.
+
+Swati Devgan   41:24
+Perfect. Sounds good. All right, Eric, thank you so much for your time and have a good day ahead.
+
+Guzman, Eric   41:25
+All right.
+
+Swati Devgan stopped transcription

@@ -1,0 +1,628 @@
+Linux migration user study - Manjeet-20260217_170422-Meeting Recording
+17 February 2026, 11:34am
+46m 0s
+
+Swati Devgan started transcription
+
+Manjeet   0:06
+Yeah.
+
+   0:25
+Learning and clarity. So I'm swati.
+
+Manjeet   0:26
+Sure.
+
+Speaker 1   0:28
+I'm a product manager with Azure migrate which is one of the Azure native services which helps in end to end visibility into what exists in your on Prem or other environments.
+Which are not hosted on Azure specifically and right from discovery to decide and plan with all the right artifacts in terms of what's the cost or cost estimates as you move from on Prem to cloud.
+Followed by your readiness status and then of course giving you all the right tools.
+And techniques to execute your migrations. Whichever approach you take. So within that as part of this team, I'm focusing on, I'm basically focusing on Linux and containers as as the workloads which are fairly predominant when it comes to orchestrating your orchestrating your on Prem data center.
+With we are focusing on sort of understanding what are the pain points that customers come across or what are the priorities.
+The customers have which are rather differing from the Windows world when it comes to Linux and what governs their decision making as they start or embark their journey to migrate or modernize to cloud.
+
+Manjeet   1:37
+Should.
+
+Speaker 1   1:38
+As a progression of this discussion, since today we don't have an E2E experience when it comes to.
+When it comes to container instance discovery, I would also want to understand if you have some deep dive experience into how container, what is the opportunity and.
+Presence of containers in the on Prem on Prem World. If that's an estate that you're managing, I see through the data and telemetry that I have.
+You have your managing VMware environments as well, so.
+Integration to that understanding.
+And how our customers looking at sort of containerizing as they move to cloud, what are the priorities?
+What would help?
+What are the gaps that we can fill as Azure migrate?
+So over to you.
+Maybe you can help with a little bit of your overview, what you do and then we can take the conversation from there.
+
+Manjeet   2:32
+OK, yes. So my name is Manjit. So I'm a cloud architect. Mostly my projects you can say will help the clients to make responsibility for lifecycle strategies like optimization. I leave the planning of migration strategies.
+So you can say we conduct full infrastructure discovery like all from your application, your dependencies, your database, your networks, all we will evaluate mostly with the using the cloud native tools, but it's all depend upon the client. Sometimes they want to go with some third party tools.
+Also, so we go with that one. Mostly we prefer to stick with whatever the cloud we are using. So just use their in native tools. Then you have a more clear transparency on the you can say sources which are going to interact under the cost, especially the major factors which.
+Mostly is important for everyone. So that's what we have. And then the compliance and governance, those are the other big factors which we always look from the tool side that they can help us for while doing migrations every all policies are in place.
+Yeah.
+
+   3:48
+Got it.
+
+Speaker 1   3:49
+So what are the predominant tools?
+And apart from Azure migrate, Manjit that you use to at different stages of migrations to sort of help with this end to end migration journey for your clients.
+
+Manjeet   4:05
+Yeah, so discovery, right. So first biggest part is the discovery. So when when you have to find what are the servers, right, what is the you can say applications, what are the different images they are using, what are the database they are using. So biggest part is the discovery we have to do that is the.
+Challenge. So if we go with our company also have our own native tools also which we developed and otherwise we will always go with the you can say Azure migrate or you can say your site recoveries is there then there's a data migrations if they only.
+Concern about the data. So if they only want to do the app modernization then we go with the app service migrations assistance. So this is from Azure side. Same before AWS they have their crowd trails right? They have their AWS migration services which.
+Which do all the discoveries back and forth and replicate and create environment in their cloud and then we will do the migration. But the tools is there is no specific tool I can say. So some companies they have their own very nice you can say orchestration tools which has.
+All the information single place listed so you can use those. Some we extract it in the Excel first. We run our own native scripts which will do some extractions from there and generate the Excel so that we can later compare it with whatever the migration happened.
+Just double checking, making sure all the.
+All the course right, all the servers, all the containers, everything is properly. You can say they discovered it. So those things. So in in a nutshell I can say there is no single tool to do it because discovery specially for the.
+Applications, because there are so much tight compliance and so much rules, so much policies are configured, sometimes it's not easy to get all the information. If they will say private statics or some private containerization or some private repositories are there, it's very hard to get all that information.
+From their systems, so.
+I can say mostly we use try to stick with the cloud native so it's very easy for us. But if they're not then we have their own you can say different third party tools which we use but they are very expensive. I can say their cost is even more higher than.
+You are a cloud native tools.
+
+Speaker 1   6:46
+I'm just a little interested in what these third party tools are, which you consider where pricing of course, is a challenge as you mentioned. But if you can mention, are these like Linux vendor native tools?
+I'm asking more specifically in the context of managing Linux, Linux IT estate.
+So would you?
+Would you be care to sort of share some names that have been considered?
+
+Manjeet   7:09
+Yeah, so like, OK, so third party tools, right? So from there.
+I can say for that one we.
+There is the the biggest one for just from the container side I can say we will used one is cloud endure which which is like is is AWS services for your workloads that that is a very you can say very very decent service I can say but it's expensive you had to pay for it.
+
+   7:28
+OK.
+
+Manjeet   7:40
+And then that we will use then we have our Kendral. Kendral has one tool which is called Kendral migration tool that we will use that is very you can say very helpful and that is mostly discover all of our.
+
+   7:40
+OK.
+OK.
+
+Manjeet   7:57
+Seamlessly we will use it, but there is a heavy, heavy PIM cost side. They are very expensive, so client mostly does not want to go for those tools. So we use that one Kindle migration, then there's AWS for that thing and then.
+
+   7:57
+Menu.
+Got it.
+
+Manjeet   8:15
+There is one from the ACOM. Also there is a ACOM migration tool we will use. That is another one if could be suggested, but mostly companies they it's up to them because from the cost perspective mostly.
+
+   8:28
+OK.
+
+Manjeet   8:30
+I can sell it 20% which use third party tool. Mostly everyone try to stick with the yes.
+
+   8:37
+Cloud native.
+Got it.
+
+Speaker 1   8:41
+So if if you're managing an estate in terms of the in terms of moving to cloud, if you're managing a multi cloud state, does that is it fair to assume that the tools being used to, let's say move an estate to AWS versus Azure?
+The the tools would vary as a function of where you're moving it.
+For example, if the target is at AWS, you'll be using AWS Migration Toolkit versus.
+For Azure, it would be Azure migrate because that's that suits the best.
+
+Manjeet   9:10
+Yes, yes, yeah, yeah. That's a fair understanding. Yes, yes, that is fully.
+
+Speaker 1   9:11
+Is is that a fair understand OK.
+OK, so so deep diving. You spoke about something that interests me.
+You spoke about the compliance mandates and the various rules that sort of go on the decision making and also pose challenges as you embark on this journey.
+In the discovery stage, which is the first stage of migration journey where you're trying to understand the IT estate, how the data center looks like in terms of the workloads and the servers orchestrate deployed over there.
+
+Manjeet   9:34
+Yeah.
+
+Speaker 1   9:42
+From that perspective, what are the challenges that you, your not challenges per SE, but what are the as a consequence of the compliance mandates?
+What level of flexibility or comfort the customers have in terms of provisioning the user permissions?
+Or via service accounts or user accounts to all these agent list ways of discovery. For example, when it comes to Linux discovery viazure migrate there are certain set of permissions.
+Are required for the customer to provide to their clients.
+
+Manjeet   10:14
+Yes, yes.
+
+Speaker 1   10:16
+Are there any challenges that that come with?
+
+Manjeet   10:16
+Yeah, yeah, there is, yeah. So that is the biggest challenge, especially when it is very hard to impress the, especially their compliance teams, right. When when we told them, OK, we need to install our agent there and which has full access, everyone first hesitate, OK, that does not allow.
+Any third party tools to be there. First they think how much information, what type of information it will grab. So you have to list everything. OK, we are just discovering your servers. Nothing will be exported. First we will check it and then we will push it, but.
+Everybody wants everything to be done in the private on their side, then push it on the Azure side so that they have a list. Everything generated all your you can say documents, all your discoveries, all the list of all the different servers, cores.
+The IPS everything should be generated on their side. Then everyone is very comfortable. It's always take little time to impress them that we are going to we are not using any you can say confidential or any secret informations. We just discover what.
+Whatever the servers or whatever the you can say networks, all IPS, we just grab all that information. What course, how a server course, which type of container you are using, what is the base image, all those things we we are not going to.
+Push anything you can say which hurt their business. That is always every client, always care of that thing. That is the first thing. So it will take some time to impress them that how we will do, how we will isolate your environment in Azure, how the.
+Agent will work. It takes some time for them to understand. I think it is good if we can have a preview generated just on their side with all the details and clear indication. OK, only this information is going to move towards your Azure. We are not doing any such thing that could be more helpful.
+If there is a preview we can show but first thing with the agent they always scared to give the admin access. How much access they have even you ask them to give them full access still some of the parts.
+Which is hidden, right? They have a private statics. They have a private containers which which is not. Still you can access using this agent. Still you have to run some scripts, you have to write it or later in the phase you will figure it out. So those parts are always a challenge.
+Especially with the clients, whenever we work with them, especially with the big and financial clients or healthcare with medium clients, they are OK because their infrastructure is not that complicated. But when to come to the enterprise and big organizations, they have very strict compliance.
+Organization policies, their role based access. There you can say I am policies configure so many things they have it so.
+
+Speaker 1   13:33
+So just building over that point specifically for the large customers from financial sector or healthcare sector.
+What's the strategy in a in a scenario where the customer is hostile to share the user permissions, create the specific user accounts and service accounts to access and run agentless discovery? What's the usual strategy that you and your organization use in terms of recommending? Are there any to?
+Begin with some offline mechanisms, which is just.
+A quick scan of static inventory.
+Is that something that's used or is there any alternate strategy that you guys use to ensure that there's continuous engagement with your customers?
+
+Manjeet   14:11
+Yeah, for that one we does not directly go with the you can say migration tools. We have our you can say scripts written. We have bad scripts which will just do quick scan there and just pull some informations.
+And even, yeah, yeah, that, yeah, those scripts even we does not run right. We we give those to their network guy to show them, OK, just run this script you will see because those guys, they already have all the admin permissions, everything set right there networking for.
+
+Speaker 1   14:28
+Even that would require some permissions. Isn't that the case?
+
+   14:30
+The scripts.
+
+Speaker 1   14:36
+Give them to, OK.
+
+Manjeet   14:47
+You no need to do any extra, so we will show them. There is one Excel generator with this information. OK, what is the core? What is environment? It is all information, everything it is generated and then we will show them. OK, this is what information we are looking for. We will not go for any further any deep. This is the information.
+Information which is exported to cloud. Yeah, that's how they start feeling. OK, then it is OK if you need this information. So yeah, that is the little challenge because that's how we understand it while doing so many migration that this is the biggest thing.
+
+   15:12
+Comfortable.
+Gordon.
+
+Manjeet   15:23
+Once they are OK with then then everything easy then you then they will then they will give your agents your scripts or your full access whatever you want. They are OK if that's the information they are looking if this is what they are exporting then it's very helpful.
+
+   15:27
+OK.
+
+Speaker 1   15:40
+Got it, got it. Understood.
+So just just slightly switching gears while continuing to stay with the discovery stage of the migration, specifically for Linux, what is the trend that manjeeth you you observed for across your customers?
+
+Manjeet   15:51
+Yeah.
+
+Speaker 1   15:56
+What are the odd authentication mechanisms?
+What type of credentials in terms of the authentication type the customers are are comfortable in sharing when it comes to relax?
+Them a bunch of ways of you know.
+Sharing credentials, right? SSH.
+Username, password. So there could be moved.
+Is there is a pattern that or affinity that they have?
+I'm asking it from the point of view of maybe Azure migrate can amp up to provision that type of authentication mechanism to sort of reduce the drop off in terms of adopting the discovery by Azure migrate. And does it differ from the preferences that customers have for their?
+Windows Estate, is there a fundamental difference that you've observed in terms of the preference towards auth mechanisms?
+
+Manjeet   16:44
+Yeah, so definitely. So in the big organizations when we do enterprise, mostly there is a certificate management with your secrets. So that is a bit the public key, they shared it. So that is mostly we will used.
+Because they never have a direct username, passwords or anything they hidden. So there this is how we will use most of the time big organization and from the container I and mostly we prefer them to go with the containers OK.
+
+   17:01
+OK.
+OK.
+
+Manjeet   17:15
+So we always our first choice is let's go with the container so that tomorrow if they have to switch to AWS or GCP or any other records, it's easy for them to just migrate their containers. So because it's a containerized.
+
+Speaker 1   17:30
+When you see containers, just saw two interject understanding me, ensuring my understanding is correct.
+When you say containers as in as the cloud targets in terms of my modernizing, when they're migrating to cloud, you prefer you suggest containerization as an approach.
+Is that a fair understanding? OK.
+
+Manjeet   17:45
+Yes, yes, yes, yes. So that is what our always preference. So it's little bit easy also because then you have a base images created, it's easy to configure all their servers. So always go with the containerization from the Linux side and mostly.
+
+Speaker 1   17:57
+Got it, got it.
+
+Manjeet   18:03
+We see Linux is easier in terms of deployment and configure as compared to Windows.
+
+   18:13
+OK.
+
+Manjeet   18:14
+That is very easier way. Easier thing is because once you set up your base image and you have configure it once and just you give every time you use this image you create two or three versions of base image based on a user's requirement.
+And then you no need to do anything much. You can say it will always pick that base image on your containers on the scripts. It will it will configure all those. You can say Linux servers for you. OK no no this is from containers from servers also.
+80% I can say all the clients they have a Linux servers. Windows are very rare. We found only for the.net application or some very old Visual Basic scripts or something, but all others you can say they are all on the Linux.
+
+   18:52
+OK.
+Hmm.
+
+Speaker 1   19:06
+OK. And what are the top distros that you see in trend?
+
+Manjeet   19:10
+So in trends mostly the Red Hat is the main one for there. You can say main where they have their main application deployed, right? Red Hat is one. Then there's Ubuntu's also they will use few of them. They have their Ubuntu servers also.
+
+   19:20
+OK.
+
+Manjeet   19:28
+And if we talk about the cloud perspective, right, Amazon has AWS and Azure, they have their own Linux versions also. So we would, yeah, we would try to recommend those also when we do it based on the user. So you can say the what type of use case it's it. So we always recommend those also.
+
+   19:35
+Versions now, yeah.
+
+Manjeet   19:47
+So that it's a little bit easier for us also then you does not have much compatibility and here and there issues because sometimes your underneath operating system has some performance challenges once you live it. So we always initially stick with all those cloud close to cloud as much as.
+As we can, so it makes our mobile life easier, yeah.
+
+   20:09
+Got it.
+Call.
+
+Speaker 1   20:11
+So when you're when you're recommending these new OSQS while moving to cloud for these Red Hat images, what's the migration strategy Manjeet?
+That's predominantly used do is there like a replication?
+Liftership sort of replication that happens that is being used for which Azure migrate also has its own replication IP block by block or it's like a clean install approach or there's something else. Can you maybe shed some light?
+
+Manjeet   20:41
+Yes, yes there there is always a mix and match type of users. So some clients they are OK to you can say create from the scratch because they want everything to be properly configured. They create their own new base images and then they will ask us to use those only base images they will configure.
+
+   20:42
+On that.
+
+Manjeet   21:01
+Multiple versions of base images and then you can use those. But for some of them they are, they are in hurry or they have their own challenges, right? So they prep for lift and shift. They they want us to go just as it is.
+
+   21:08
+Got it.
+
+Manjeet   21:18
+So then those are little bit. Sometimes we have some you can say compatibility issues. We feel it case between moving images between especially from your private registries require some reconfigurations, right? You have to do a lot of retagging.
+And some security scannings also you have to done on all those things. So yeah, so making sure your the the images you are moving, they are, they are OK and compatible. All of your kernels are OK and performing. So some platform requirement are some base requirements, some other things you have to do some little bit on.
+Those part, yeah, it is lift and shift is little little tricky. I can say little time consuming, little extra work. You have to do it if rather than if they are OK with just using the cloud or some other base images from your cloud directly and then it's very.
+Easy and then we it's it's easy to move that stuff.
+
+Speaker 1   22:20
+So in the latter approach, which is where the customer is OK with the image to pick up like a golden image from cloud and do like a clean install, redeploy everything from scratch, how does the carry over of some data or some files which are crucial for continu?
+
+Manjeet   22:30
+Yes.
+
+Speaker 1   22:37
+Purposes, how does the migration of these data and files migration and file migration happen from on Prem to cloud?
+What are the tools and techniques you're using to support this scenario?
+
+Manjeet   22:48
+So for this one, right, so mostly whatever they have because these already we discovered it on there and they have. So it's not directly you can go with the lift and shift from the scratch, right? So we will run one.
+
+   23:04
+Right.
+
+Manjeet   23:05
+You can say pre run I can say or one we can say sandbox run type of things we will do. So what we will does we will do one or two lift and shift so that we will get most of their details right when you did the lift and shift things then you will get catch all of the.
+The different things and then you have a more flexibility to check the things and to see what is configure on the cloud side once it is there. So we will do pre two or three you can say those type of.
+Lift and shift, but not from this service side, just for our purpose we will do it so that we have can catch all the things right. What are the special privileges, policies or what are the special things they have put it in those images. So we will capture all those and then.
+We will try to replicate in their new base images which they are creating so we so it is sometimes the clients they have very clear pictures of whatever they have it so you can easy to do it. But for some then you play different ways right? We run a few scripts we try to do.
+
+   24:03
+OK, OK.
+
+Manjeet   24:17
+Lift and shift for few and then capture it and then properly have scripts written for their ongoing feature based images.
+
+Speaker 1   24:28
+Got it, got it.
+Also in the Linux world Manjeet considering it's so diverse when it comes to the various enterprise, grade and open source distributions that are available out there.
+
+Manjeet   24:39
+Yes, yes, yes.
+
+Speaker 1   24:42
+The the situation or the scenario of specific distros which are deployed in someone's environment and the reaching end of life or end of support status quite real.
+Have you come across the scenario while you're executing migrations from on Prem to cloud?
+For customers and what's the usual approach that you or the customer has in terms of handling these this true servers?
+
+Manjeet   25:04
+Oh yeah. So when in the discovery phase we figure it out all of those different images, they're using it then that time we will recommend the customer. OK, so this is the scenarios these these are there. You can say life support things right LTM. So this is the date when you have to.
+You will lose all those ports. So can you migrate to this one? So we suggest them different options and we tell them OK this there is not much change in your cost. We will calculate all those things also and there's not much change you have to do from this side. So that is also another.
+You can say initiative which we does on the behalf of customer. If those things happens, we will right to you can say mitigate all those types of risk in the initial phase and give client the option different options so that they can.
+Migrate initially on those and set their mindsets based on that.
+
+   26:04
+Do you?
+
+Speaker 1   26:04
+Do you see value in cloud native migration tools such as Azure migrate if?
+
+Manjeet   26:09
+Yeah, yeah, these these tools are very helpful, no doubt, no doubt. They they they help us lot and they are cheaper and they are very work close to the cloud, right. Services, it's not your then from as a.
+Migration.
+Services provider, right? It's easy for us because you will get Azure support also anytime you can get that one and mostly it will work seamlessly most of the time unless very very difficult environment set up, you can say very private type of environment.
+It's very hard restrictions. Things are done there, especially when the government migrations are a little hard. Otherwise it's for clients. It's OK. Yeah, these tools helps a lot. No, no doubt they they are worth, I can say, and they are proof.
+
+   26:56
+Gordon.
+Gordon.
+Question.
+
+Manjeet   27:03
+Improving day by day, I can say when initially three years back we started, it's very hard to configure, replicate all those things. Things are moving improved very, I can say too much from migrations tool side especially.
+
+   27:05
+Better.
+
+Speaker 1   27:20
+Got it, got it.
+Switching gears a little bit here, Manjeet you spoke you touch based on how how your company is sort of working to provide containerization as an approach as part of the migration and modernization journey for customers.
+Quite a lot.
+So if you can sort of shed some light on how does the container based topology looks like for the custom those who have on premise state who have like what are the container run times?
+Which container orchestrator is the most popular? I suspect Kubernetes would be one of the answers, but and how does the architecture looks like? How are these?
+How are customers mostly?
+Orchestrating these in in their on Prem environment and in extension to that, what are what is the kind of approach that the customers what what is the migration strategy that the customers is looking forward to in terms of embracing containerizing?
+In cloud as well.
+
+Manjeet   28:15
+Yeah, so yeah, so before even touch base on that thing. So when when we do the Linux containerizations, right. So it's first thing is the image, right. Image management is very important because.
+There's always you need to make sure your base image is up to date. It scans for vulnerabilities, everything, any any surprises right in the environment. So all those things you are making sure your images base images up to date and there is a node dependent.
+Conflicts right between.
+Between the levels you are using and the new ones with the base image, anything is we have everything from their registries. There is no mismatch in their kernel versions. We will check all those things. We have scripts and everything when we are making sure that part. So those things are very important from first.
+On the container side and there.
+Storage, right? How you storage management, right? Especially with this containers because they are stateless. So how we will handle the stateful workloads either we will go with the it's a file storage, BLOB storage, what whatever you use. So you have to configure all those things also along with it. It's not just container. So now.
+The now the part comes how which strategy we will use. So we will always try to you can say go with either containerized or Kubernetes either ECS or you can say AKS, EKS or ECS. So those.
+Those environments we always try to, you can say.
+Give options to clients either if their workloads are simple and easy, they are. They are not very much you can say heavily used. We go with serverless containers also. So it's a serverless containers. You are containerized or with the Kubernetes orchestration.
+So all the big enterprises, their final thing is Kubernetes and it's it's not Kubernetes is the most. It's not easy to configure Kubernetes when.
+When you do everything from scratch, you have to set all your you can say customer bindings right to your custom, your server binding certificate installs, all your spinning and all those things happen. So but Kubernetes is our final goal and that will.
+
+   30:39
+Yeah.
+
+Manjeet   30:50
+I think there is still a lot of work we have to do from our side, not just from the migration side. Migration side, we discovered it. OK, these things you need it. OK, this images will be using will be replicated.
+With these containers, these are the base images, everything you configure it, but still with Kubernetes it's a lot of lot of effort. You have to do it from the routing perspective, networking perspective and then so much infrastructure as code you have to return just for those I think.
+That is.
+Little bit to work we have to do it there. That is still not a seamless way I can say going to Kubernetes.
+
+   31:35
+Business.
+
+Speaker 1   31:39
+What are the what are the top container run times that you you see?
+Being available when it comes to your on Prem estate that you're managing for your customers, I'm asking it so that we can ingrain that as an input as we sort of prioritize this for for container as a workload to be supported as end to end as part of.
+Our tooling strategy.
+
+Manjeet   32:04
+Yeah, so when it comes to, so you are asking about the base images, mostly whatever they believe.
+
+Speaker 1   32:10
+The runtimes basically container Docker cry.
+What are the the ones which which are most popular as per the customer base that you're managing?
+
+Manjeet   32:18
+OK, OK. So so yes, that's correct. So one is the open shift. Open shift is is is very popular. People always prefer yes through with the red hot open shift. That is very popular. That is the main orchestrations.
+
+   32:28
+Red Hat.
+
+Manjeet   32:34
+Because they're their support and they're their control, they they, they decrease the complexity. Otherwise you have to do a lot of things.
+
+Speaker 1   32:42
+Vendor support is there, yeah.
+
+Manjeet   32:44
+Yes, yes, the the yeah, the vendor support is very good. You can, they're expensive but they're it's worth to use it. So mostly people with their very high loads where the transactions are lot, you can say high traffic service loads, they always go with open shift, mostly Red Hot one.
+That is the main one we use and for others where the things are not that crucial, so they will go with the you can say Docker. Mostly Docker is 80% you can say other than Red Hat, it's all Docker.
+Everybody.
+
+Speaker 1   33:20
+These are standalone containers I suspect.
+
+Manjeet   33:22
+Yeah, yeah.
+
+Speaker 1   33:23
+Are these OK? OK with like with no orchestration controlling the spin up and spin like spinning up and down of?
+
+Manjeet   33:31
+Yeah, that is only through mostly open shift we used for that one orchestration.
+
+Speaker 1   33:35
+OK, OK. OK, got it.
+And in terms of the migration strategy, do you see for the Openshift ones which which are already orchestrated on Red Hat Openshift, Azure also has an equivalent?
+Service which is Red Hat Openshift managed by Azure is. Is that something that that you see as a value in terms of in terms of being recommending that as a Azure target over the vanilla AKS?
+Considering the the onboarding challenges you spoke about, whenever we are setting up AKS in cloud.
+
+Manjeet   34:11
+Yeah I think that is always the problem is the client always want a multi cloud right big enterprise especially so they they does not want to stick with 11 vendor. They said OK we want something can feature say one cloud right.
+AWGCP or Azure, one of them, some issue happens, right?
+Did that if something there there it's not working or then network issues, there is some challenges, some security breaches. If they have to switch to some other cloud, what is the easiest and farthest bit that is the risk from risk side and compliance side we have to be keep in mind. That's why people.
+Why to use? You can say everything from same cloud native things, even the Azure has their Red Hat things managed service, but still it's more like a independent thing. So if they go with the Red Hat open shift people mostly so then it's easy for them to do.
+Tomorrow, if they want to switch to AWS or GCP, things are very easier. They does not have to do much. You can say from the configuration side, they have to just export all the informations and then just to rerun it on those clouds. It's very easier.
+So that is why everyone preferred to be a little bit more independent, does not want to do a vendor locking, especially with this very orchestrations of your Kubernetes clusters, I can say.
+
+   35:34
+Got it.
+Got it.
+
+Speaker 1   35:50
+In the current state mandeet how exactly you or your team tend to identify the presence of container instances or container orchestrators in on Prem environment.
+What are the tools or techniques?
+Do you have your own scripts or is there any other?
+Vendor tool that you're using to identify whether a container exists in an on Prem server or not.
+
+Manjeet   36:10
+Yeah, so it is combination of that one. So one is our you can say scripts also run and the Red Hat has their own discovery tools also he Red Hat also provides. So we use those also so.
+Those are the main things because mostly mostly the containers, mostly on the on Prem side, mostly are Red Hat. Most of the time you can say and Red Hat is very good on that one and discovering it and even it discovers others containers even if you are using Sunbuntu or Alpine or some other.
+
+   36:25
+OK.
+
+Manjeet   36:45
+Images also it will it will able to locate those also but our scripts also done a good job. So because verification we have our scripts so we run those also. Only challenge is with the private container sometimes they have it in their private.
+
+   37:00
+Axis.
+
+Manjeet   37:01
+Yeah, access those issues. So that's why we always try to run from their administrator so that it's the scripts can run very easily because those guys, they have their full access on their user IDs.
+
+Speaker 1   37:17
+So these in these scripts that are scanning for container instances, what's the inventory metadata pertaining to containers that they are essentially looking for?
+If you can maybe help me with top few signals using which you that your scripts are trying to detect for to establish or answer the question that yes the server has these many contain container runtime and these may container instances or pods running on it. What are those?
+Input signals that these scripts are looking for.
+
+Manjeet   37:46
+Oh yeah, so these scripts are mostly you can say. OK, OK, what I can say from these scripts?
+OK, from these we are just looking for the base images. OK, how many pods are running? What is their scaling policies? What is there? You can say security. Any configuration from the security side? What are their certificates? Where it is located?
+And where those certificates are installed, right? So we will capture all that information from their containers and what are their storage, which storage they are linked, how much storage is assigned, the volume, all those things we will capture and.
+Apart from there what are the ingress rules right and egress rules for their network security that is very important also. So we we capture all those also for their you can say containers communication so that's later we have to configure same in the Kubernetes or in the or in the.
+Containers environment. So these are very these are few very important. Uh, you can see yes we do.
+
+   38:55
+Sorry.
+Important signals.
+Got it, got it.
+Sounds good.
+
+Speaker 1   39:03
+I think we we just have two minutes. So I'll in terms of the overall, the 45 minutes slot that we had, maybe I'll just like to conclude by asking you one Uber level question, Manjeet.
+Across the three key stages of migration, which is where customer firstly you or the you basically facilitate of you to discover what exists in the on premise state which is discovered. Then of course decide and plan.
+To estimate what is the cost benefits, what is the readiness state and then executing the migrations. Since you've used Azure migrate toolkit to migrate for your customers in the past any and you continue to use it as per the data that I got.
+Any top level feedback or enhancements that can be done across these three stages from the context of Linux and containers, specifically across these three stages that can be done that I can take as a meta level feedback from you.
+
+Manjeet   39:59
+Yeah, so from that thing, right, first thing is especially easy to run on their side, right? Because when you install the agents, everybody's scared. OK, this agent, some simple things we can just run and show on their side. OK, these are the containers and this is what we are looking and this.
+This is how it will migrate, just generate some type of prototype. I can say POCS for them which feels them confident. OK, there's not a risk or anything, it is just doing this thing. So some small type that type of POCS whether even touching anything on.
+Azure side we can just run small container and ask them this will run on your environment and it will do these type of things just script or something so that it's it's easy so that they feel confident. That is very challenging part always it took months to convince them.
+
+   40:51
+OK.
+Convince.
+
+Manjeet   40:58
+All those things. It's just very especially with with the big organization, they have so many questions they will ask here and there.
+
+   41:06
+Got it.
+
+Manjeet   41:06
+And other thing is, yeah, this old right, these legacy applications that they are there from, there's no documentation, nothing is there. So sometimes they have very private and tight coupling between those old unsupported I can say.
+Unsported software, so right. Unsported versions those those always is a challenge also. OK, so then.
+What supported you can say for you migrated you do you need to change any underneath of their applications codes also or if you migrate from this unsupported versions to the cloud right for this new?
+New you can say Linux versions or new window versions, will it work? So that is always a challenge compatibility of their unsupported versions. How which one we can recommend right?
+On the cloud side, so that there is a less compatibility issues will happen. I think that could be always very helpful.
+
+   42:15
+Got it, got it.
+
+Manjeet   42:16
+Um.
+Yeah.
+
+Speaker 1   42:19
+Anything else that you would want to share?
+
+Manjeet   42:21
+Yeah, cost is another thing. I think cost definitely we should have very much clear understanding on the cost cost side. Everybody first ask, OK, once we start migrating then you calculate the cost overall. OK, this is the cost it will. I think cost calculation should be easier and.
+Transparent because whenever we did initial migration in all the all the time initial cost which is generated the forecast it will give you less numbers what once they got the bill it's always higher so.
+
+Speaker 1   42:57
+OK. So you you you've used business case and assessments a product feature of visual migrate to estimate the cost benefits or are there any other tool toolkits that you've used to show the projections?
+
+Manjeet   42:58
+So.
+So we just use Azure because that then it's easy for us to write a configure and put all the other.
+
+Speaker 1   43:15
+Yeah. So what are the the TCO calculators you must be within Azure?
+You must be using a specific TCO calculator to show projections, right cost projections.
+
+Manjeet   43:27
+Yes. So this is Azure like from the EKS side, right from your services, from your compute. So, so we put mostly use those all calculators you can say. So there is not a specific things where.
+
+   43:27
+Would you?
+
+Speaker 1   43:38
+OK, OK. OK, got it.
+
+Manjeet   43:43
+Whatever the service is right from mostly in the compute side is very heavy. You can set database computes and networkings. So those are the few different calculators which we use to show them OK, this is the cost it will comes, but final bill is totally little bit different.
+
+Speaker 1   44:02
+So that that reduces the trust factor when it comes to the customers.
+
+Manjeet   44:05
+Yeah, yeah. Then then they will ask, OK, do this one is costing us too much. Then it's always then they hesitate to do the further future migrations. They will sometimes hold it. They want to do POCS on different cloud, so.
+
+   44:07
+Is.
+
+Manjeet   44:21
+That is, I think, is a big factor also.
+
+Speaker 1   44:24
+Got it, got it.
+
+Manjeet   44:25
+The cost should be a little transparent, yeah.
+
+Speaker 1   44:27
+Got it. Before I conclude last one thing Manjeet which I think we didn't capture and it'll be important for me to as as I curate the learnings from this conversation.
+Are you an independent solution cloud solution architect?
+Or you're working with an organization.
+
+Manjeet   44:42
+Yeah.
+
+Speaker 1   44:44
+Which provides these facility.
+
+Manjeet   44:45
+Yeah, yeah, we, yeah, yeah. This is organization. I work full time with one of the organization which which help their clients to do the migrations and all those.
+
+   44:51
+OK, OK.
+
+Speaker 1   44:55
+And the clients are predominantly from healthcare and financial sector or there are others as well which are part of this umbrella.
+
+Manjeet   45:04
+Our business unit mostly focus on financial and healthcare because they want a long term support and then they will have extra revenue things. So right that is our.
+
+Speaker 1   45:10
+Got it, got it.
+Security policies also, I suspect.
+
+Manjeet   45:19
+Uh, yes, yes. So that is all.
+
+   45:22
+Got it, got it.
+All right.
+
+Speaker 1   45:24
+I think I will be 4 minutes over.
+Sorry for going a little overboard manjeet.
+
+Manjeet   45:27
+No, that's fine.
+
+   45:28
+This was.
+
+Speaker 1   45:29
+This was quite useful.
+
+   45:32
+Thank you.
+
+Speaker 1   45:33
+Thank you for your time.
+It was a great conversation, all right.
+
+Manjeet   45:34
+Yeah, yeah. Thank you. Thanks. Have a good one. Bye.
+
+   45:38
+Bye bye.

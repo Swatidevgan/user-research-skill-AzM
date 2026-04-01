@@ -1,0 +1,704 @@
+Linux migration user study - Eugene-20260218_210109-Meeting Recording
+18 February 2026, 03:31pm
+42m 56s
+
+Swati Devgan started transcription
+
+Swati Devgan   0:04
+This conversation and then we can take it further from there. Eugene. So hi, I'm I'm Swati. I am basically a product manager with one of the products named Azure Migrate within Microsoft Azure. The product essentially I I was looking the nominations of the people who've.
+
+   0:18
+Mhm.
+
+Swati Devgan   0:23
+Who nominated them themselves for this research study and I saw your nomination as well. I I saw your input that you you've used this tool, so you must be Azure Migrate for your migration and modernization purposes. But I will just go ahead and give like a quick overview of what the product does.
+And how is it related to the research conversation we're doing today? So Azure Migrate essentially caters to the end to end customer journey of ensuring of moving your data center whether on Prem or on any other cloud to Azure.
+It predominantly consists of top three stages, which is which is a function of how customers also plan their migration and modernization. It consists of discover, plan and execute. Discover is essentially discovering your estate, what all servers, workloads, databases.
+And how does the network communication across these look like? That's the first pit stop giving an overview of what the topology of your on Prem environment is. The side is where we assess based on the discovered servers and and various workloads in your environment and give you an assessment report.
+An output which shows the readiness index of your topology and what would be the cost benefits of migrating to Azure to various targets as a function of varying R strategies, whether you're lifter shift versus replat versus refactor etc etc. And then of course the third and.
+The last stage is about migration executions where we have a bunch of tools at our disposal which help you to migrate to Azure. So keeping this context in mind, the purpose of this conversation Eugene today is I specifically look at understanding the landscape of migration and modernization.
+From the context of Linux, OS and containers, and that's where I would want to sort of focus on as part of this conversation today. The idea essentially is to understand how does the landscape for the environment.
+Deal with pertaining to migration and modernization specifically in the context of Linux. Looks like across the three stages I spoke about and if you manage an estate which has Windows OS as well, it will be great to learn from your experience on how the preferences, strategies and approaches to migration.
+Vary across Windows and Linux. That'll help us in sort of setting a context on how our product journeys should be holistic enough and should cater to the customers having both the OSS in their environment. With that, I'll just take a pause and maybe we would let you sort of shed a light on what.
+What your work looks like and how it is pertinent to the discussion I'm looking forward to.
+
+Eugene Kornevski   3:22
+Sure. So actually I've completed several migrations. So it's a, as you know, modernization, it's a more a journey and marathon, not a sprint.
+So in a current company and then the previous company where I worked with much larger set of data. So at some point it's always.
+
+Swati Devgan   3:39
+Yeah.
+
+Eugene Kornevski   3:53
+Uh, nice to see cost benefit, but uh by the end of the.
+It shows the, let's say, suggestion of the current state.
+
+Swati Devgan   4:07
+Right.
+
+Eugene Kornevski   4:08
+But it's hard to, um, predict.
+The uh, let's see from the perspective of the Uh.
+Future projects, how it's going to affect budget. So let's say if it's a older system and I have to, let's say lift and shift, that's one thing.
+
+Swati Devgan   4:29
+Hmm.
+
+Eugene Kornevski   4:34
+It's basically it's a no brainer, uh, to do it because it's um.
+It's a strategy what you cannot rebuild, but in majority of the cases.
+It's uh.
+For me personally we using Azure Migrate to analyze the cost benefit so and just to assess timeline how fast we can.
+
+Swati Devgan   4:59
+Right.
+
+Eugene Kornevski   5:09
+Do it. So there is a chance that we can do the quick rebuild of serverless app and not to migrate whole VM there so.
+
+Swati Devgan   5:22
+Got it, got it. So it's the assessments in the business case. I I understand are the artifacts that you must be using to sort of analyze the readiness, is that is that correct?
+
+Eugene Kornevski   5:23
+Uh, yeah.
+Yes, yes.
+
+Swati Devgan   5:36
+OK. So before that before assessments there is for for for you to assess your on premise state, maybe some clarifying questions before that. Where is your data center or IT state setup? Is it VMware or is it?
+
+Eugene Kornevski   5:54
+Yes, it's VMware. It's a so we're using a couple of things we're using if we're talking about on premise, we're talking about VMware and for production and open source hypervisors for.
+
+Swati Devgan   5:55
+Is it any other VMware OK?
+Got it. So got it. So for you to be able to use assessments in business case for pertaining to Azure migrate discovery is a mandatory step. So maybe if I if I could understand from your experience how?
+
+Eugene Kornevski   6:16
+Yes.
+
+Swati Devgan   6:33
+How it what kind of? There are a bunch of toolings within the discovery experience also that Azure Migrate provides. How does the strategy and the decision making towards using the discovery tools looks like specifically for your Linux workloads that are hosted on Prem?
+
+Eugene Kornevski   6:48
+So for the in general, it doesn't matter to me actually. Is it a Linux or Windows? The discovery goes in the from the initial assessment of the age of the.
+Uh uh.
+OS or Azure application. So then we using I'm using like outside of even Azure migrate. I'm using trying to use calculator to calculate and analyze how it's going.
+
+Swati Devgan   7:09
+Right.
+Mhm.
+
+Eugene Kornevski   7:27
+Going to be done right? And what's the cost prediction without error migrate stuff? Then we are looking at options to.
+Is it necessary to keep whole VM as I mentioned before, so when we assessing?
+Machine to migrate. So in majority of the cases we are looking at option to migrate database.
+
+Swati Devgan   7:55
+Sure.
+OK.
+
+Eugene Kornevski   8:07
+So what what's the what's the effort to migrate database and application separately to avoid additional costs? So I would say refactoring that the huge.
+
+Swati Devgan   8:20
+OK.
+
+Eugene Kornevski   8:24
+Factor for us in the whole migration journey.
+
+Swati Devgan   8:26
+Mm.
+Got it. So what is the preferred R strategy? We've spoken about lift and shift, which is more of a rehost. Refactor is something that you just mentioned and replat of course is another approach. Which one is it that you've seen being the most prominent one in terms of customer preference?
+
+Eugene Kornevski   8:39
+He.
+Refactoring only, yes, because it's a so lift and shift. Basically for me personally it's a in majority of the cases no go because of the.
+
+Swati Devgan   8:48
+Refactoring OK.
+
+Eugene Kornevski   9:01
+When you're doing lift and shift, you are taking all, let's call it garbage which is gathered over and over the years together with all errors.
+
+Swati Devgan   9:09
+Right.
+
+Eugene Kornevski   9:17
+To the cloud. So so this is basically garbage in, garbage out. So instead of doing all these, I prefer usually clean start. So regardless of the system migration, especially with the Linux.
+
+Swati Devgan   9:20
+Right.
+It's.
+Progress.
+
+Eugene Kornevski   9:36
+Clean start much easier and more, let's say, reliable in the long run.
+
+Swati Devgan   9:46
+Right.
+
+Eugene Kornevski   9:47
+So that's why I would say refactoring is my preferred method of doing stuff and analyzing how it can be done and what can be done and so on.
+OK.
+
+Swati Devgan   10:10
+Or web apps. So what are the prominent approaches that you take in terms of refactoring across the various workloads?
+
+Eugene Kornevski   10:10
+OK.
+OK.
+So let's say we are hosting some app and it's not so big of an app and we don't believe that we're going to grow with this app. So in this case we just use.
+Using simple app services with single let's say Docker container and trying to move the app there. So in the same time connect to some sort of Postgres in majority of the cases Postgres SQL Server.
+
+Swati Devgan   10:58
+Equals.
+
+Eugene Kornevski   10:58
+Sure, yes. And so that's the in case we have to move something like not heavy loaded. Why? Because it's easiest way and the cheapest way, so.
+
+Swati Devgan   11:09
+Right.
+
+Eugene Kornevski   11:15
+If we're talking about some website hosting, so depends on the client requirements because Azure are not providing static apps for everyone for every location and I'm located in Canada, so.
+If we're talking about data residency, so in static requirements not mandatory, sorry, data residency not mandatory, I'm choosing static apps and distributing the load between several locations.
+
+Swati Devgan   11:35
+Mm.
+
+Eugene Kornevski   11:53
+To avoid any interruption in case of, let's say not put all eggs in one basket. So then then we have more serious applications which let's say.
+
+Swati Devgan   12:00
+Right.
+
+Eugene Kornevski   12:10
+Growth of those application workload wise or predictable or less predictable was option to burst and in the end couple of let's say months or quarters. So in that case.
+Kubernetes helps, but it takes much longer process and much longer time span because of the configuration of Kubernetes Services and make it maybe sometimes refactoring of the service itself.
+It supports like Kubernetes. So this all depends on the app itself because otherwise we won't be able to do it right and customer requirements, data residency highly important for us for.
+Services.
+
+Swati Devgan   13:09
+Right, right. So just understanding the penetration and relevance of Azure Migrate as a solution for you when it comes to refactoring, our product provides end to end recommendations on Azure targets that would require those refactoring efforts which boil down to making code level.
+
+Eugene Kornevski   13:28
+Mm.
+
+Swati Devgan   13:29
+Changes to your current architecture. So but but so but I'm interested in yeah.
+
+Eugene Kornevski   13:37
+So I would say yeah, I would say it's not all the time accurate because it's specific app requires specific, let's say allow and attention to details so.
+
+Swati Devgan   13:42
+OK.
+OK.
+
+Eugene Kornevski   13:55
+So from my experience recommendations I would say maybe 70 to 80% accurate but because I work I cannot do it all by myself. I have team who is doing it so depends on the if it's a refactoring.
+
+Swati Devgan   14:11
+Right.
+
+Eugene Kornevski   14:15
+And I have to migrate something heavy. I need to 1st analyze what's the effort from the team size. So do I have engineer ready to jump in or I need to delay this migration because of this?
+Stuff. So it's all about specific use keys for the app. That's why from my experience and same feedback I'm getting from my team that it.
+The tool itself provides almost accurate information and what networking changes and app changes we need to make, but it's still not there to to give us, let's say.
+
+Swati Devgan   14:57
+God.
+
+Eugene Kornevski   15:09
+Sort of full lift and shift approach, OK.
+
+Swati Devgan   15:13
+Got it, got understood. I think this has been helpful. Just just switching a little bit of gears here, Eugene, to amplify my understanding, coming back to the Linux landscape thing where?
+Fundamentally speaking, out of all, out of many other ways in which Linux OS is different from Windows, one of the things that that is differing is the fact that there are so many distributions, so many distros out there that exist, both enterprise grade and open source.
+
+Eugene Kornevski   15:45
+Mhm.
+
+Swati Devgan   15:46
+Um. Owing to that? Um.
+Typically what we've seen a large or medium to large enterprise usually dabbles with more than one distro, REL, Ubuntu, CentOS. All these are fairly famous when it comes to building your infrastructure in the context of the OS images. So we would just love to understand how your estate.
+
+Eugene Kornevski   16:02
+Mm.
+Mm-hmm.
+
+Swati Devgan   16:10
+How your data center is sort of structured and if heterogeneity is something in terms of the OS images, it is applicable to your environment as well. How do you and your team handle a situation where these distros every now and then they're reaching, they're turning outdated end of life.
+End of support. What? What is the approach towards handling these scenarios?
+
+Eugene Kornevski   16:34
+Still, um.
+You see, each professional who's coming to any organization has different favorites, let's say like this. So when I joined so.
+
+Swati Devgan   16:48
+Right.
+
+Eugene Kornevski   16:54
+In my previous company when we had like maybe 10 or 15,000 Linux workload servers, it was like complete zoo of varieties of because.
+Turnover unavoidable in the companies and each person who came in trying to make it standard approach. But unfortunately before migration completed to new OS level person leaves in majority of the case.
+Because it depends on the workload itself. So as of now we have three main distros in in the company. We're using Ubuntu as a primary.
+
+Swati Devgan   17:34
+Mm.
+
+Eugene Kornevski   17:46
+For workload because it's highly popular, just based on popularity, right? So we have also still this is the projects what we are hoping to complete by the end of year to make.
+The cloud we're using Unix which is a little bit from IBM, so it's AIX operating system. So we're trying to figure it out how to properly and this is the production database, so we're trying to figure it out.
+
+Swati Devgan   18:11
+OK.
+Mm-hmm.
+
+Eugene Kornevski   18:26
+About how to migrate it with no minimum downtime and keep all functionalities. And so I I believe we don't have CentOS anymore because it was migrated to Ubuntu.
+
+Swati Devgan   18:41
+Hmm.
+
+Eugene Kornevski   18:46
+But we are still thinking to go to Red Hat and acquire Red Hat support for our workload. So we are thinking to to to move this.
+
+Swati Devgan   19:00
+But.
+
+Eugene Kornevski   19:04
+EIX to Red Hat because it's it's it provides the support from the vendor side, yes.
+
+Swati Devgan   19:12
+Vendor. Yeah, got it. Just double clicking on. You mentioned that back in the day when there was some CentOS based Deluxe fleet that existed and then you guys moved it to Ubuntu. What were the what was the methodology that you guys used to move it to Ubuntu? Was it like an upgrade and in?
+
+Eugene Kornevski   19:24
+Mhm.
+
+Swati Devgan   19:32
+In in the process of sort of upgrading or moving to Ubuntu, how did you guys carry for carry over the the much needed configuration in the form of required data disks let's say or the required files? What was the process like?
+
+Eugene Kornevski   19:48
+So Linux is Linux, so um.
+
+Swati Devgan   19:52
+Right.
+
+Eugene Kornevski   19:55
+By the end of the day, we just rebuild it from CentOS to Ubuntu and moved one by one, step by step with project plan. So it's nothing special, it's just regular migration process like for everyone else.
+
+Swati Devgan   20:00
+Party.
+
+Eugene Kornevski   20:13
+I don't believe that I can provide you here more than more examples for how to how to get rid of outdated OSS. So it's just regular migration workloads. You are migrating databases, recreating the code especially in.
+Now it's much easier because AI helps an advisor so.
+
+Swati Devgan   20:37
+Of course, yeah, yeah, got it. Hypothetically speaking, if let's say you're as of today, you're you've you've plans to migrate your estate from on Prem VMware estate to any of the clouds.
+
+Eugene Kornevski   20:53
+Mhm.
+
+Swati Devgan   20:53
+And you come across a decent amount of fleet across whichever OS which is which is turning outdated pretty soon. Would you prefer the migration tool to have that capability supported as part where the where the tool itself takes care of the upgrades or would you prefer doing it in house in your own?
+
+Eugene Kornevski   20:58
+Mhm.
+Yes.
+
+Swati Devgan   21:13
+Organization with your own expertise.
+
+Eugene Kornevski   21:13
+So it depends on the amount of resources I have from the professional side. So it's it's a man hours workload. So if I have enough resources I would prefer to do it by myself but.
+
+Swati Devgan   21:20
+OK.
+Right.
+
+Eugene Kornevski   21:33
+Believe nowadays each company trying to save money on everything and what I see that lots of lots of times we just it's easier and quicker to to do the migration in automated way.
+
+Swati Devgan   21:38
+Yeah.
+
+Eugene Kornevski   21:52
+So the way how I would do it, if the tool provides me options to migrate it, I would definitely use it, at least try to use it. So at least I'm going to try to use it to test machines and migrate this machine 1st and then after.
+
+Swati Devgan   22:05
+OK.
+
+Eugene Kornevski   22:12
+This machine, let's say a sandbox. Not not that there, but more like a sandbox running stable for, I don't know, maybe two weeks a month. Then I would try to use it.
+To to the production, because, yeah.
+
+Swati Devgan   22:31
+Right, got it, got it. I think that that helps me in developing clarity around this particular area. Eugene, switching gears and moving to the shifting left in terms of the customer journey, which is where the customer starts by discovering their estate, right?
+Talking from your experience, when a tool like Azure Migrate or any other equivalent tool has to start the journey of discovering and scanning the existing on premise estate, it seeks some level of access to the on premise environment in the form of.
+
+Eugene Kornevski   23:08
+Mm-hmm.
+
+Swati Devgan   23:09
+In the form of a little bit of line of sight and in order to develop that line of sight, you need certain authentication, certain permissions. Just want to understand how based on your experience, what level of.
+
+Eugene Kornevski   23:14
+Mhm.
+
+Swati Devgan   23:25
+You know a flexibility your organization has in terms of providing those user permissions, those authentications and across and just adding another question to that across Windows and Linux does the.
+Provisioning of the this access in the form of authentication. Like what? What type of authentication mechanisms are suitable across Linux versus Windows? If you can maybe shed some light on that.
+
+Eugene Kornevski   23:54
+So um.
+Let's say like this.
+Uh.
+It's all depends on the tool. If we're talking about Microsoft, Microsoft I would trust more than any other company which provides services because so it's based on reputation. So I would.
+
+Swati Devgan   24:06
+Right.
+OK.
+
+Eugene Kornevski   24:22
+Freely give permission to tap into my systems. Let's say not freely, but most likely to give permission to tap into my infrastructure from Microsoft to.
+Then from let's say third party tool which is doesn't have as big name as Microsoft and this is just because of the trust what?
+
+Swati Devgan   24:43
+Oh.
+
+Eugene Kornevski   24:53
+Else might happen in future. So if we still talking about migration and we start the process of migration as as of now, I can freely give access to the.
+
+Swati Devgan   24:59
+1.
+
+Eugene Kornevski   25:11
+VMware, it's not a big deal. If we're talking about workload, we have role based access on the user level to get to get to the servers, to get to the set of application servers, so.
+
+Swati Devgan   25:14
+Hmm.
+No, no.
+
+Eugene Kornevski   25:31
+If we're talking about granular access to the servers, let's say Azure Migrate wants to have access to some servers. What I know that I'm definitely going to migrate.
+It's just role based access. I can create one more role which is going to be enabled for one particular server and it doesn't matter actually is it a Windows or Linux because it's all group based access. So I'm going to give permission to access.
+
+Swati Devgan   26:00
+Mm.
+
+Eugene Kornevski   26:07
+To the troll, not to the account, but to the role for set of the servers. And yes, in this way I'm more comfortable because if I'm migrating, let's say some application which contain.
+
+Swati Devgan   26:19
+OK.
+
+Eugene Kornevski   26:23
+Let's say 5 servers. So then I have to just assign role to the the servers in VMware to oversee the.
+
+Swati Devgan   26:27
+No.
+
+Eugene Kornevski   26:39
+Let's say VM status, networking and all other stuff. That's much easier for me to to trust this tool than just to give broad access to full infrastructure.
+
+Swati Devgan   26:44
+Right.
+
+Eugene Kornevski   26:54
+I can give full access to infrastructure from the OR set of VMS. I mean VMware clusters to like limited access. That's nowadays. It's not a big deal, but from the point of view.
+
+Swati Devgan   27:07
+Oh.
+
+Eugene Kornevski   27:12
+Of the trust, like I mentioned, companies like Microsoft, I would trust much more with the tool than companies, third party companies which.
+
+Swati Devgan   27:14
+Oh.
+
+Eugene Kornevski   27:27
+Less known.
+
+Swati Devgan   27:29
+Got it, got it, understood. And between and in terms of the authentication mechanisms, some of the most famous ones that that are out there, SSH key based cert or a plain username password, any preferences that your organization?
+
+Eugene Kornevski   27:44
+SSH, SSH, yeah, just SSH. So it's a more secure, more controllable. So not plain username and password. No, not no.
+
+Swati Devgan   27:46
+SSH OK, got it.
+Go.
+
+Eugene Kornevski   27:59
+Just now.
+
+Swati Devgan   27:59
+Got it. Understood. Yeah, makes sense. Yeah. Another thing that I wanted to understand, Eugene, do you have your current setup in terms of your infrastructure and IT state? Is it, is it a multi cloud strategy or you're just sticking to Azure for now?
+
+Eugene Kornevski   28:19
+So uh.
+We have some services in AWS, but it's a limited scope. Our primary cloud, it's Azure because we have. So I'm trying to build like 1 ecosystem and we're using.
+
+Swati Devgan   28:37
+OK.
+
+Eugene Kornevski   28:41
+M365 we're using cloud desktops for some contractors and we're using also Intune for autopilot stuff, so.
+I would prefer to keep it majority of the stuff in one place and as of now this one place is Azure if we're talking about public cloud.
+
+Swati Devgan   29:00
+Got it.
+Got it, got it. Yeah, I think my next logical question would have been to understand if the tooling preferences vary when you migrate to a print cloud versus Azure, but since it is predominantly Azure, so I I think Azure migrates to stuff, yeah.
+
+Eugene Kornevski   29:23
+So yeah, that's Azure migrate. That's because we are migrating the cloud to Azure, so we.
+
+Swati Devgan   29:31
+That makes more sense. Yeah, got it, got it. Eugene, have you, do you guys have containerization as an approach to sort of containerize your web apps or other instances in on Prem and is the is, is that something that's that's a growing approach for you?
+
+Eugene Kornevski   29:32
+Yeah.
+
+Swati Devgan   29:50
+As you migrate and modernize your data center in VMware to cloud as well, is that a preference?
+
+Eugene Kornevski   29:57
+So we're not using containers in VMware as of now because some part of infrastructure legacy and some part of the company was like so.
+
+Swati Devgan   30:01
+OK.
+OK.
+
+Eugene Kornevski   30:16
+Um, on the on premises we using. We're not using containers on premises.
+
+Swati Devgan   30:16
+OK.
+OK, got it. But as you're moving to Azure, is that something an approach OK?
+
+Eugene Kornevski   30:24
+Yeah.
+Of course, yes, we are doing, we are doing this that point of refactoring, right. So it depends on cost benefits what it could provide and complexity of the.
+
+Swati Devgan   30:38
+Thanks.
+
+Eugene Kornevski   30:46
+Additional configurations what we have to do we depends on the workload.
+
+Swati Devgan   30:50
+Right.
+Got it.
+All right. So maybe talking about the third stage, which we've already touched base, but one specific aspect where I wanted to learn a little bit more. When you embark on the journey of actually executing migrations that is taking your taking your stage from on Prem to cloud, we spoke about a few R strategies.
+But specifically in terms of infrastructure provisioning within cloud, within Azure, is IAC infrastructure as a code, a strategy that you use to sort of deploy, set up your landing zones? What are the tools that you you mostly use to sort of conduct the the infrastructure provisioning?
+
+Eugene Kornevski   31:19
+Hmm.
+Of course, of course.
+So we're using VS code in Terraform. So we using Terraform obviously GitHub. We're not so for repositories.
+
+Swati Devgan   31:37
+OK.
+OK.
+Mhm.
+
+Eugene Kornevski   31:51
+So because it's reliable, because it's you are building once and you have source code of your infrastructure and you you can rebuild it in case of failure and.
+
+Swati Devgan   31:52
+Um.
+
+Eugene Kornevski   32:08
+Yeah, something like that. So yes, that the tools what we're using.
+
+Swati Devgan   32:11
+Cool.
+Got it, got it. Um and.
+Do you think specifically, do you have any feedback or any gaps that Azure Migrate can fill in provisioning these artifacts? Because as based on our knowledge, what we've seen in terms of customer trends across the three journey points I spoke about, right, execution is the biggest like that's where.
+Where the sort of real complexity or time that's the most time consuming. So considering specifically for Linux, I see as an approach for infrastructure provisioning because of the redeploy mechanism is quite popular. Do you think Azure Migrate can do better?
+Any aspect over there? Any feedback specifically?
+
+Eugene Kornevski   32:59
+So I wouldn't say that execution is an issue for me personally. For me personally, if you do proper planning, execution is not a execution takes not so much time. So when?
+
+Swati Devgan   33:05
+OK.
+Yeah.
+
+Eugene Kornevski   33:19
+Planning done correctly in in any place where it could be and lots of time spent on discovery and of all services execution itself is not.
+
+Swati Devgan   33:22
+Right.
+OK.
+
+Eugene Kornevski   33:35
+Big portion of the migration execution. So I I would say that as I mentioned before about migration process and use of the tool. So when we analyzing the.
+
+Swati Devgan   33:39
+OK.
+Oh.
+
+Eugene Kornevski   33:54
+Workload and how it's good for analyzing the workload.
+
+Swati Devgan   34:01
+Got.
+
+Eugene Kornevski   34:02
+But for my creation and recommendation for the changes, that's where improvement might be helpful.
+
+Swati Devgan   34:10
+Got it. That's interesting. I mean that's that's a very interesting perspective. If you can talk a little bit more on maybe then the the kind of recommendation artifacts that Azure Migrate has provisioned in the form of business case and assessments, what are the other input parameters that we can look at?
+
+Eugene Kornevski   34:25
+So.
+
+Swati Devgan   34:28
+To refine that.
+
+Eugene Kornevski   34:30
+So I cannot tell you. I cannot give you exact examples right now because but so.
+
+Swati Devgan   34:33
+Sure, sure.
+
+Eugene Kornevski   34:42
+It's.
+It's too broad to. So we're talking about some particular specific set of rules which are within the code. Let's say it's a sometimes it's a hard hard coded even passwords within the tool.
+
+Swati Devgan   35:01
+Mm.
+
+Eugene Kornevski   35:03
+Within the app, sometimes it's a undiscovered API which must be changed, so it's not about.
+
+Swati Devgan   35:04
+Right.
+
+Eugene Kornevski   35:17
+It's I don't know how you can improve tool.
+That it will will be perfect. That's the problem. I know that some improvements can be done, but.
+
+Swati Devgan   35:28
+I think.
+
+Eugene Kornevski   35:33
+Each environment different and not everyone follows the. I would say no one follows the standard procedures because it's a human factor and maybe in future when everyone will use.
+As a code, when application would be highly readable and understandable for let's say AI point of view, maybe then it would be standard and everyone can use it. As of now it's just we're still dealing.
+
+Swati Devgan   35:53
+Mm.
+
+Eugene Kornevski   36:10
+And with bunch of legacy infrastructures everywhere. So when we're talking about legacy infrastructure, modern tools cannot fully unlock possibilities to and see what's.
+What 5-10 years ago admin wanted to do within this code. So it's just too hard to to to do it because same like infrastructure is a code. It's right now it's highly popular and.
+
+Swati Devgan   36:40
+OK.
+
+Eugene Kornevski   36:48
+Everyone using it but.
+People who are using infrastructure as a code, they are building stuff already in the cloud in migrations itself. We are migrating majority of the stuff, legacy stuff. So it's it's why to way too broad.
+
+Swati Devgan   36:58
+Hmm.
+Right.
+
+Eugene Kornevski   37:11
+Discovery options must be implemented to improve this tooling. That's my opinion about this, so unfortunately this is it.
+
+Swati Devgan   37:17
+Got it.
+Got it, got it. And similar on I think what you rightly said, I mean it, it makes sense. It's not like one-size-fits-all approach that we can take when it comes to planning for migrations because every state is different, every, every on premise environment and every, every.
+Customer has different priorities also in terms of migrating, yeah. So maybe slightly just rewinding and with that I'll be aiming to sort of conclude the conversation as well, rewinding it to the discovery phase where you have to discover and scan for the inventory that exists in your.
+
+Eugene Kornevski   37:45
+Exactly.
+
+Swati Devgan   38:01
+Environment you've you've used Azure Migrate tooling to discover your state if you have to give like let's say.
+Two to three inputs in terms of enhancing the experience over there, reducing your time, making you more productive in terms of discovering your estate to to embark your migration journey. Anything that you would like to share on the first stage, yeah.
+
+Eugene Kornevski   38:23
+So.
+To be honest, I don't have any. Uh.
+I I never had bad experience. So because I'm the the reason of this is because I'm technical person, I work in this environment like for the last, I don't know maybe 15 years it was on premise and.
+
+Swati Devgan   38:34
+OK.
+
+Eugene Kornevski   38:47
+Uh, cloud stuff and the rest of the uh things I I've seen how the tooling the tools were um.
+How how it was involve evolve and it was like as of now I'm using my own approach for this and let's say like this it works so my.
+
+Swati Devgan   39:01
+Right.
+
+Eugene Kornevski   39:14
+You can add lots of feature there, but is it necessary?
+Obviously if you're going to add AI option to analyze to the Azure migrate, it would be much efficient to from perspective, but I believe you have to then rename the tool and disclose it.
+Deeply AI analysis works on on your. So the only thing would would help truly help it's a deep implementation of AI to the tool. In this way you AI can do.
+
+Swati Devgan   39:44
+Right.
+
+Eugene Kornevski   39:58
+We know all that AI do better job than humans, so.
+Yeah.
+Mhm.
+
+Swati Devgan   40:23
+People and the experience interface should also not be so much portal driven. It should be conversational where you can use the power of NLP to do at least basic stuff which requires a lot of.
+
+Eugene Kornevski   40:32
+You see, unfortunately this might little bit comment about this. When you aren't doing everything conversational, personally I feel like I'm losing control.
+
+Swati Devgan   40:40
+Right.
+Yeah.
+
+Eugene Kornevski   40:51
+So here needs to be careful consideration about how much conversation and how much because I still from from IT perspective, from IT like technical perspective, I still want to have control on the.
+What's the tool doing so?
+I would like to say that.
+Implementing full chat chat approach wouldn't be. I would I wouldn't trust full chat approach from my user experience.
+
+Swati Devgan   41:24
+Yeah.
+
+Eugene Kornevski   41:33
+I would from my perspective it would be better to make it less chat dependent. Chat options should be maybe some.
+
+Swati Devgan   41:34
+And.
+Um.
+
+Eugene Kornevski   41:49
+To provide some feedback or specific configurations, but not to not to full chat experience because full chat experience it means from IT perspective that.
+
+Swati Devgan   41:56
+Right.
+
+Eugene Kornevski   42:05
+AI in full control, so that's my opinion about it.
+
+Swati Devgan   42:10
+Of course, yeah. I mean, there got to be, there shouldn't be. We need to strike that balance as you, as you rightly pointed out. And the human approval system should always exist. No action should be taken without that approval.
+
+Eugene Kornevski   42:16
+Yes, it's.
+Yes.
+Exactly.
+
+Swati Devgan   42:28
+System in place. Fair. I think we will at the top of the hour as well and I think the conversation has been fairly useful. Eugene, thank you so much. Thanks for your time. I was, I think I was able to develop clarity and learning across the areas I was looking forward to.
+
+Eugene Kornevski   42:40
+Thank you for right.
+
+Swati Devgan   42:46
+Alright, thanks. Thanks again and have a good day ahead.
+Thank you.
+
+Swati Devgan stopped transcription

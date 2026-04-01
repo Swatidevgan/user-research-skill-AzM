@@ -1,0 +1,472 @@
+Linux migration user study - Francesco-20260219_120348-Meeting Recording
+19 February 2026, 06:33am
+44m 5s
+
+Swati Devgan started transcription
+
+   0:14
+Is connected to the same user search study that we plan to conduct as part of this conversation.
+So I am Swati and I'm a product manager with Azure migrate which is one of the Azure native tools too that helps to sort of migrate and modernise your IT state from on premise like VMware or from other clouds as well hyper V.
+
+Francesco Avella   0:30
+Yeah.
+
+   0:38
+Most of the large hypervisors are supported as part of this journey. When it comes to the source environment.
+Quickly talking about the three broad, broad stroke.
+Phases.
+Of the journey that Azure migrate supports, it starts with discovery. It helps you sort of scan what all inventory exists in your environment in the form of servers, databases, web apps. Container containers is not that not yet there, but most of the workloads that are there in your environment.
+
+Francesco Avella   0:59
+Mhm.
+
+   1:07
+Post that there's a plan and decide phase which which is grounded on this inventory that we've discovered, which is what which is based on most of the inputs that are there in like your compute your storage parameters and whatnot basis which we we develop assessment reports which helps you to take the the decision making on.
+
+Francesco Avella   1:13
+Okay.
+
+   1:28
+In this aspect, and the cost aspect of cost savings aspect of moving to cloud and 3rd and the last stage of course is the actual migration execution, which is where the various R strategies right from left and shift that is the RE host scenario then re plat re re factor and everything comes into picture.
+So that's that's a quick overview of the product. I suspect you would know a little bit already either in the context of Azure or migrate or in the context of competitive products, which is what we'll delve into as we discuss.
+
+Francesco Avella   1:56
+OK, not.
+
+   1:59
+Talking quickly about this.
+
+Francesco Avella   2:00
+Okay, okay, okay, great. Good. Yeah.
+
+   2:02
+Yeah, yeah. So talking quickly about the scope of the conversation today. I, as part of my role as a product manager, focus largely on Linux OS migrations and container as a workload, specifically in the scope of migrations from on Prem to cloud.
+And we are running this research study to understand what are the various pain points that customers come across or gaps that exist in our tooling that can sort of focus on enhancing the experience specifically for Linux and containers in the context of migration.
+So that that's gonna be the large the meta level context of the conversation for the next 40 minutes.
+
+Francesco Avella   2:41
+Mhm.
+
+   2:42
+I'll take a pause over to you. Maybe you can quickly help me understand your role and how you know we can sort of tailor the conversation today in the context of how the areas that I'm trying to learn from as part of this conversation.
+
+Francesco Avella   2:58
+Okay. Okay.
+Yeah.
+
+   3:04
+So maybe you can help me understand how your work has been related to the migration and modernization scenario and then?
+
+Francesco Avella   3:12
+Yeah, yeah, sure, sure, sure, sure, sure. So, thank you for this opportunity. First of all, I'm the senior lead infrastructure tech lead for the company currently. I have my hands on the infrastructure, on the ML, on the AI application.
+on the deployment also. So I have experienced migrating a lot of environment from the on-prem to the cloud platform. In particular, I worked a lot with AWS and also with Azure platform. So usually during the migration,
+Okay, we follow this approach, okay? We start with a discovery phase. During this phase, we discover all the workload, okay, that could be migrated to the new cloud platform. Usually during this phase, when we migrate to Azure, we use Azure Migrate.
+OK, this is very useful during the initial phase, where you...
+Need to, for example, discovery or analyse the on-prem environment, and and you are interested also to the cost estimation. OK, to a first cross cost estimation. OK, so this phase for me is fundamental because if you plan.
+carefully the assessment, the first phase, the discovery phase, okay. I think that you can avoid surprising, a surprise during the deployment phase in terms of cost, I mean, okay. After this phase, obviously, obviously, I'm going to.
+A Windows machine, Linux machine, container, also, so I have a lot of experience doing these kind of activities.
+The second phase is the migration. OK, is the core is the heart of.
+The immigration.
+We migrate the VM from to the cloud, and if it is needed, we proceed with the rollback plan. Hopefully, hopefully now, but in any cases, we proceed with a rollback plan if we know that any aspects or any dependencies. I will give you any depth about the dependencies.
+Doesn't work, doesn't work, sorry, doesn't work properly. OK.
+So, to migrate the workload, we use we use another tool that is Azure Migrate, but here we use another different interface. OK, the tool is the same, the same tool that we use for the assessment is used for the migration. OK, so...
+The migration, yeah, but before to approach the migration, we design, okay, we plan carefully all the migration waves. What does it mean? It means that we have a list of machine after the scan, okay, and this list contains also the dependencies between machine.
+OK, and also the nature of the workload. OK, in other words, we assign for every machine, OK, before to the migration, we assign a tag. OK, this tag indicate if the machine contain a workload, a critical workload, or a medium workload, or a no critical workload.
+Okay, so we use tag, okay, to understand how a workload is critical for the customer environment. Okay, this is the first information for me, which is very important because this impact on the migration wave also makes sense. Okay.
+And another, another aspect that we...
+that we understand after the assessment phase is related to the dependencies. OK, in other words, imagine that you have a cluster composed by 10 VMs, 10 machine. OK, obviously this machine will be migrated in during the same way. You can't migrate 5 machine in a way and the other five during another way. It's making the sense.
+It is very risky in terms of stability of the cluster with a high probability your cluster doesn't work after if you try to divide the migration in different ways, OK, because you need to establish different VPN and point and blah blah, OK, this is this is another another long long story, OK, so.
+The tag, the tag, the dependencies, or if you have a machine, okay, simple, yeah, okay, and this machine use a SQL database, okay? Obviously, you will migrate all these two objects in one shot on Azure or on the cloud platform, okay? This is in this stage.
+Isn't isn't important the target cloud platform, because the approach is the same. Usually, we use we use the CAF framework. OK, that framework, yeah. CFP stands for Cloud Adoption Framework.
+
+   8:44
+Architecture Clara. Architecture framework. Yeah, yeah.
+
+Francesco Avella   8:45
+Yeah.
+Yeah, yeah, cloud architecture framework, yeah, architecture, no adoption architecture, okay, yeah, I use the acronym, I don't remember the X on this form, yeah, but it's correct, and yeah, we use this framework because it is very helpful for all the cloud platforms, because it suggests us very interesting guidelines for the migration.
+
+   8:50
+Yeah.
+
+Francesco Avella   9:09
+OK, I learned a lot from this framework during this year, honestly, so...
+So, after the first phase of discovery and the assessment, at the end of the assessment, we produce a sort of document that contains all the information that I already mentioned and contains also an important part related to the network, right? Because before
+To start with the migration of the workload, Windows, Linux, or containers, it isn't important at this stage. OK, we plan carefully the network, OK, on the cloud. So, in other words, we proceed with the cloud foundation. For me, the cloud foundation.
+is the process during which we plan carefully the environment. For example, we decide how many tenants we will have in our environment. We plan carefully the network, defining the number of the PC, the number of subnet, how this connexion will work. For example, a very interesting scenario. I don't know if you are interested.
+on it, but I can give you a lot of details. Yeah, okay, yeah, yeah. Feel free to stop, okay, because I have a lot to, the story is very long, okay? I have a lot of things to tell. An interesting scenario is an average scenario, okay? I work a lot with this kind of scenario, especially for the customer.
+That manage sensitive information, like PII or PHI, bank insurance, for example, and in enabled scenario, we maintain a part a portion of any on the on-prem environment, OK, and we migrate another portion on cloud platform, OK, so...
+Your machine, your workload, generally speaking, leaves on two words, the on-prem world and the...
+Cloud world, okay? And in order to maintain an efficient environment, in order to maintain a good communication between these two worlds, we use in Azure, Azure Hark. Probably you already know this tool. Yeah, it's one of them.
+most important, the most famous tool in Azure, and if you work with cloud migration, I'm sure that you know it. Yeah, Azure Arc can give you the possibility in a nutshell to maintain, to speak with your machine that are deployed on your brand. For example, if you want
+
+   11:39
+Of course.
+
+Francesco Avella   11:52
+To upgrade or to patch an Opera machine, you can do it simply using Azure Arc console. It is a very powerful tool, or we use a lot Azure Arc, but I've given to you a lot of details about this because it is another.
+
+   12:10
+I I I do have. I'm. I'm sorry to interject, but I do have a very specific question. I want to learn a little bit more on the on the strategic motivations of adopting arc. Francisco, if you can shed some light on that in the sense.
+That.
+Arc is.
+More.
+More of a bridge, right? It's it's a middle point.
+You're not moving your entire thing to cloud, you just make sort of installing an arc agent and still maintaining your infrastructure in on Prem. I understand the merit that that's there.
+But what are the business strategy drivers maybe at the top level coming from the leadership that that help you to come at this, this decision of not migrating fully but adopting ARC is, is there any?
+What are the decisions that are influencing this outcome? If you could maybe shed some light on that.
+
+Francesco Avella   12:59
+Yeah, yeah, yeah, yeah, okay, good. It's good. The question is clear. So the answer is very simple, okay, because when you work with customer that no trust to expose or to move their data on cloud platform,
+This is again, is true in particular when you work with the bank, for example, okay? Because they manage a lot of sensitive data, okay? So identity company are not very happy to move their data on cloud, so they prefer to maintain the server that stored there.
+
+   13:18
+OK.
+
+Francesco Avella   13:37
+sensitive data on-prem and obviously if you need to work with the hybrid infra you need to you must use Arc. It works well. It has a lot of limitation from a point of view, a lot of limitation, but at the end I think that
+It is a good tool, OK? It do its work with a lot of limitation, OK? For example, recently I used Azure Hark to manage the ESU licences on Windows machine. The ESU licences are the extended supported licenses, OK?
+And I upgrade a lot of licences for the on-prem machine, and I enter a lot of issues during this procedure, a lot, a lot, but again.
+
+   14:23
+Was this for Windows? Was this for Windows OS or did it include some Linux OSS also for which you were upgrading to the extended support licences?
+
+Francesco Avella   14:32
+No, no, no, this kind of licences work only for Windows. Linux don't use a ES2 licenses. Yeah, yeah. But yeah, if at the beginning of our conversation, you mentioned that you are interested on Linux and on the container, right? So, okay, okay, don't worry. Let me focus on this kind of...
+
+   14:37
+OK.
+Right, right, right, right.
+
+Francesco Avella   14:52
+Of of application, yeah.
+
+   14:52
+Let me let me reorient the discussion because you you touched based on various things and I suspect that now I can maybe ask some specific questions across those areas which you spoke about in the context of Linux and maybe see if we can I can and get I can gather some learnings there. So you spoke about the discovery aspect, which is like if discovery and planning.
+
+Francesco Avella   15:03
+Yes.
+
+   15:13
+On in an efficient manner, the rest of the journey is streamlined right? So.
+
+Francesco Avella   15:18
+Yeah, I agree. OK, yeah.
+
+   15:20
+Specifically in terms of Discovery, I just want to understand a few aspects, see at the end of the day, if you want to discover if any tooling, let's say Azure migrate or if you're using AWS application migration service, whatever the services in for these services for these tools.
+To discover your estate on premises state, you need to create a line of sight and.
+That uh line of sight or a visibility uh network, so to speak, within the on premise environment. So how do you do that in the sense that do you, uh, I'm interested in understanding.
+
+Francesco Avella   15:56
+I.
+
+   15:57
+That how your customers are comfortable in sharing those accesses, those permissions that are required to have that line of sight. Are there any concerns that the customers come across in terms of sharing those accesses in terms of conducting the discovery?
+Those are the aspects and and in extension to that.
+What are the what is the level of user permissions and authentication mechanisms like username, password, SSH certificates? What? What is the what? What are the trends you've observed in terms of customer customers being comfortable?
+
+Francesco Avella   16:28
+OK, OK, yeah, yeah, yeah, yeah, OK, yeah, this is a very specific question, OK, but I have the answer for your question, because when I migrate the Linux workload, usually the customer, usually I ask the customer the root access, OK, because when I need to work with this machine, I need...
+
+   16:28
+Around sharing these.
+
+Francesco Avella   16:49
+to access as a root because there are any operations that require root permissions. Okay. Let me answer to your second question, how high access to this Linux machine depends, depends on the customer. Usually the username and password is not the best way, okay.
+But in any cases, we the customer give us these possibilities. Other customer, for example, suggest us to use PAM, P.A.M.P.A.M. approach. Other customer give us the username and the certificate.
+Prove, add.
+Private, no, a public a public certificate, because the private is installed on the machine itself. OK, yeah, so we use these three approach usually, but during the migration, if I ask the customer, "Hey, customer, can you give me the root elevation, the root permission?" The customer usually give us this kind of permission of.
+You should be forced to start with the migration process. This important point, all the machines, all the machines are.
+OK, the customer the backup of this machine on the environment. For example, if they use VMware, they do a snap and they backup that is a bit different because a snap is an operation that create a sort of snap of the memory status for the machine.
+OK, and the snap is done immediately before the migration phase, immediately before, because if you created the snap now, OK.
+And you work in the meantime, over the VM, this snapshot size increase, increase, increase. OK, so yeah, exactly. So, the snapshot is done immediately, immediately before the migration. OK, and they do also backup usually the night before. OK, and important thing when...
+they do the backup and the snapshot also the machine is shut down. This is especially important when you work with clusters where you have multiple nodes and in order to preserve the consistency across the entire system.
+OK, for example, think of active-passive cluster. OK, that is the most common example of cluster, or if you have a Zookeeper application, Zookeeper is sort of a coordinator in a cluster. OK, you must shut down your machine, because if you snap the machine and they are working, or any sync process is ongoing on the machine.
+You have an inconsistent cluster, and when you will make a right of this cluster, you will have an inconsistent cluster on cloud. OK, this happened in the past. OK, this happened. It was not a good story, yeah.
+
+   19:57
+Got it.
+No, that helps, I think. So if I gather it correctly, route based.
+Permissions are something that customers not most comfortable with for the obvious reasons, because it's like the most elevated access and in the first part of the journey, customer use usually prefers snapshot based approach to having. So that would be a static view of their inventory that can change. But in order to ensure that the changes are minimal.
+For those snapshots, by minimising the time window in between, right? So I think I think that helps. That helps instead of setting the expectation around how Discovery works, the next pitstop that I want to understand if you if in case you've come across.
+
+Francesco Avella   20:32
+Yeah.
+De.
+
+   20:44
+This situation, specifically when it comes to the nature of how Linux operating system is, it's there are so many players, there's so many distros out there that exist when it comes to Linux world due to which the the customer environment has been observed as.
+Fairly heterogenous.
+Just to quote a data point that you observe from our survey and from our internal telemetry, on an average a customer has about two to three distros running different. And when I say distros like Ubuntu REL, CentOS, different OS versions that are running. So.
+
+Francesco Avella   21:13
+Mm.
+
+   21:17
+Because of this particular observation and the and coupled with the fact that these major OS versions continue to cyclically hit this situation of turning out dated, whether in the form of end of life.
+End of support.
+So have you with your customers ever come across a situation where their on premise, their on premise, yeah, on premise estate has that and and how did you tackle when you were migrating, what was the customer preferences in terms of ensuring that they have longevity in terms of the OS version that they they are moving?
+
+Francesco Avella   21:38
+Absolutely, yes. Absolutely, yes. Yeah.
+Yeah.
+
+   21:54
+When they modernise or migrate.
+
+Francesco Avella   21:56
+Okay, yeah, yeah, so your question is very good because this situation is very, very frequent, very frequent. In particular, if you want to migrate a different Linux workload and this workload as have a different operating system version or different distro version.
+In any cases, you could have, you could have and stay an updated version. For example, recently I migrated any Ubuntu machine and the version of Ubuntu, if not wrong, was the 18 or the 20. I don't remember exactly.
+Hopefully, probably the 20, yeah, yeah, yeah, okay, the 20 is updated, okay, the 18 two, I, I haven't now the Ubuntu website, but I'm not sure that they have the details you confirm during the migration, during the migration, so we discovered this aspect.
+
+   22:38
+OK, both are outdated.
+Yeah.
+
+Francesco Avella   22:57
+During the assessment phase, okay, so after that we know this thing, we we ask the customer if they want to maintain the same version on the cloud. Okay, obviously I don't suggest this or if they want to.
+upgrade, okay, the version of the operating system when we move to cloud, okay? Usually I try to suggest the second option because for me it's better, okay? But it's better, but it is more expensive also because it is not the same as simply a simple lift and shift migration, okay? You have a workload and shift it on the cloud, okay?
+But in this case, you need to do a sort of re-platform. I don't know how we can call it a sort of re-platform. And how does it work? How does it work?
+We, there are two ways here, there are two ways. Or we upgrade the operating system on the on-prem environment. For example, we move from the 20 version Ubuntu to the 22 or to the 24 that is the last version currently, okay?
+And after we proceed with the migration of the workload on cloud, OK? Usually, this is my favourite approach, OK? Or, or we install a new machine from scratch, from scratch on the cloud, OK?
+
+   24:29
+Decline.
+
+Francesco Avella   24:32
+Using the last version, for example, the 24, and after we asked the customer to install the application, but this point is very crucial because it depends on the application. Yeah, yeah, we tried to install the application on the new machine, but we don't do.
+
+   24:46
+I'm compatible, yeah.
+
+Francesco Avella   24:53
+The installation, because in any case, it's the vendor support is required, any application are very are very complex to be installed again. I don't know if there is the the compatibility between the new boot version and the application that they was using on the on-prem, so...
+This is the most difficult scenario. So in order to avoid this complex situation, complex situation, the classical approach is, okay, customer, please do a blue-green deployment on your on-prem. For example, imagine that you have a VM with the 18 version of Uber.
+OK, so we clone this machine on the on-prem using the blue-green approach in order to OK, the blue-green approach, do you know it is approach? Yeah, yeah, let me clarify.
+
+   25:45
+Can you elaborate? Can you elaborate a little bit? I I'm interested in understanding what you're saying what?
+
+Francesco Avella   25:50
+Yeah, yeah, yeah. It is very simple. The blue-green approach is approach where you clone a machine, okay? All right, so you can test your application on the cloned machine, okay? Doing this, doing this, you don't have a downtime on the source machine.
+Okay, this is in a nutshell. Okay, it is the opposite of another approach that is called canary approach. Okay, but okay, let me stay on the blue-green approach. Let me go back. So you have a machine with the 18 version of Ubuntu Audio Prem, okay? We clone this machine blue-green approach, okay?
+
+   26:13
+Got it, got it.
+
+Francesco Avella   26:33
+We upgrade the new machine to the last version of Ubuntu to the 24 version. Okay, so we test carefully that the application works well on the new machine on-prem. And if there aren't regression, this machine, we move the new machine on cloud. This way to proceed is very smooth.
+
+   26:38
+People, yeah.
+
+Francesco Avella   26:54
+There is an effort in terms of machine because you need to create a new machine on your on-prem app, but to give you the guarantee that there isn't downtime on your on-prem, I mean, and give you another guarantee.
+that when you migrate the machine on cloud, you have the last version of the operating system and it works well because you already test it on the on-prem environment.
+
+   27:21
+That that, that was that was a very beautiful and very elaborate explanation of this particular process. One follow up one last follow up on this area and then we'll move to the next area. Francisco this as you explained it there were two to three approaches.
+
+Francesco Avella   27:23
+Okay.
+
+   27:37
+You spoke that one of your most favourite approaches upgrading it on Prem and then taking it to cloud where and then of course the last approach. The blue-green approach everywhere as I as I hear this seems like a very.
+Time consuming and intensive process, right? Because you have to go application by application in terms of testing. Setting up a testing environment et cetera, et cetera.
+Do you think this adds a lot of time or effort due to the entire migration and modernization journey whenever this particular situation comes up and any based on your first hand experience, any feedback for a tooling like Azure migrate that?
+That can amplify or ease out this experience.
+Specifically in terms of upgrading and getting rid of these outdated restrose.
+
+Francesco Avella   28:21
+Yeah.
+Mm.
+Yeah, this question is very interesting, but I don't know because probably if I have a magic wand, okay, I will suggest to...
+I will suggest a process in Azure where the machine is migrated, maintaining the same source version for the operating system, the team, for example. OK, so you migrate the machine, OK, maintaining the same version, OK.
+And after, after, but this pipeline must be fully automated for me, okay? Because if it doesn't happen, it is not useful. And after this step, or when you have the machine on cloud, the D18 Ubuntu version, okay? Another process starts.
+with the upgrade of the betting system or of the kernel is the same, is the same, okay. But after that, this happens. Sorry.
+I suggest that there is another process that cheque carefully if the application is stable or not. In other words, I suggest to move all the process that I, that I already discussed with you, all right, the blue-green, blah, blah, blah, with
+fully automated pipeline managed by Azure. This could be very useful, especially when you need to migrate a lot of machines, a lot of workloads, especially critical workloads. And again, I need to record this case.
+in a lot of scenarios, a lot, because it is very frequent that a customer maintain all the machine with all the operating system. Probably they don't remember that they have this machine in any case. It's okay, it happens, it happens.
+
+   30:31
+Correct, correct, correct. Sounds good that that was really useful I think since we are just left with about 10 to 1011 minutes, I would like to switch switch gears and want to sort of learn a little bit more on 2 areas. I'll just list it down.
+
+Francesco Avella   30:32
+Okay.
+Yeah.
+
+   30:46
+One is the last leg of the journey, which is executions. You. You also touched based on the various art strategies. If you can quickly walk me through.
+
+Francesco Avella   30:47
+Yeah.
+Yeah.
+Which?
+
+   30:56
+The hero scenarios, so to speak, when as to when a lift and shift, which is just bringing your machine as is, which is a revoked scenario versus replat versus refactor which are the three top type of execution strategies.
+So where based on your experience, when is it that the customer prefers a quick lift and shift versus a complete code refactoring which is a longer term effort? And of course then using Paas services which are there in Azure or AWS.
+If you can just shed your light some light on the three different approaches and when is it customers choose what that would be helpful.
+
+Francesco Avella   31:36
+Yeah, so the shift, the platform, the third reason, the refactoring, right?
+
+   31:43
+Yeah, yeah. And then lift and shift being the third one.
+
+Francesco Avella   31:44
+Okay, okay.
+OK, yeah, yeah, yeah, drift and shift, yeah, is the most common approach, yeah, yeah, yeah, yeah, OK, so usually when we migrate all the workloads, OK, we do a sort of pre-migration test, OK, and during this phase, we test that all the VM are migrated in a correct way.
+
+   31:53
+Yeah.
+None.
+
+Francesco Avella   32:11
+we try to start hold the machine in a sandbox environment. It's sandbox for me in this case mean that you test your application in an environment that is a nerve gap environment or an environment that is fully isolated from the interact. Because if you migrate, for example, a database, okay,
+and this database.
+this database or no database is not a good example. If you measure it a CRM, okay, and this CRM after the migration, you open it over internet, okay, you can generate any issues. So we test all the machine in a completely isolated environment, okay.
+We test that connectivity between the nodes work well, we test that all the processes work well, and when we are sure that there are regression, we switch off the machine. No, no, the other is not this. We start with the switch off DNS.
+moving it to the cloud, we maintain, we active the machine on the on-prem for a rollback, it could happen, and we open the traffic, the machine over internet if it is needed. In this way we
+
+   33:22
+OK.
+
+Francesco Avella   33:34
+Haven't done time with the timing. It's very, it's very, it's very little at this related to the DNS switch time, few seconds, few seconds or minutes. OK, in the worst case.
+So, this is the classical approach. So, just to answer to your questions, what the lift and shift is the most common approach, and usually the approach during which we don't intercore any kind of issue, because you are a copy of the machine. OK, the most critical.
+Uh, approach instead of hard approach where you have a replatforming, uh, replatform, sorry, and um, the replatform and refactoring of the machine, yeah, because in this case you change.
+a lot of things from the original scenario. For example, you change the operating system, or you change any libraries, and this approach doesn't work well. Or another scenario that we don't mention, but I think that you are interested in it,
+because you mentioned it at the beginning of our conversation, is the migration of the container. Usually, yeah, yeah, but this is another important topic. We can discuss it, we can spend a few hours discussing it, but when we migrate the container.
+
+   34:50
+Yeah, yeah.
+
+Francesco Avella   35:03
+In any cases, we work in this scenario. For example, the customer use a container tool on your on-prem, Docker for example, or they use, I don't know, Podman or they use container D. OK, and when we move.
+this workload to the cloud platform, the customer ask us to use the proprietary tool that is managed by the cloud vendor. For example, in
+Azure, they ask us to move all the container on EKS. OK, Azure, I don't remember, yeah, Kubernetes, yeah, yeah, exactly. The acronym are not my, yeah, OK, EKS, OK.
+
+   35:47
+Kubernetes.
+No, not a problem, OK.
+
+Francesco Avella   35:57
+Or, I guess on AWS is the same service like, alright, so in this case, in this case, we enter a lot of issue because it is a sort of re-platforming action there, because you are moving your container, the container is container of the dependencies, so ideally, ideally.
+
+   36:01
+Yeah, yeah.
+
+Francesco Avella   36:16
+you will not have any issue migrating a container. It is a container, all the libraries are embedded into this block, into this container. But we integrate issue frequently, especially when we move from container technology to another one, from Podman to ETS, from container V to ETS, from Docker to ETS.
+and so on. All right. So in order to solve this issue, is the issue we need a lot of time.
+We need a lot of time because, in any cases, we need to upgrade the operating system version for the container or the version of the libraries or to do a long troubleshooting. OK, so usually, just to answer to your question, the container migration is the last.
+migration that we do or if there are two dependencies with other VM obviously.
+
+   37:19
+OK.
+
+Francesco Avella   37:19
+But usually, we maintain the container migration in the last migration wave, for the reason that I already explained.
+
+   37:30
+Gordon got it, got it. On the container part, just a quick follow up. You spoke about the challenges of you know challenges and complexity of setting up a Kubernetes service, the ASK or the ATS depending on whichever cloud you're using.
+There are a bunch of serverless container services also which which handle rather.
+Relatively less complex containerized application because there is no underneath orchestration layer. Have you dabbled or experienced?
+Those services which are serverless in nature in terms of choosing your cloud targets for these container containerized servers that you identify in your on premise environment for the customers.
+
+Francesco Avella   38:13
+Yeah, yeah, yeah, but when you talk about serverless, you are talking about container or serverless services.
+
+   38:19
+Yeah. Contain specifically containers maybe within that like. I'm not sure I I can name a few services, but I'm not sure if you would be aware, but in the realm of Azure like Azure Container instances, Azure Container apps, these are relatively complex.
+Yeah. Contain specifically containers maybe within that like. I'm not sure I I can name a few services, but I'm not sure if you would be aware, but in the realm of Azure like Azure Container instances, Azure Container apps, these are relatively less complex.
+
+Francesco Avella   38:22
+Yeah.
+
+   38:36
+So services have you? Yeah, so.
+
+Francesco Avella   38:37
+Yeah, yeah, yeah, yeah, in this case, yeah, yeah, absolutely, yes, in this case, the migration is very smooth, is very smooth, if you have don't use the orchestration layer, the the the migration is very smooth, it is scaling or...
+If you want to migrate a pure serverless services, for example, imagine that you move an application, okay, to EWS Lambda function, for example. I don't remember the name of the equivalent product in Azure Logic.
+function with similar thing. In this case, the migration is very smooth because you can trigger your logic, your container, using a simple line of code, okay? And yeah, this kind of migration is very simple to do. Obviously, if you want to manage all sorts of expectation layer with Kubernetes or...
+Other container is straighter like Docker Swarm, for example, is another one. This requires a lot of extra effort.
+
+   39:45
+OK, got it. Got it. And in terms of the in terms of the topology of the various run times, container run times like cryo container D, Docker D When when you engage with the customers who have Avast or significantly big enough.
+
+Francesco Avella   39:55
+Yeah.
+
+   40:04
+VMware State, which are the run times you observe being present the most Francisco. This would this would help us in sort of building the strategy according to the the demand that that's there.
+Comes to container runtimes in the on Prem bold as we sort of build our story for modernising those to cloud.
+
+Francesco Avella   40:18
+Yes.
+Yeah, okay, good question. Yeah, I'm actively involved during this decision and from experience, the Docker container are the most used. If you ask me to rank the container technology, the order starting from the most important.
+
+   40:33
+Got it.
+
+Francesco Avella   40:43
+Is Docker, Podman, and Container, but Docker is the most used approach, yeah, so if you, if you will do a new development on Azure, I suggest you to invest on Docker migration, yeah, I absolutely.
+
+   40:49
+Then go on.
+Got it, got it.
+Docker, docker, Docker D got it. Got it perfect. I think we're at the top of the hour as well. Maybe I'll just conclude with one question, which is a little bit more.
+
+Francesco Avella   41:02
+Huh.
+Yeah.
+
+   41:12
+Top level, we spoke at the beginning of our conversation. We spoke about the three critical journeys and that's what we delved into as a cloud solution architect who's who's done migrations for EOS. Now if if you have to sort of suggest.
+
+Francesco Avella   41:18
+Yeah.
+
+   41:27
+Or highlight a key gap when it comes to whichever tooling you've.
+In terms of migrating your on premise state to cloud across these three journeys, irrespective of your migrate, what are those key gaps or key enhancements you would like to suggest to someone like me who is a product manager for one of the services that we can focus on?
+
+Francesco Avella   41:48
+Yeah, yeah, yeah, that's what it does. This will be very long, but I think that one of the point is ready to the...
+automation of the migration in term of networking, for example, and I suggest to improve also the phase during the which you are able to cheque if all is working properly. Okay. The last phase is, for example, all or meet.
+
+   42:16
+OK.
+
+Francesco Avella   42:20
+Cheque as sort of mid checkpoint, OK, because this approach, this iterative approach, as the CFP framework suggests on the other hand, OK, because this approach is is presented in the CFP framework, call adoption framework, and just to use to to.
+to add in the tool a sort of mid checkpoint, okay, so that you can cheque if the process is going well or if there are any issues or anomalies that could be adjusted.
+Adjusted.
+OK.
+
+   42:59
+Got it. Got it. Yeah. I think with that, we're at the top of the hour as well. Francisco, thank you. Thank you for this conversation. It was immensely useful. Thanks for the details. Delving into the details as well, I think.
+
+Francesco Avella   43:10
+It's a pleasure, it's a pleasure.
+
+   43:12
+Yeah.
+Yeah, and I think.
+If at all in future I I'll I'll take a note of your contact, if at all in future we you want to delve into other areas as well from the migration perspective, I'll keep a note of it. I'll let my fellow colleagues also know if at all we ever need a follow-up conversation to learn more.
+We will reach out to you.
+
+Francesco Avella   43:35
+Yeah, yeah, sure. If you want to set up a follow-up call, feel free to contact me or respondent or feel free to reach me or LinkedIn using my mail. Don't worry. I will be happy to participate in this kind of study. Okay. It's a pleasure for me. Thank you.
+
+   43:42
+Sure. Yeah.
+Absolutely, yeah.
+Yeah.
+Thank you. Have a good day ahead. Bye. Bye.
+
+Francesco Avella   43:55
+Thank you, bye. Have a good day. Take care.

@@ -1,0 +1,429 @@
+Linux migration user study - John-20260219_090108-Meeting Recording
+19 February 2026, 03:31am
+35m 58s
+
+Swati Devgan started transcription
+
+Swati Devgan   0:03
+Myself John and I'll set some context on the the conversation that I'm I'm planning to have in terms of learning about Linux migration specifically. So I'm I'm a product manager with Azure Migrate which is an Azure native end to end tooling.
+That helps you migrate from on Prem or other clouds to Azure. It basically focuses on 3 broad journeys which are a function of how customers also orchestrate their migrations. It starts from the discovery of your on Prem or data center.
+IP state to understand what all server and other workloads that are deployed in your in your current setup. How does the network and and dependency mapping works to give a visual view of that. The second stage is essentially assessing and planning.
+For the migrations, which is where we provide all the necessary reports in terms of migration readiness, what will be the cost benefits at scale and in a targeted way. And then of course the 3rd and the last stage is about executing these migrations, which is where we try to sort of capture the the.
+Various R strategies, re-host, re-plat, refactor, etc. And there are multiple tools that exist in this journey that can be used to sort of deploy your your estate in cloud. Keeping this journey in mind my particular focus area.
+As a product manager within this team is understanding migrations from the perspective of Linux workloads, Linux OS and containers. Often what we've observed is that the trends in terms of adoption for our tooling is fairly skewed towards Windows.
+And we are doing this extensive research study to understand what it takes to sort of migrate Linux workloads, what are the preferences, tooling preferences, migration strategy preferences across the three journeys which impact or sort of influence the decision making of migrating your container workloads.
+And Linux OS from on Prem or other clouds to Azure. So with that context, maybe I'll take a pause. Would love to understand your work stream and how it's sort of connected to the area that we would want to sort of discuss today.
+
+John   2:31
+Oh for sure. So I did not. I don't do the my current role, but my prior role I did a lot of migrations. So we run. I work for the army and so we run two clouds. We run a WS, we run Azure. So a WS is our multi-region, multi-tenant hosting cloud.
+
+Swati Devgan   2:40
+OK.
+
+John   2:50
+And that was the, you know, AWS happened to be our first instantiation of cloud services and we've like since brought on Azure to be our second cloud hosting platform. So we were probably, you know, like a lot of customers, we had a significant amount of.
+Of technical debt in our data center, a lot of legacy applications that were, you know, I would just say like just out of date like a lot of things were running on.net or using like SQL Server databases and so like our.
+Role in doing the migrations and moving to like Linux and moving off of Windows was just reduction of like our licensing costs. So we were trying to get things off of Oracle. We were trying to get things off of of Windows.
+And so like those are the the key kind of like business drivers for us like doing this migration and getting off of Windows. Is that kind of like where you want to go with this conversation? OK, OK, great. Yeah. So like a lot of the tooling that we had, we, you know, when we did our.
+
+Swati Devgan   3:48
+Mhm.
+Yeah, absolutely. Yeah.
+
+John   4:00
+Initial assessment, yeah, like I said that was those were the business drivers, right. So it's like the second part of that was then like what are we looking at from our application portfolio, you know exactly like all the R factors that you just talked about. So we were able to like you know what can we get rid of because like another application within our organisation.
+Or outside of our organization does it really well and we can partner. So like we were able to retire a number of applications and that saved us, you know, quite a bit of money by, you know, either turning off those VMS or and also letting go the contract staff maybe that supported it.
+
+Swati Devgan   4:35
+Mm.
+
+John   4:40
+So you know that was that's one part of like the the retirement part. But then when we started getting to the replatform, you know refactor stuff, I think that big part for us was like like I was said like you know the key business driver being that cost management piece.
+Like, you know, just knowing that, you know, if we can reduce our overall licensing costs in like Oracle, Microsoft and like even to an extent when we were looking at moving to AWS, we purposefully decided not to go with a Red Hat instantiation.
+Of Linux, we ended up going with Amazon Linux just to be able to save additional cost. Yeah, so those that was like just, you know, as a whole, we were just trying to look at it from that perspective of where can we save money but also find efficiencies in migrating to cloud.
+I'll pause there. Sorry, I just said a whole bunch of stuff.
+
+Swati Devgan   5:34
+Got it.
+No, no, I I think that sets a fair amount of context. Maybe I'll I'll just ask follow up questions across the the themes that you spoke about. So you spoke about a multi cloud strategy where you have AWS and a fair bit of Azure. So how does the when?
+When when you had executed migrations where the where the cloud targets were constituting of AWS and Azure, how does the tooling preferences varied? Were you using cloud native tools to sort of migrate or was there like a unanimous way of?
+Migrating it agnostic of cloud. How was the approach over there?
+
+John   6:17
+We had two. So sort of we had some applications that were container based where we were just able to move them over. I was trying to think like how many of those we had, maybe three. We had a portfolio of probably like 11 to 12 applications that migrated over. We probably had three that were.
+Container base that we could just migrate over and the rest we went with like Cloud native tooling and that was like a very that was a very new experience for our team when we did this that was executed in 2022 I want to say.
+So about four years ago. So we were really focused on, like I said, like cost was an issue. So when we started thinking about like, all right, what are we gonna do from like a cloud native standpoint where we can use like microservices around like doing like serverless applications?
+Because we had some stuff that was really lightweight and we knew that we could just do it all like serverless. So like that's as we went through our portfolio, we kind of said like, all right, you know, this application has this sort of path forward and we want it to be cloud native and we know it's going to be a lightweight app. So we're going to go serverless.
+
+Swati Devgan   7:14
+Mm.
+
+John   7:31
+You know, maybe we have this application that's, you know, running really well right now. We don't, you know, we just want to get it out of our data center. So it's already containerized. Let's just put it in the cloud. So like for each, each, each.
+
+Swati Devgan   7:43
+No.
+
+John   7:46
+Each application we kind of just did like our own internal assessment and then worked with AWS in concert for a lot of the a lot of the migration for like more cloud native application hosting.
+
+Swati Devgan   7:58
+Got it, got it. So shifting a little bit left in terms of the journey and starting from from the discovery standpoint, right as you guys would have started in terms of understanding.
+What exists in your on Prem data center that you were aiming to move to AWS? How did the discovery essentially start? What kind of tooling or approach you or your team was using to identify what all servers workloads exist in your?
+Environment today where I'm leading to giving a little bit of context, there are two broad level approaches that exist in terms of discovering your environment, right? One could be online, one could be offline. Online is where there could be an agentless access to your environment that AWS or Azure seeks in order to.
+To read or have a line of sight into what is there in your on Prem data center and one could be offline where it is on demand. You bring a list of your inventory and we just sort of assess and give you readiness reports, readiness reports in terms of migrating to cloud based on that.
+So the first one, which is the online mode, requires a little bit of user permissions, access to your service accounts, right? Configuring all those things and then of course some access to your credentials, server credentials and whatnot as as well. So.
+Are there any, if at all my question, is there a preference across these two approaches to discovery one? And what were the reasons governing the preference, if at all there was one?
+
+John   9:42
+Sure. It's a that's an easy question. So we definitely were offline. We we didn't do online and the the part of the reason why is because a lot of our workloads are classified. So we weren't just going to you know a lot of our our contractors that supported us from AWS.
+
+Swati Devgan   9:53
+Hmm.
+
+John   9:59
+At the time were not cleared contractors, they were just supporting from the standpoint of like being solutions architects or whatever. So that was really easy. So we just provided them the application and you know sort of like what that stack looked like and then like put a path forward for that and then AWS helped us with like put a path forward.
+Would be for the migration strategy.
+
+Swati Devgan   10:19
+OK.
+Got it, got it. On that note, have you, have you or your team been exposed to the experience of using Azure Migrate for migrations to Azure at any point in time?
+
+John   10:33
+I have not actually we recently and like when I say we are, we're still fairly new with Azure. We just recently stood up like the mission landing zone and started building out like our environment for mission application hosting.
+
+Swati Devgan   10:35
+OK.
+Got it.
+
+John   10:49
+So yes, yeah, so we haven't, but like that's probably gonna be one of our next things I would guess with our our account routes.
+
+Swati Devgan   10:49
+Got it, got it. That works. Go.
+Got it, got it. So you spoke about one of your business drivers being exiting Oracle and Windows based setup for cost cost optimization purposes. In that case, what were your cloud targets specifically for Oracle, which were the databases?
+That you were looking at as they were as you were exiting Oracle Windows. I understand you spoke about the AWS native Linux versions, right?
+
+John   11:26
+Yeah, we used, oh gosh, like Postgres RDS on, yeah. And then I think maybe one other used like MySQL. So that's those were our targets. We just knew that like, you know, they're managed through RDS already with a WS, so.
+
+Swati Devgan   11:31
+Postpress.
+God.
+
+John   11:43
+That was our, those were our just sort of like targets. Yeah, good question. I meant to mention that earlier.
+
+Swati Devgan   11:45
+Got it. Go.
+Got it. Yeah. So basically moving from Windows to open source, I just wanted to understand what are the popular databases that that you, you and your team considered so.
+
+John   11:54
+Yeah.
+Oh, sure.
+
+Swati Devgan   12:04
+In this context, as you were executing the this, you were moving away from the Windows setup, moving to a Linux setup, both in terms of the servers and databases, considering PG SQL and MySQL are fairly.
+Tailored for open source environments. If you talk about the executions part, John, what was the R strategy or so to speak, or in general, what was the approach in terms of executing or building up the environment in AWS? I'm keen to understand both the toolkit and.
+
+John   12:23
+Right.
+
+Swati Devgan   12:39
+Strategic approach that you and your team took to execute these migrations.
+
+John   12:44
+Would you you explain what you mean by toolkit in this context for me?
+
+Swati Devgan   12:48
+Toolkit basically if if at all. So AWS in itself has a fleet of AWS application migration MGN migration service and then there are there's a database migration service also that AWS has. So if if there was any specific preference towards these and if if it if at all these were not the cases then were there any custom scripts that you guys would?
+Using to sort of execute or set up environment in AWS, just wanting to understand that process a little bit in detail.
+
+John   13:15
+OK, perfect. Thanks for that. That context helps. Yeah, for us like for the application hosting, like a lot of the front end had just to be redone completely. So from that standpoint, like we ended up doing like more like you know more React based like you know front end design but like from the back end we absolutely use like the database.
+
+Swati Devgan   13:25
+No.
+
+John   13:35
+Migration service from AWS to be able to move those workloads into the cloud just for that heavy lift. And part of that is we did that over, gosh, you guys call it Expressroute, AWS calls it Direct Connect. So we were able to have a sync in place between our data center and the AWS cloud to be able to do replication from the.
+As part of the database migration. So we were running like dual stack and being able to update at the same time. That was probably the biggest thing. A lot of what we did when we really sort of kicked off a lot of this work was we tried to.
+
+Swati Devgan   13:57
+Mm.
+
+John   14:11
+Work with a WS and our other contractors to develop out like what we say is like basically you know an initial operating capability for the application and that means like just you know a minimal viable product that works that the that the.
+That the customer could see because like our our strategy for so many of these things was like to refactor because you know we're talking about a major shift from like tech that that was just sitting in a server rack to actually being like a cloud native application. So there was.
+There's a lot of like working with our customers who are the application owners, having them rethink like the art of the possible as far as like what their application could be. So I think from that that that standpoint like.
+
+Swati Devgan   14:57
+Right.
+
+John   15:02
+You know from the toolkit standpoint, the database migration stuff, but at the time we didn't have anything that was like like an agent like like you would today like an agent based migration service which I know AWS and Azure have today.
+
+Swati Devgan   15:13
+Good.
+Right. Got it, got it. That helps. That helps sort of set context on on the practices for the migration execution. So thank you on that. Just reorienting a little bit now and deep diving into the.
+Linux OS world, how it's sort of curated, it's it's fairly heterogeneous world in terms of the OS distros right that are available out there in the market, both enterprise grade and open source.
+
+John   15:41
+Mhm.
+
+Swati Devgan   15:46
+And that's what that's something that we've observed where on an average a small to medium business or an enterprise business has on an average about at least two distros operating in their environment. This also brings in.
+Particular a particular state where a lot of times that these distortions are either approaching an end of life or an end of support scenario. They're turning outdated. So my first question in terms of your data center that was curated in on Prem.
+VMware world, as you mentioned, was that ever a consideration where you had enough amount of Linux OS distros which were hitting sort of the state which were turning outdated soon? And what was the approach while you were migrating to cloud that you and your team were strategically taking?
+In terms of handling these OSS for a long for longer supports cycle going forward.
+
+John   16:47
+Yeah. So we were sort of, we're sort of lucky in a way because we are air gapped that we don't have to like, you know, we we can run outside of end of life because we're doing it ourselves. But we did like a lot of our applications that were hosted in the data center were past end of life. And so we took a very.
+
+Swati Devgan   16:52
+Yeah.
+Mm.
+
+John   17:04
+We took a very strategic approach in like how how we would provide our customers like Amazon Machine Images or like Azure virtual machines. What we did is we took the Amazon Machine Image for the Amazon Linux and we take that, we hardened it and so we made sure.
+That every customer that came into our environment got that same Amazon Linux AMI so that they were making sure they were getting all the patches from us centrally and they weren't having to worry about that so they could stay up with their compliance and cybersecurity requirements. So when we did that migration.
+
+Swati Devgan   17:32
+Good.
+Mhm.
+
+John   17:44
+That was like a very targeted thing because we didn't want to just do that like sort of, I know it's kind of, you know, it's a phrase, but don't bring your data center to the cloud. So we wanted to be able to like take that approach where like we're providing this to our customers and they're not having to worry about like the patching of like their machine.
+
+Swati Devgan   17:55
+Alright.
+
+John   18:04
+Or VMS, um, we're doing that for them on behalf of the customer.
+
+Swati Devgan   18:08
+Got it. So in that case when you were sort of spinning up a new OS image, in this case the Amazon Linux and bringing the configuration from VMware for these machines which are hitting end of life or end of support state, you're essentially.
+Redeploying a clean install approach is what you took. So in that case I suspect that there would be some configuration, some data disk, some essential files that you would still want to sort of carry over from your data center to cloud, right? Maybe not everything block by block by block as you spoke about, don't carry everything from your data center to.
+
+John   18:47
+Yeah.
+
+Swati Devgan   18:48
+To cloud but but some essential configuration was must be required to to be transferred. So what if if that was the case, what was the approach you took to just do that targeted migration?
+
+John   19:01
+Could you give me some examples of like what you're talking about from that standpoint, like from like just the carryover from like Linux VMS and like the data center to the?
+
+Swati Devgan   19:04
+Yes.
+So for example, maybe maybe I can lay out a scenario to plan my point. Let's say you have a Red Hat 8 or 9 image so so which is deployed in your VMware which is nearing its end of support or end of life for.
+Timeline and it's of course air gapped and at that point at that point in time you've decided to sort of you and your team is undergoing this journey of migration and that's where you you you spin up a new Amazon Linux image OS image which was hardened with your security policies to ensure that.
+It it is, it meets all the security mandates. Now you must have set up the landing zone or or an IIC template would have been used to sort of spin up this particular machine in AWS.
+But there's a lot of configuration, there's a lot of data that resides in your VMware in environment on the machine in source environment which is supposed to be migrated. Some of it would be pertinent to be moved to cloud for business continuity purposes, right?
+Not the entire thing maybe, but some some particular configuration system files or data disk. So just carrying over or transferring that specific bunch of data that is required to be that is that is relevant for your business continuity of the customers that you're working with.
+Firstly, was that the case where some part of it was required to be migrated? If if yes, then what was the approach taken to do the targeted migration?
+
+John   20:45
+I'll be honest with you. I really don't remember that being a big part of our discussions. And like, it could be something that happened, but like, I don't remember. Yeah, yeah, sorry. I I yeah, it's just not something I remember.
+
+Swati Devgan   20:51
+OK.
+Pardon.
+That's OK. Oh, that's OK. I think predominantly what I was looking for to understand was whether it was a lift and shift approach or redeploy. But you spoke about redeploying and that's that's enough of a data. Data point was just the next question was more of a drill down, so it's fine.
+
+John   21:09
+Oh yeah.
+OK.
+OK.
+
+Swati Devgan   21:16
+All right. So maybe you you spoke about a touch based on the containerization approach also which was used by you and your team, maybe reorienting my discussion towards that a little bit, so.
+Is it? Is it like containers were deployed in your VMware environment as well? Or it was during the migration journey from from on Prem to cloud you and your team decided to adopt containerization targets in AWS? What was?
+How is the topology curated?
+
+John   21:51
+The latter, I mean one of the things that we didn't do really well like with our VM like hosting on premises was we didn't have a good build pipeline. And so like when we were making the strategic, you know, again this is a strategic decision to move to cloud, we wanted to put in like a, you know, a build pipeline so that when you commit your code like your like Docker file.
+Builds out and then it's deployed in our into our environment like after it goes through like scanning and all those pieces. So like we had some applications that we felt like were good.
+Candidates to just be containerized because we knew we needed them to be up and running quickly. We didn't have the time to refactor all those sort of things or that we would, you know, get them to the cloud and then work on refactoring later. So it's like it was a little bit of lift and shift on some of those things.
+But I think the key thing for us was like really trying to put in that build process so that we could like bring, you know, that was also like it sounds terrible, but like we were trying to do a lot of things at once like to implement like you know, a cloud migration, but also to put in like a consistent build process so that like we were doing.
+
+Swati Devgan   22:42
+Go to.
+
+John   23:00
+When we were deploying into like our Kubernetes stack that we could do.
+You know, a good build process and then it just gets deployed out until like Openshift.
+
+Swati Devgan   23:12
+Got it. Oh, OK. You spoke about both Kubernetes and Openshift, was it? So does does that allude towards the fact that you you were or your customer had an active like Red Hat license due to which you you were preferring and it would have?
+Provided a good vendor support due to which Open Shift was preferred over Kubernetes Vanilla SKU.
+
+John   23:36
+So we run like EKS on our side which is Amazon's like you know Elastic Kubernetes service, but like we do have other customers that we work with that we that run like a platform as a service for us. And so we what we wanted to do is put that build process in place so that like those kind of like containerized applications.
+
+Swati Devgan   23:41
+Yeah. Thanks.
+
+John   23:56
+Could just be deployed into. It's a totally separate customer, but like it would be deployed into their open shift. We weren't managing that open shift. It was another agency that manages it for us, but we wanted to be able to put that build process into like what we currently do.
+
+Swati Devgan   24:10
+Progress.
+
+John   24:13
+So that like that could just be deployed out into into their Openshift instantiation.
+
+Swati Devgan   24:18
+Got it, got it. And would you, would you know a little bit about what was the was there any ever any instance where I'm I'm broaching into the space of what was the underlying host OS kernel here?
+We we do know that Linux OS is predominant over there, but did you ever have a scenario where while you were deploying container services, let's say Kubernetes or Red Hat via Red Hat Open Shift, was there ever a case where the underlying host OS was Windows based?
+Or it was always Linux which was used. Would you remember anything on that?
+
+John   24:56
+Hey, I wanna say there were maybe like one or two Windows based, but I'd.
+I would be struggling to like.
+Say like positively about that. I just really like that was 2022, so I apologize. Like I just don't really remember that that much.
+
+Swati Devgan   25:09
+So yeah.
+No worries. No worries. Yeah. I I mean, as long as I think I I just deduced that it was predominantly Linux and it sort of sort of aligns with the hypothesis that I had as well. So it's it's fine. Yeah.
+
+John   25:25
+OK.
+
+Swati Devgan   25:27
+Talking about the planning stage, maybe shifting gears a little bit here, John, talking planning in terms of once you've identified that which all servers and applications or databases in your on Prem environment are are.
+Are potential candidates to be migrated to cloud? What are the, what are the, what are the key parameters that you, your leadership or your team was looking at in terms of deciding what goes where in terms of your AWS targets? Of course cost would be one of the things, but would you sort of?
+Comment on were there any other input parameters that were governing your decision making?
+
+John   26:12
+Yeah, absolutely. I mean, I think for us it was really customer use case. So we have like, I mean like like you said like cost is always going to be associated, but it wasn't just like the cost of running the application. But I mean for us we have to look at like you know.
+If that that program or that application has funding behind it, so that like the customer is going to continue to invest, not just the cost of like running the application. And so that was a that was a factor for us. So like you know of the applications that we're going to move.
+
+Swati Devgan   26:37
+Yeah.
+
+John   26:44
+Is there funding in place to continue that support once they're in hosted in the cloud so that it can continue to just like we're not, we get it there, but then we're continuing to modernize and do all those sort of things. So that was one thing. I think the other thing too was just we had certain programs we knew that were.
+What we call it community resources. So like they're used by a large breadth of our our partners and those were obviously the ones that we sort of said like, all right, we got to get these right and then we've got to make sure that like there's no downtime for like as we migrate.
+
+Swati Devgan   27:06
+Yeah.
+
+John   27:21
+That was probably like the second thing is just like, you know, just how much they're used. And then we purposely, like we're saying like kind of like early on, we we purposely said like there's going to be some areas where we think, you know, we're going to divest because there's other, there's other partners that we can provide this information to and they can run.
+On it on our behalf without us having to do all the lifting and us having to pay the utility cost and contracting cost. So those are really kind of the three things. I mean, I guess ultimately you could put it all under an umbrella of cost, but I mean at the end of the day it was, it was cost times like you know customer demand.
+And and then you know where can we offset like you know our current cost to be able to reinvest that money into like the applications that we were hosting?
+
+Swati Devgan   28:11
+Got it, got it. So if you at a at a broad level, if you reflect on your experience of doing the end to end migrations right from starting day one till executing setting up your landing zones in AWS for the right with the right AWS targets ensuring that all the networking and security policies.
+
+John   28:29
+I.
+
+Swati Devgan   28:31
+Are in place, which is what I'll call, let's say day in. So in the entirety of this experience, John, if you reflect on on how it was executed, which stage do you think that took most amount of time and for someone like me who's the.
+
+John   28:35
+Mhm.
+
+Swati Devgan   28:49
+PM for one of the tools which aids this journey helps customers in this journey. Based on your experience, what do you think? Which are the areas where the tools can be more proficient in helping the customers to expedite or accelerate the journey? Any any reflections on that aspect?
+
+John   29:07
+Yeah, I think it's it's a tough one to answer, but I think you know from my experience we when we were doing this, this sort of cloud, you know, migration we were thinking about, you know, we were all very much brand new to the cloud in some ways. So like there was a big learning.
+
+Swati Devgan   29:26
+No.
+
+John   29:26
+Curve for us in terms of the art of the possible and all those things, just understanding all the terminology that goes along with it and kind of having that up front. We were kind of at the mercy of AWS to some degree to be able to educate us and which always takes.
+
+Swati Devgan   29:45
+OK.
+
+John   29:46
+At least for the customers, but I think that to me is probably um.
+That's an area where I think and and like I've I've since we've gone through this with Microsoft, Microsoft did a very really like a great job when they came in and talked to us about roles and responsibilities and like sort of what I would call like orienting us on like the journey of like getting the landing zone stood up.
+Where AWS didn't take that approach, but I would say that like that continued focus on understanding the customer's like role or responsibility and like input and then just like kind of level setting on like what to expect going into the migration.
+You know, it sounds like that's exactly what you're doing like as part of your like as a product manager. But like that's, you know, but that to me is like the key thing. Like, you know, you want to have confidence going into it and that you're not just at the at the mercy of somebody who's like helping you do the migration.
+
+Swati Devgan   30:29
+Got it, got it.
+
+John   30:45
+So.
+
+Swati Devgan   30:46
+Got it. So basically assistance throughout the journey from an expert was something that that would have been a change maker in your in your experience perhaps. Got it. I I think just at that point just one last thing that as I was going through my notes where I think I can.
+
+John   30:58
+Yeah, yeah.
+
+Swati Devgan   31:06
+Learn a little bit more from you and after that we can conclude the conversation is in the executions migration execution phase, which is the 3rd and the last stage. John, we spoke about.
+You spoke about using a redeploy or clean install approach to sort of set up your AWS landing zone and AWS environment as you were migrating infrastructure as a code based technology would have been fairly powerful for you to sort of set that up.
+Part of it is of course resource provisioning. You must be setting up your VM environments using the IAC deploy approaches. Were there any other scenarios that were powered by these IAC templates? What were these if at all? The answer to that is yes, if you can help me enumerate if there were any other scenarios beyond.
+Source provisioning for which I see was useful during your journey.
+
+John   32:05
+Oh gosh, it's a great question. I can't think of any. I mean like for everything like we. So when we did this migration, we already had like sort of our like our overall like tenant hosting like multi cloud built out. But so we were just migrating a lot of our individual applications to that environment. So everything we had was like pretty.
+
+Swati Devgan   32:18
+OK.
+
+John   32:25
+Well understood in terms of like we we were running Terraform or we still do like run Terraform across everything. So from like an IC perspective like that's pretty much like all we did for like all of our customers when when they were coming in is like we you said like hey we're gonna try to again like well at the time.
+
+Swati Devgan   32:31
+OK.
+Go.
+
+John   32:45
+It was like completely open. So that that's where we try to like push a lot of our customers. Does that answer your question? I'm not sure I did. So like you're OK.
+
+Swati Devgan   32:51
+Got it. Yeah. Yeah. Yeah. No, no, I think I'll be honest where I was coming from is we are making huge investments in our native tooling in order to have these IAC ready, readily available IAC templates, right. So that when the customers embark on their migration execution journey.
+We have that templates ready for them to sort of set up their landing zone and.
+
+John   33:17
+Oh yeah, I know exactly what you're talking about. I'm sorry to interrupt you. Like, yeah, I know exactly what you're talking about. Yeah. So like when we did like the Azure landing zone, like we we just basically like cloned that from like your GitHub and like we could start from there and start to build fresh. Is that kind of what you're referring? Yeah, that was huge for us.
+
+Swati Devgan   33:24
+Yeah, yeah.
+Right, right. Yeah. So I'm.
+Yeah. So since you've experienced it with Azure landing zones, let's say where I was getting at was that have you or your team found those landing zones comprehensive enough? Was were there any gaps which which I can take a note of and can sort of have?
+Have an have a feedback in terms of, hey, this is how we can sort of amplify it further for our customers to be to be more autonomous when they're on this journey.
+
+John   33:55
+So.
+I can't say that I have on on like the application side just because I haven't used it. But like when we went through like the standing up our Azure landing zone, I think there was a lot of stuff that we wanted to add and and like at the time like I think Microsoft had like degraded like.
+The use of Terraform and it was all just focused on Bicep. So we wanted to make sure we stayed with Terraform. But yeah, I mean, I would say that, you know, for us because we were setting up a management plane as opposed to like an application.
+
+Swati Devgan   34:23
+Yeah.
+
+John   34:35
+Hosting environment I would yeah there there was a pretty big delta in terms of like some of the the the things that we wanted to do but I but for like at a at a for a migration level I can't speak to that specifically just because I I haven't I haven't done an Azure migration as of yet.
+
+Swati Devgan   34:38
+Right.
+Got it, got it. I think no, that helps that considering you you were able to sort of answer it from the point of view of Azure landing zones that that essentially help with what I was looking for. Yeah. So I think that's that's all I had, John. Thank you. Thank you for your time.
+
+John   34:58
+So.
+
+Swati Devgan   35:12
+And hope to maybe speak to you sometime later as well, because I don't know if you remember, but one of my colleagues named Deepa, she, I think she and her team, she's our researcher, user researcher within our team and she actively sort of.
+Works to run these user studies across various different work streams and she sort of recommended to speak to you. She told me that it be yeah, she recommended that it'll be it'll be a useful conversation for you. So yeah, and and she she was right. I mean this was this was immensely useful.
+
+John   35:39
+Oh, great. Yeah.
+Oh, good.
+
+Swati Devgan   35:49
+Um, so yeah, thank you. Thank you for your time. Have a good evening.
+
+John   35:51
+Yeah, yeah, you too. Hope I speak to you in the future as well. Thanks.
+
+Swati Devgan stopped transcription

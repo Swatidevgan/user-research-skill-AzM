@@ -1,0 +1,967 @@
+Linux migration user study - Mohamed-20260216_170109-Meeting Recording
+16 February 2026, 11:31am
+52m 6s
+
+Swati Devgan started transcription
+
+Swati Devgan   0:03
+To understand where the conversation will go today, we'll start with brief introduction. I'm Swati. I'm a PM with Azure Migrate team which is one of the in house end to end native tool that helps stuff to streamline the end to end migrations from on Prem or cross cloud.
+Cloud environments to Azure. It caters to the three broad stages of migration, which is firstly discovering your estate across various workload types, right from servers to databases to.
+
+Mohamed   0:27
+Hmm.
+
+Swati Devgan   0:37
+Web apps and whatnot. And then of course doing a deep level of planning and analysis which is assessments piece where you understand what is it that has to be, what will be the cost implications, what will be the efforts that will be required to modernize or or take a rehost approach which is rather faster and then of course executing the.
+
+Mohamed   0:44
+OK.
+
+Swati Devgan   0:57
+The migrations. So within this team, my focus area is to sort of understand the pain points of customers or the kind of experiences that they prefer when it comes to Linux migrations. And within that I also want to focus a little bit on the container migrations piece.
+Which is something that's not supported today as we speak, but we are committed to sort of building the right experiences as we go ahead. So with that and I have Deepa with me who is my colleague within the same team and we are driving this particular research area together.
+
+Mohamed   1:21
+Hmm.
+
+Swati Devgan   1:35
+So, yeah, thank you. Thank you for joining. Maybe with that, if you would want to give like a quick introduction of yourself, how your work looks like and if if there is, you know, there's something that's pertinent to what I just spoke about, which we can tell further as we as we talk.
+
+Mohamed   1:43
+Sure, sure.
+Sure. So we we started moving to the cloud in 2016. We started with a WS, then we added three more clouds. So we use a WS, we use Azure, we use GCP and we use OCR.
+So we total, we totally use four class. The heavy load is or you know if I say percentage, I'm not going to be 100% accurate percentage wise, but let's say maybe 50% AWS, 30% Azure, 20% GCP and 10%.
+OCI so part of my job is to enable cloud services. So by default not the the services are not enabled by default. No one can use them by default. So we have to go and make sure the service is secure enough to be used.
+And if it is secure enough to be used, we have to write the automation for the service to be launched or used. So we do not allow the developers or the users to go to the console or the portal and use the service right away and launch it. So we use.
+A Cloud Formation template or Terraform template for Azure and we use Ansible Plus for deployment. We use Jenkins and we use Jenkins Jenkins plugin that we wrote that will use the Terraform or will use the Cloud Formation template, execute it and.
+Launch the service so everything is launched through the automation and developers are able to log on to the portal or console to view but not to launch things.
+
+Swati Devgan   3:31
+OK.
+
+Mohamed   3:32
+I also work on cloud tickets when developers have issues. If the service is not secure enough, I work with the cloud provider we create. In the case of AWS, we create something called PFR product feature request for them to fix the issue.
+And then provide us the fix. We do the same thing with with Azure. For example, if a service does not support customer managed key or a private endpoint, so we cannot have the service enabled. So we have to wait for the fix, get the fix and then launch the service.
+I work also on Ansible Plus, which is the deployment tool to launch the infrastructure and full Ansible Plus is used 125,000 times a day to launch services on the full clouds.
+
+Swati Devgan   4:19
+Got it. And I'm I'm a little curious about the usage of Ansible based playbooks that you spoke about, right? Is this are these custom playbooks via Ansible?
+
+Mohamed   4:28
+Mhm.
+YAML, YAML file. Yeah, YAML files basically, which basically many times AWS or Azure already have the code. We just copy it, change it and make changes to it to make it run for our environment because there are stuff that are required.
+To be able to launch the service. Um, so we add those things and then we we're on, we're on the playbox.
+
+Swati Devgan   4:55
+Got it. Can you elaborate a little bit more in terms of what scenarios you use these playbooks for? Because where I'm coming from, where I'm coming from?
+
+Mohamed   5:01
+Launch any service where to launch any service for. I'm sorry, go ahead.
+
+Swati Devgan   5:07
+Yeah, where I'm coming from is I I'll, I'll perhaps highlight my the piece of information that I have when it comes to Ansible automation platform which is owned by Red Hat, right?
+
+Mohamed   5:07
+Oh.
+Yes.
+
+Swati Devgan   5:20
+That's that's a beautiful tool to sort of discover your estate which resides in Red Hat environment and then of course assess it for migrations to any cloud or any other portal as well. However, in terms of executing those migrations, it doesn't have any replication IP, it doesn't have any. So what?
+
+Mohamed   5:24
+Um.
+Mhm.
+Exactly.
+Um.
+
+Swati Devgan   5:39
+What exactly happens for the third part? And if you can walk me through the first two parts also with your real life experiences.
+
+Mohamed   5:46
+Let me let's say we're gonna launch an EC2 or a V app for example, right? Easy service, everything. So we secure have a cloud formation template or a data form template right now we put that in the Git repository. So every team they have their own Git repository. So they put that in their own Git.
+
+Swati Devgan   5:50
+Yeah.
+
+Mohamed   6:06
+Repository. So this is done. This part is done. Now what they do is they create a Jenkins Jenkins job to execute that. So inside the Jenkins job we fill in, you know whatever information. Then we have our own Jenkins plugin that we developed.
+So that Jenkins plugin that we developed basically will go to the repository, will read the cloud formation template or Terraform template, will execute it and all of that will run on Ansible Plus to launch the service. Once the service service, you know we can see the output, everything. If there is a failure, we're gonna know if there is a success.
+As we're going to know, once it's done and completed and it was executed or deployed on Ansible Plus, people can go to the portal or the console and they can see their service, you know, their EC2, their RDS, whatever service they launched and it will be there.
+
+Swati Devgan   6:59
+Got it. So this go ahead, go please finish.
+
+Mohamed   6:59
+So inside inside, I'm sorry, inside that playbook, inside that terraform or cloud formation template, it will have everything that they need. CMK tags, everything. We we use tags a lot because this is how billing will work. You know each team has their own code, so tags has to be there.
+And we also have something called auto remediation. So if a person tries to use does not have a tag, for example for their team, they try to use a a different customer managed key than the one they should use or they don't leave. So auto remediation will terminate the service automatically.
+Because it did not follow the security guideline. Or if they have, they try to launch a service that is not approved, auto remediation will delete it right away.
+
+Swati Devgan   7:48
+Understood, understood. So that that's more of a compliance blanket of sorts that you've set up so that got it, got it. Because otherwise there will be erroneous billing of sorts, right? Just just double clicking on that if I if I understand it correctly, you're you're basically adopting a clean install approach here where?
+
+Mohamed   7:52
+Exactly, exactly.
+Sure.
+
+Swati Devgan   8:08
+You are deploying where you're deploying a cloud topology through these Ansible playbooks and and then maybe as a as a second step, a second part of this journey bringing whatever you want to bring from on Prem, maybe your data disks, your storage templates and whatnot. So I'm I'm a little interested.
+
+Mohamed   8:14
+Yes.
+Yes, yes, yes.
+
+Swati Devgan   8:27
+Since it is a redeploy, it's a lifting shift of sorts where you are running, spinning a VM or EC2 instance in cloud and bringing whatever is pertinent from your on Prem environment. The second part which is where your data disks, your storage templates and all those artifacts which you want to carry over in cloud.
+
+Mohamed   8:30
+Mhm.
+Mhm.
+OK.
+OK.
+
+Swati Devgan   8:47
+What are the tools and techniques that you use to bring those to complete the migrations?
+
+Mohamed   8:48
+Sure, sure. So for data migration, we also wrote our thing that chooses the data migration service. So we we call it data migration tool. We had developers do it. It will copy the data directly that tool from.
+The on Prem to the databases. This is for the data migration. So we call it a data migration tool and it chooses there is the data migration service. It it it uses the data migration service to migrate the data. So this is for.
+
+Swati Devgan   9:10
+OK.
+OK.
+Is this by Azure or some others? Uh?
+
+Mohamed   9:23
+By by the one we have is by AW for AWS. I know Azure has the same thing but I haven't. I worked on the AWS one but not the Azure. I assume there is the same exact because I know Azure has it in the migration tool as well.
+
+Swati Devgan   9:28
+I see. I see.
+Call.
+
+Mohamed   9:39
+So I know that for sure. What else? What else? So this is for the data for artifacts. If we have artifacts, so we use artifactory. So we have our own artifactory. So we put everything in artifactory. So there are projects in artifactory in for each team.
+
+Swati Devgan   9:39
+Right, right.
+Mm.
+Mhm.
+Pardon.
+
+   10:10
+Pardon.
+
+Mohamed   10:10
+From where? So this is like a security risk. If we open it for all they can download whatever and you know so we have artifactory. If the software is not found in artifactory to be downloaded then they have to request and then the software will be evaluated and if it is approved it will be in artifactory.
+
+Swati Devgan   10:30
+No.
+
+Mohamed   10:30
+So what they do is they can using the playbook as well. They go to artifactory, download it, install it on the VM or what, bring it in and so on. So that's how we do it.
+
+Swati Devgan   10:43
+Got it. You spoke about, you spoke about how you're working with this organization or your organization basically dabbles into migrating when you started migrations back in 2016. It's a multi cloud strategy that you adopted, right? So how does strategically I want to understand how does?
+
+Mohamed   10:58
+Yes, yes.
+
+Swati Devgan   11:03
+Strategically the tooling preference varies when you're managing A multi cloud environment in terms of your migrations. I'll take a scenario when for 30% of your state which is migrated to Azure, if I got that correctly ballpark, we say we the 50% which is on AWS when you and your organization.
+
+Mohamed   11:11
+Oh.
+
+Swati Devgan   11:23
+Was carving out this migration journey. How was the the preference to for the migration tooling across these two cloud targets varied and what were the guiding principles?
+
+Mohamed   11:32
+Mhm.
+Sure. So like I said, we started with one cloud, which was a WS. At that time a WS was much more popular than any other cloud. So we started with a WS. We also get a big discount from a WS, so and we also get a big discount from Azure as well. So I'm saying however.
+Well, we did not want this is an expression. You don't want to put all your eggs in one basket in case something. So that's why we started having multiple clouds and multiple. So we rely heavily like like I said, AWS is first and Azure then GCP, so GCP mostly.
+
+Swati Devgan   12:01
+Got it.
+Of course.
+That was the thing, OK.
+
+Mohamed   12:14
+Is used for AI like Vertex AI, all the AI work because I think and you can correct me if I'm wrong, I think Google is much more advanced than AWS and Azure when it comes to AI services and OCI is like.
+
+Swati Devgan   12:16
+OK.
+Yeah.
+
+Mohamed   12:31
+Probably 5% or even less. I don't even know why they have OCI, but I don't make the decision.
+
+Swati Devgan   12:33
+OK.
+OK, OK. And the tooling for example, when you were for the 30% of the on premise state which moved to Azure, let's say versus the 50% which moved to AWS, were the tooling preferences different or you were using the same Ansible playbooks?
+
+Mohamed   12:47
+Mhm.
+Oh.
+
+Swati Devgan   12:55
+Which were CSED enabled.
+
+Mohamed   12:56
+I'll I'll be honest with you, I was doing configuration management before clouds, so I wasn't doing the same work for on Prem. So I don't know what they did on Prem, but like I said, I was a configuration manager building applications and so on.
+
+Swati Devgan   13:06
+I see.
+
+Mohamed   13:13
+But then I moved to the cloud. But for the on Prem I don't have experience to be honest. I don't know what they did. But for two I can tell you about tools that we use on, you know, so we usually use the latest tools, latest, you know, we started using Gitlap and Gitlap was really new. So anything you.
+
+Swati Devgan   13:16
+Nothing.
+Got it. Got it.
+
+Mohamed   13:32
+And they think it's going to benefit us. We usually use the latest and greatest of it. Confluence, GitLab, Jira, all these tools can work whether it's on Prem or on on the clouds.
+
+Swati Devgan   13:37
+OK.
+Got it, got it, got it. All right. So at this point, just switching a little bit of gears or rather delving into the details of it, Mohammed, as I spoke about, I want to understand the the Linux side of things in the sense that.
+
+Mohamed   13:59
+Sure.
+
+Swati Devgan   14:01
+As you're talking about the estate that you've been managing, I'm sure a decent portion of that would be Linux OS based. So when uh.
+
+Mohamed   14:07
+More a lot of Linux to be probably 80% of Linux of of you know the VMS.
+
+Swati Devgan   14:12
+Great, great. So what kind of spread across the OS distros? Because Linux is fairly democratized. There's so many distros out there, of course, consolidated by Red Hat and Ubuntu and Rocky and Almo. All Red Hat. So what are the kind of challenges you or your organization?
+
+Mohamed   14:19
+Yes.
+OK.
+It's all red hat, all red hat, all red hat images.
+
+Swati Devgan   14:32
+Comes across when it comes to discovering the Linux state, potentially with the name to moving it to any cloud. So when I speak about discovery, let me peel it off a little bit for you to understand. We as Azure migrate as a tooling we provide.
+
+Mohamed   14:44
+E.
+
+Swati Devgan   14:51
+A bunch of capabilities to customers who are either on Prem or on another cloud which are aiming to migrate to Azure. There is a connected way of discovering their estate, which is where we deploy an appliance in your Vcenter or whatever. Let's say if it is VMware, I'll take that, yeah.
+
+Mohamed   15:00
+Yeah.
+You see?
+Yes.
+
+Swati Devgan   15:11
+And then we encrypt the data so that the Azure doesn't have access to that data. But we can get continuous stream of data in terms of assessing it and giving you the right recommendations as you embark on the journey to move to Azure. And then there is of course an offline way where you can just you can give us the import of what all.
+
+Mohamed   15:25
+Mhm.
+
+Swati Devgan   15:31
+Inventory exists in your environment and we can just assess it a point in time on that. It wouldn't be a continuous experience, but of course it would be a lot more secure if that's the priority customers have. So specifically talking about Linux as an estate which is required to be discovered. Do you have any insight into how?
+
+Mohamed   15:35
+Mhm.
+Yes.
+
+Swati Devgan   15:51
+How are you your organization prefers to move the Linux? Yeah.
+
+Mohamed   15:53
+Yes, yes, yes. So basically yes for for Linux. This is what we do for Linux. AWS has images for Linux, Red Hat, whatever, right. So what do we do? We don't even, we don't take whatever they they have and start using it. What we do is.
+
+Swati Devgan   16:04
+OK.
+
+Mohamed   16:13
+We have a team, the image team. So they take that image that AWS had, let's say the latest version of Fred Red Hat, right. They take it, then they add to it all the all the stuff that we need, OK, everything that we need for for the company I work for, right. They create their.
+Own image. So now even though we copied it from AWS or Azure, we create created our own image. So we have our own image there. So when I'm ready to launch an EC2 or a VM, I cannot use the AWS or the Azure image that's held that is there.
+
+Swati Devgan   16:49
+The custom you use the custom image.
+
+Mohamed   16:51
+We will use custom, so we we have to use the custom custom image that we created by that image team. So I cannot go create my own custom image as a developer. I have to use that custom image and launch from it. If I try a different image, it will get terminated right away.
+
+Swati Devgan   17:01
+OK.
+Got it. So if I understand correctly, your work mostly entails on the the execution or part of you know setting up an environment in cloud. Is is that fair or you're involved in the?
+
+Mohamed   17:20
+I said I yes, I set it up. Also I configure it. If it needs configuration, I configure it. I provide all of that to the people who are using will be using or using the service at the same time when they run into issues configuring it or running it or you know having issues.
+
+Swati Devgan   17:33
+Got it.
+
+Mohamed   17:39
+Create tickets for us. So I work on those tickets as well because I'm the one who enabled the service, a troubleshoot or anything. I work with them to resolve the ticket.
+
+Swati Devgan   17:50
+Got it. So I'm sure for Red Hat, since you spoke about Red Hat being the predominant environment that constitutes your Linux OS composition for your organization over there, how does the handling for the end of support and end of life distros work because Red Hat 8, Red Hat 7, even 9?
+
+Mohamed   18:01
+Mhm.
+US.
+
+Swati Devgan   18:10
+I think is nearing the end of support state. So how do you guys manage that kind of? I have two questions there. Firstly, do you have an active vendor license, Red Hat license and do you get like some support for upgrades or what is the strategy? Is it a clean install strategy or upgrade strategy that you use as you try to sort of deploy?
+
+Mohamed   18:11
+Exactly, exactly.
+
+Swati Devgan   18:29
+And deploy it on cloud these these images specifically.
+
+Mohamed   18:31
+We we basically what we do. This is something very important to know for you to know. Even though we we let people use the redhead image right, they only have 90 days and then they have to recreate it again.
+OK, recreate the VM again after 90 days. 90 days is the Max. Why? Because of all the security fixes that get released. OK, we don't rely on developers upgrading or updating their system, right? We don't trust them to update.
+
+Swati Devgan   18:49
+Yeah.
+OK.
+
+Mohamed   19:04
+OK, so every 90 days there will be a newer image that will have all the latest security fixes, so they have to redo all the work again. So since we have that automation, the automation just do it like that. They just need to change the the image name and recreate the environment again.
+
+Swati Devgan   19:20
+And how do you carry over the prior context like packages, softwares that existed on the previous version?
+
+Mohamed   19:24
+Everything in the playbook. Everything is in the playbook, so everything they install the whatever.
+
+Swati Devgan   19:28
+OK, OK. So so there is a carry over context with the playbook as well. OK.
+
+Mohamed   19:34
+Exactly, exactly. So there is the playbook. Also maybe we have options to back up the EBS volume for example, if needed. So we have that option as well. So we always do that so we can have the latest fixes now for the upgrades, right? So since now they have 90 days, right? Now it's the end of life for.
+Red Hat 8, Red Hat 9, whatever, right? We're gonna have an image for the new version and they will get start getting notifications. This is gonna be the end of life. You need to upgrade. You need to upgrade if they and they give them a certain period of time if they don't do it.
+Even the production workload will get terminated automatically. They will send them for 30 days notices. Now it's on you as the developer, on you to go and upgrade. OK, we send you notices every day for 30 days. You did not do anything. Then they have the power. The automation has the power to terminate.
+Things for for if you don't mind.
+
+Swati Devgan   20:31
+Wouldn't that would if if you terminate a production of workload, wouldn't that impact like business continuity? There would be web apps.
+
+Mohamed   20:38
+It does. It does. But The thing is, it doesn't go just to the developer. It goes to the developer. It goes to their their manager, the team, their manager, the director, the VP. So if these people were sleeping, you know now it's gonna be on you. Because for us, security is the most important things. If a hacker gets on because of an old image, you know the damage will be much.
+
+Swati Devgan   20:43
+Got it. Senior leadership.
+
+Mohamed   20:58
+So usually since it goes to not just the team, the director, the VP, you know they usually act because if I'm a team and I'm slacking off now, my manager, the director, the VP know. So they're gonna be monitoring me. So we never ran into this issue.
+
+Swati Devgan   21:06
+No.
+Got it. And what are the tools you're using to sort of either or what tools your developers would be using to actually execute these upgrades? Because at the end of the day, executing, let's say a Red Hat, an upgrade from Red Hat 8 to 9 is not a straightforward process. I've heard customer pain points around app compatibility and.
+
+Mohamed   21:25
+Yeah.
+Mhm.
+Mhm.
+
+Swati Devgan   21:35
+Other issues. So how are you tackling that?
+
+Mohamed   21:38
+So basically what they do, remember the process I told you with the playbook, the image, everything. It gets repeated. Then part of if they are installing an application, it's gonna be part of the playbook, it's gonna get downloaded from Artifact, they get installed and so on.
+
+Swati Devgan   21:43
+Yeah.
+
+Mohamed   21:52
+Then before they really move to production, especially if there is a compatibility issue, that's when they're gonna test it before they really do that change in production and have it production ready so they have the time to to do the testing and so on.
+
+Swati Devgan   22:08
+Got it. Got it. So Mohammed, yeah.
+
+Mohamed   22:11
+So, so it's not. If I can add, it's not like I'm in production now. I'm gonna replace this with a newer one right away. No, they have time to go test, make sure everything is good before they make the final change.
+
+Swati Devgan   22:22
+Yeah, I I understand the workflow and I was just curious a little bit about the exact tools that they're using to sort of migrate. Would you know like I I do know like Red Hat has its own native capability to conduct upgrades. Are you guys using that or are there any custom scripts?
+
+Mohamed   22:25
+Mhm.
+If it is, if it is upgrade like on the Linux system for example, they can do that. For example, I think it's called.
+There is a command to update. I can't recall it because I haven't done that, but there is a command to upgrade that will upgrade. However, to upgrade from 8:00 to 9:00 or 9:00 to 10:00, no no no you need if it's like 8 to 8.1, eight to dot to two, yes you can do that, but for that you have to create a brand new image and use that.
+
+Swati Devgan   22:51
+OK.
+That's a major voice version upgrade.
+That small loop.
+
+Mohamed   23:08
+Brand new image to launch the service again.
+
+Swati Devgan   23:10
+And then you carry over the prior context through the artifactory scripts that you have already. OK, got it, got it. And even on the major OS version upgrades moment, you have that 90 day period for example. So let me layout an example to land my question. Let's say currently your image is running on.
+
+Mohamed   23:15
+Exactly, exactly.
+Sure.
+
+Swati Devgan   23:30
+9 Red Hat 9 and Red Hat 10 is already already available and it is it is an active distro SKU. It it doesn't have the implication of end of support or end of life anytime soon.
+
+Mohamed   23:32
+Yes.
+Google.
+Mhm.
+
+Swati Devgan   23:46
+So what's the compliance mandate for such images where the latest version is available, but your machine, your machine is running on an OS which is N -1. So what's the mandate over there?
+
+Mohamed   23:56
+When people start getting the notifications, we have a new image, a new custom image with a REL 10. You need to start the upgrade. You have this period of time to do the upgrade. If you don't upgrade, we're going to start terminating environments or machine or instances or whatever. So that's when they get, for example, maybe 60 days.
+Or 90 days you know to to upgrade. So that gives them some time to go and upgrade and test and at the same time they don't get their VMS terminated right away, so they get a notice.
+
+Swati Devgan   24:30
+Got it, got it. OK, so in terms of your environment topology, Mohammad, do you have any Linux machines, Linux OS machines running in on Prem environment as well, which which your leadership is looking?
+
+Mohamed   24:36
+E.
+We do, we do because we still we're not fully like when I said 100%, I meant 100% of what we have on that lab. But we do have our own server. We have so many data centers, so we do have data centers and everything. But like I said, I don't work on on plan.
+
+Swati Devgan   24:48
+Only cloud cloud.
+Right.
+On the data center side is on the on Prem data center side of things. OK, got it, got it. So I think.
+
+Mohamed   25:01
+Exactly, yes. But we do have, we have tons of data centers still on Prem.
+
+Swati Devgan   25:07
+Got it. And would you, would you be able to share at least the strategic lens on why your organization or the leadership is still sticking to that data center or maybe if they have plans or they're exploring the opportunity to move them to?
+
+Mohamed   25:22
+It's the money. I mean, our cloud budget is $100 million. This is just for the cloud budget, right? If we migrate everything, it's not going to, it's going to be much more than this. So it's money. And there are so many applications that are running on Prem that don't really make money. So there is no point for them.
+
+Swati Devgan   25:23
+OK, it's the money, OK.
+Got it.
+Got it. Got you.
+
+Mohamed   25:42
+To move to the cloud and cost us more money.
+
+Swati Devgan   25:45
+Got it, got it, understood, understood. Because I I think I had a lot of questions on the on that journey if at all you have a potential to TAM which is required to to be migrated to sort of to to be migrated to cloud and if I split it across the three journey decide, plan, discover, plan and execute.
+
+Mohamed   25:55
+Good.
+Yes.
+
+Swati Devgan   26:05
+I think your experience is more sort of pertinent to the execute phase where you are deploying the topology, cloud topology, but but I think that there's there's immense learning over there as well. So since so I I'll basically continue with the discussion over there.
+
+Mohamed   26:05
+Mhm.
+Correct.
+
+Swati Devgan   26:21
+While switching a little bit of gears to understand if you dabble with a lot of container workloads as well, where containerization as an approach has been has been used as in your environment, is that the case?
+
+Mohamed   26:33
+So we have a containers team that does containers and we do have many teams who want to go and do containers. They go there.
+
+Swati Devgan   26:41
+Got it. So what?
+
+Mohamed   26:43
+So we do allow that. We do allow that.
+
+Swati Devgan   26:45
+Got it. So what what are the container like top container orchestrators and runtimes that that are preferred and if if there is a strategic rationale to to to that decision making?
+
+Mohamed   26:55
+You know they do EKS.
+
+Swati Devgan   26:58
+Yes, OK.
+
+Mohamed   26:59
+EKSI know that I don't work on the containers part, but whatever answer I can give you, I will give you based on my me seeing what's going on or whatever. So we we do have the EKS team who do who do that. So we do have that for Azure and we do have that also for a WS.
+
+Swati Devgan   27:01
+Yeah, sure.
+Got it.
+Got it and.
+So in Azure that would be AKS Azure Kubernetes service, is that is that correct? Got it and and would you have any idea of what is the underlying OS preference over there? Is it predominantly towards Linux or Windows?
+
+Mohamed   27:20
+Yes, yes.
+No for for a WS it's Linux, for Azure it's Windows and I will tell you why it's cheaper for us to to use Windows on Azure than a WS.
+
+Swati Devgan   27:35
+Yeah.
+
+Mohamed   27:46
+So.
+
+Swati Devgan   27:46
+Got it. So, so running containers on Windows entails like a a virtualization layer that's WSL layer. Is that is that something that your team has also orchestrated when it comes to containerization in Azure? Would you would you know anything about that?
+
+Mohamed   27:54
+Yes.
+To be honest, because we don't work on containers or so it's not my team, it's not, it's, yeah, there is a whole team just for EKS and containers and they handle that what whether it's migration, you know, creating the environment and so on, it's a totally different team.
+
+Swati Devgan   28:04
+Your team OK, OK, OK.
+Got it, got it. So let me let me reorient the discussion to the area which you work actively on, which is more of you know executing the migrations or deploying or setting up the the cloud environment as and when we move to that. OK. So within that you you touched based on that a little bit already but.
+
+Mohamed   28:21
+Mhm.
+Mhm.
+Environment exactly.
+Mhm.
+
+Swati Devgan   28:37
+Iac which is infrastructure as a code approach which is what you are essentially doing with with Ansible as well. If you can maybe help me understand the day end scenarios apart from you know lighting up the Azure or AWS resources, EC2 or Azure virtual machines.
+
+Mohamed   28:40
+Yeah.
+Yes.
+
+Swati Devgan   28:57
+Apart from that, what are the other type of popularly used playbooks or scripts that are being that are there in your artifactory which are required? I understand the top level scenarios would be some security and compliance, but if you can talk about it a little bit more in detail that would help me in dropping the.
+
+Mohamed   29:07
+OK.
+So sure. So we have about 70 service enabled in a WS and we have about maybe 40 in in Azure. OK of of the entire and all of those services are executed via Terraform or Cloud formation template same process.
+
+Swati Devgan   29:16
+That particular stage.
+OK.
+
+Mohamed   29:35
+That I explained before, nothing gets created from the portal or the console. OK, for every service to be enabled, the service has to satisfy all the security requirements that we have. Mostly it has to apply we we can apply tags because if we cannot apply tags, we're not going to know which team did what.
+So this is forbidden customer managed key. Each team has their own customer managed key. If there is the Azure managed key or the AW managed key, we don't lose that. The service has to enable customer managed key, so each team they have their own key.
+OK, private and private points or private endpoints, right? Private links, they have to be there because we don't go to the public. I mean, we have some specific application that are publicly faced, but mainly even if we communicate, we want to communicate on a private link or a private endpoint.
+Private endpoint. We don't wanna go to communicate from this service to that service by going publicly and then going back to the VPC again. We have to have a private link between the services.
+
+Swati Devgan   30:40
+Got it, got it. And you spoke about these 1740 services for which there are readily available IAC templates, Ansible or Terraform. Two questions there across the AWS and Azure environment topology that you that you manage, are these scripts sort of?
+
+Mohamed   30:45
+Mhm.
+Mhm.
+Mhm.
+You.
+
+Swati Devgan   30:58
+Usable, fungible across these two environments or you have custom scripts across the two different cloud?
+
+Mohamed   31:00
+Yeah and I no no no basic. Basically for Azure we use teleform and for a WS we use cloud formation template. So if I'm but but because so these are two different scripts.
+
+Swati Devgan   31:09
+OK.
+
+Mohamed   31:16
+One Terraform, one AWS, our one cloud formation. However, the plug-in that we use, the Jenkins, everything is exactly the same. The Ansible plus everything is the same. It's just that that that the form itself, Terraform versus cloud formation. However, once this is available for a specific service, we publish this on Confluence, all the automation.
+
+Swati Devgan   31:26
+What?
+
+Mohamed   31:36
+Is published on Confluence. So anybody who wants to use the VM or RDS or whatever service they want and it is enabled, they can go, they can make a copy of my Jenkins project that I created. They can make a copy of the Cloud Formation or Terraform template that I have.
+They can store it in their data, their repo and then they have to make some minor changes to it. For example, they have to change the billing code to their billing code. It's not going to be mine. They have to change the customer management from mine to theirs. So on the instructions I tell them you have to change this, you have to change this, you have to change this, but the rest should be the same.
+
+Swati Devgan   32:14
+Got it. And after that, once the clean via the clean install approach, when the server data migration comes into picture, what are the type of scripts that exist here? Or I I'm more interested in the methodology if you can share. Is it rsync? Is it snapshot based?
+
+Mohamed   32:20
+Mhm.
+Sure so.
+
+Swati Devgan   32:33
+How exactly?
+
+Mohamed   32:33
+It depends if it's installing application. If it's going to be installing application, then they have to do the installed command in the in the playbook itself. It's going to go downloaded for auto factory and do the install. We're not going to copy. However, if it's data, we have our own scripts like the data migration scripts.
+
+Swati Devgan   32:43
+OK.
+OK.
+
+Mohamed   32:52
+To migrate the data, to be able to migrate the data to from the old one to the new one.
+
+Swati Devgan   32:54
+OK.
+Got it. Got it.
+
+Mohamed   33:00
+So after installation it has to be a fresh install.
+
+Swati Devgan   33:04
+It has to be so the fresh install happened happened 1st and then you use these playbooks and scripts as a tool to migrate whatever pertinent server data you want to take forward, right?
+
+Mohamed   33:13
+Migrate the data.
+Exactly, exactly. So if there is any data, once it gets created, once it's done, that's when we do the the data copy. But we don't copy the application. The application gets installed, it's just the data part that gets copied.
+
+Swati Devgan   33:29
+OK, so application is also fresh installed of sorts. OK.
+
+Mohamed   33:32
+Yes, and this is part I'm I'm creating the VM right now on the Terraform, right? Once the VM is created in the same playbook, go ahead to artifact download this. Once you download it, this is the install command. This is the update command if we're going to do an update. Once it gets done, this is the configuration. Configure it to the way.
+We want all of that in the same playbook. So I created the the VM and or the RDS or whatever. I created it. Then I'm doing the config install and configuration and so on. Once everything is done and the machine is up and running, we applied the policies, everything. That's when they do the second step comes, which is the data migration.
+
+Swati Devgan   34:11
+Got it, got it. And as after after the clean install is done, then data migration is done through through the artifactory based tools that you spoke about.
+
+Mohamed   34:22
+No, no, I mean no, no, no. Artifactory is to install the application to to install. Yes. Once the install is done and they apply the policy, everything is done. They make sure the machine is up and running. Whatever the application is up and running, everything is perfect. That's when they do data migration. They migrate whatever they yes, because what's.
+
+Swati Devgan   34:26
+To install the application OK.
+Data migration so that that's that's it.
+
+Mohamed   34:42
+The purpose to migrate the data if something is wrong configuration wise and it's not working because we may get rid of it and re up redo everything again. So once we know it's.
+
+Swati Devgan   34:51
+That's exactly that. That's where I was getting at in terms of once you light up the machine or in in cloud, then you sort of use the artifactory to sort of install the right application, the web app. Then third step is transferring the server data. After that, is there a test bed of sorts test environment to see where the environment is up and?
+
+Mohamed   34:56
+Mhm.
+Mhm.
+Yes, yes.
+OK.
+
+Swati Devgan   35:11
+And is performing the way you intended or or compare it to the previous state? Is is there any test bed?
+
+Mohamed   35:12
+Sure.
+Yes. So we do have different environments. We have development environment, we have non prod environment and we have pilot. We don't use pilot a lot but there is pilot and there is a production. So they they make sure they do especially in the non prod environment, make sure they test, they make sure everything.
+
+Swati Devgan   35:21
+OK.
+
+Mohamed   35:35
+Is 100% good in the non-prod environment before moving to the prod environment. And even though they move, they created everything in the prod environment before they do the switch, they make sure whatever they created is 100% up and running. Everything is good before they make the switch because every production outage for us.
+Cost us millions. When I was doing configuration management, I put the wrong version of a stored procedure and production, which caused the production outage. They were down for 15 minutes. Those 15 minutes were $4 million.
+
+Swati Devgan   35:57
+Gone.
+
+Mohamed   36:10
+Of loss. Of course, if I do this now, it's like you're gone. You don't do, you know, they don't play with production anymore.
+
+Swati Devgan   36:12
+Got it.
+Yeah, yeah.
+Right, got it. I I have one slightly switching gears while sticking to the Linux space only. Mohammad, do you have any, do you have any CentOS based distros?
+
+Mohamed   36:29
+We used to, we used to until it was the end of support. Like first we used that head and I don't know the decision to be honest, why the, you know, it's the imaging team. So we were using Red Hat, then we moved to CentOS and then from CentOS when it was like out of support and everything, we went back to Red Hat and I think that was version 8.
+8 or 9 when we went back to Red Hat. I do not know why they did the switch between Red Hat and CentOS. I don't know. I just know this is what we have to use.
+
+Swati Devgan   37:00
+So this was on cloud or on Prem, would you know?
+
+Mohamed   37:02
+Oncloud, I'm talking about down cloud because I don't know about down Prem, yes.
+
+Swati Devgan   37:05
+All clouds.
+Got it. So I I'm OK if you're unable to share the why aspect of of it, but how exactly did the switch from CentOS to Red Hat was executed in terms of tooling and process? Can you shed some light on that maybe?
+
+Mohamed   37:19
+Remember I said like on the cloud we we even though a WS or Azure have their own images, we take their image, the image team, they take that image. I mean it's not the marketplace like a WS and Azure, they have their own images. It's not it's yes, it's not the marketplace is like for me to do it and put it.
+
+Swati Devgan   37:28
+From the marketplace, from the marketplace.
+Images, golden images.
+
+Mohamed   37:39
+On the marketplace and big body. But for Azure and AWS that have their own images, you can use their own image. So we take that, we make our own copy, we do the security updates, we do whatever configuration we need to and then we we put the name of our company.
+
+Swati Devgan   37:41
+OK.
+Got it.
+
+Mohamed   37:54
+And then next to the image, right? And then we say Red Hat or Santos or whatever. So this is how the developer even though they can go and get the name online, but from there you can figure it out. For example Santos, whatever, Red Hat, whatever and then the name of the.
+
+Swati Devgan   37:55
+Thanks. Got it.
+OK.
+Go.
+So again, clean install approach basically in a way, right? Redeploy approach. Got it, got it, I think.
+
+Mohamed   38:13
+The cleaning solar coach, yes, yes.
+So at at one certain time we had Santos image and Red Hat images at the same time, but we were, you know, exactly.
+
+Swati Devgan   38:22
+Serving the same purpose, right? But then eventually you guys would have killed the CentOS OS images because it was end of support. Is is that a fair understanding?
+
+Mohamed   38:29
+OK.
+It was the end of support and they said you have to migrate to Red Hat. So at the time before the end of support happened, we had Red Hat and Sentos at the same time, but people were pushed to go go use the Red Hat version.
+
+Swati Devgan   38:41
+Pause.
+Versions. Understood. Understood. Got it. With that, I have just last one small deep dive area because you're managing Linux estates across AWS and across Azure as of today, predominantly Red Hat. Would you maybe care to shed some light on how you're?
+How maybe how the experiences are distinct and is there any scope for or feedback that you have for Azure to amplify the experience specifically for Linux machines which are running in Azure?
+
+Mohamed   39:13
+To be honest, I they are the same, they are the same. It's just it comes when it comes to money or it comes to money for us. So for example if a team who wants to come and use, I mean it depends on what other services we have to look also at what is the service available in Azure and on the Azure.
+And we have to have Linux services with it or is it available on AWS as well. So we have to also look at how much it's going to cost us. If we go to the AWS route, it will be cheaper or is it going to if we go to the Azure, it will be cheaper to us, especially if they have the services that we need.
+On both AWS and Azure, right. So we have to look which one will be cheaper and then we we move that that way. Like I said, we get a huge discount from AWS and we get a huge discount because I think on AWS we we are the biggest customer and on AWS like customer number biggest.
+
+Swati Devgan   39:57
+OK.
+
+Mohamed   40:12
+Of resources and stuff and Azure, I don't know. I don't assume we're the biggest, but we're we're using Azure.
+
+Swati Devgan   40:13
+Got it.
+Would you, would you, would you be comfortable sharing your organization name just just for knowledge? Horizon. OK, OK.
+
+Mohamed   40:25
+Verizon. Verizon. So I mean verizon.com runs on a WS and verizon.com is consists of thousands of applications. It's not just you know, so.
+
+Swati Devgan   40:31
+Yeah.
+Of course. Got it, got it. So I was OK. So I think there's no specific functionality related sort of feedback that you're sharing. Just one last thing, yeah.
+
+Mohamed   40:38
+So.
+The only thing, if you want me to recommend something, remember my way when I told you we had to to do a Jenkins plug in, we have the Terraform pamphlet and all of that. We did all of this because there was nothing available at that time, so we had to do it ourselves. You see what I mean?
+
+Swati Devgan   40:56
+Yeah, yeah, yeah.
+Got it.
+
+Mohamed   41:05
+So it would be nice if there is something that can do all of this. So we don't have to use or newer companies, they don't have to invest in having their own plugin and simple, you know what I mean? All of that. It would be really nice if the cloud provider can do something that can do all of this.
+
+Swati Devgan   41:22
+So Terraform templates basically in entirety.
+
+Mohamed   41:24
+I mean, you support Terraform template, but how to, I mean you have to go and execute it. We want it like an automated way to do all of that. I mean, if I have a Terraform, I can go to the console or the portal and go ahead and try to launch it, right? But for us, we didn't want exactly, exactly.
+
+Swati Devgan   41:36
+But you want a workflow, an automated workflow of. Oh, OK, OK, that's that's a fair feedback. Yeah, that's sort of an orchestration of all these jobs of sorts. Got it, got it, got it.
+
+Mohamed   41:45
+Exactly.
+Exactly, exactly. So that that's why we had to do it our own way in 2016 and then when we move to Azure and the same thing applies to GCP. So we have one plug in that will do all clouds, but it will be nice. I mean we had to do this because this did not exist and now even if there is something existing, we already have our own way. So I'm asking like.
+
+Swati Devgan   42:06
+One IP.
+
+Mohamed   42:07
+For maybe newer companies that just moved to the cloud, something like that.
+
+Swati Devgan   42:11
+Understood. Got it. One last thing that I see in my notes where I think I can pick your brains and you'll have some useful input for inputs for me. Mohammed is when you're setting up the entire estate in in cloud.
+
+Mohamed   42:18
+Sure, OK.
+Mhm.
+
+Swati Devgan   42:27
+Uh, with with all the artifacts we spoke about, is networking a key component there? Uh, setting up a networking topology in Azure or AWS? Is that something that you that you work with and how does?
+
+Mohamed   42:37
+Don't, I don't, I don't. But there is a separate network team that does all of that. So it's like we're teams and each team has a functionality. So even if when I want a private link created, I don't create it myself. I don't have power to do it. I have to create a ticket to the private to the network team and they create it for me.
+
+Swati Devgan   42:41
+OK, OK. OK.
+Of course, of course, of course.
+Somebody else is doing.
+Got it, got it. Understood. I think that's all I had in terms of the questions. Thank you for your feedback. I think it has been as I spoke about we are migration team within Azure and I got some really qualitative, useful qualitative inputs for this third and the very critical stage, which is when the.
+Customers decide to move to cloud. Um, but since you said that, yeah, go ahead, please go ahead.
+
+Mohamed   43:18
+E.
+Yes.
+I want to get something because I work for a big company and I know how big companies think. Usually smaller companies, they can go to the console or the, you know, they can launch stuff from the console. Big companies, if you want to do migration, think of workflow automation because when it comes to security, they want to make sure.
+They, you know, they follow the security rules. They don't. They don't want anything. So that's what I'm trying to advise you. Workflow automation is the best, especially for huge companies.
+
+Swati Devgan   43:41
+Yeah.
+Yeah, that that makes sense. That sounds good. And and I think, yeah, more so in in the execution phase where the customers, the big customer has decided that, OK, this is how my estate looks like. This is the portion that I need to move here like in your case AWS, this portion goes on Azure, et cetera, et cetera, et cetera and that's where.
+
+Mohamed   44:04
+Mhm.
+
+Swati Devgan   44:08
+The end to end workflow comes into picture. Just one last thing, I'm not sure how feasible is it. Deepa, maybe you would like to chime in at this point, but you spoke about that you have an environment which is on Prem as well and if there is someone in your team you can connect to.
+
+Mohamed   44:14
+Sure.
+
+Swati Devgan   44:27
+We can keep that conversation as a we can see if we need to do that conversation as well because I'm also very interested if your organization is looking at migrating that stage in the data center as well at any point in time in future in cloud and what are the considerations?
+References and decision making principles that they have. It would be it would be great to learn from that conversation as well.
+
+Mohamed   44:52
+To be honest, I only work on the cloud, so all the people I know are cloud like cloud, but I can answer, I can answer this question. I know I have the knowledge. So basically we still have data centers. OK, we we sold a lot of data centers already because we moved to the cloud. So eventually we'll move.
+
+Swati Devgan   44:57
+Uh, fair. OK.
+Right.
+9.
+
+Mohamed   45:12
+Different to the cloud little by little. However, it depends on the budget and at the same time it depends. Are these are these applications going to be in production for a few more years and done? If they are, keep them and then they until they are retired and then that's it. So little by little they are closing and getting rid of the data centers.
+However, if they don't see, I already have the hardware, for example, on-prem, right? The application is running, it's not costing me anything, OK? But if I migrate it to the cloud, it's going to start costing me money, right? And this application is going to be retired in one year or two years. Why would I move it to the cloud and pay for it if I already have the data center?
+
+Swati Devgan   45:44
+Good.
+
+Mohamed   45:51
+And I cannot, even if I move that application, I'm still not going to have the data center. I'm not going to close the data center, right? So why move it and pay for it if it's going to be retired in one or two years, keep it in the data center, get rid of this application little by little until we can free the data center or move some of the application to another data center and then close the data center.
+So that's that's what's happening.
+
+Swati Devgan   46:12
+OK, got it, got it. But as you spoke about, so if I if I drop it correctly, these are legacy applications as well, which which which are also sort of set set for end of life of sorts, right? That's why there is no strategic relevance to move them, but the business.
+
+Mohamed   46:19
+Mhm.
+Yes, yes.
+Exactly.
+
+Swati Devgan   46:32
+Business continuity for the business continuity for purpose or the or the purpose these applications are serving, the organization must be keen to sort of move that business logic to a newer relevant version of a web app which is available in the market. Is is that a clear consideration?
+
+Mohamed   46:44
+Yes, any, any, any application that's still being used in production or still going to be used in production for a while and it is generating money for us. If it's not moved to the cloud, it eventually will move to the cloud because it's much easier to do things on the cloud.
+
+Swati Devgan   46:58
+Yeah. Manage, yeah.
+
+Mohamed   47:01
+Then exactly you can you can be up and running in in less than an hour. However, if you have to get new hardware to the data center and you have to wait for six months, I have to wait for six months at least. So eventually we're moving little by little, but like I said.
+
+Swati Devgan   47:05
+Right.
+Long process, right?
+
+Mohamed   47:17
+It's it's, you know, like I said, our cloud budget is $100 million. If we're really gonna migrate everything, it's gonna be much more than $100 million. So eventually we're doing that. But for applications that are legacy, we're not gonna, we're gonna wait until the end of life and just get rid of that.
+
+Swati Devgan   47:21
+Uh.
+What are these application types if you mind sharing like are these mainframes?
+
+Mohamed   47:36
+There are millions of applications. I don't know because I don't work on these applications. I know there are applications that you know we get emails. This application is retiring. I don't even know what the application is because I don't work on it or use it. But you know legacy application or maybe sometimes we have a a better version of.
+
+Swati Devgan   47:41
+Uh, OK, got it.
+Oh yeah.
+Version available.
+
+Mohamed   47:56
+Something they upgraded to a different version that can do the same exact job but now it's on the cloud and they get rid of that because I also know that because remember I said there is a billing code for each application they gonna they say this billing code is gonna get deleted. Deleted means the application is is getting is retiring so there there is no need to have the billing code for it.
+
+Swati Devgan   48:03
+Got it.
+Hmm.
+Got it. Got it. Understood. I think that was a very valuable conversation. Thank you, Mohammed, for your time. I I think we're already 4 minutes over. I'm sorry for for taking. Yeah, yeah, yeah, I think.
+
+Mohamed   48:24
+Yeah.
+That's fine. That's fine. That's fine.
+
+Swati Devgan   48:31
+This was fairly useful. Deepa, do you have any questions before we conclude?
+
+Deepa Bhat   48:38
+No, I I was just listening quietly to the conversations and I think based on Mohammad's experience and expertise in certain domains, I think you kind of, I would say tweaked whatever we had top of our mind to make sure we get the right kind of insights for Mohammad. So thank you so much.
+So much moment there.
+
+Swati Devgan   48:59
+No.
+
+Mohamed   48:59
+You're welcome. So just one one before I end. When you implement something, think big, don't think small, don't think of small companies. Think big because when you implement it and you have it, you can get the big shocks, but don't rely just on the small companies.
+
+Swati Devgan   49:09
+Yeah.
+
+Mohamed   49:17
+Like I said, when we did the automation, we had to do it ourselves because it did not exist. Companies want automation workflow.
+
+Swati Devgan   49:22
+Yeah, yeah.
+Right.
+
+Deepa Bhat   49:25
+Yeah. But then we also have SMBs to kind of cater to, right, Mohammad. So it's like a good mix of a balance that we need to strike between like large enterprises and SMBs.
+
+Mohamed   49:33
+I know what you like. Yeah, yeah, I I'll add one thing like when it bothers us, it really bothers us when Azure or AWS or GCP, they release new services and these services are great, great and we want to use them right away. Then we'll figure.
+They don't support the customer managed, they don't support private endpoint and we have to work with them. Sometimes it takes years for them to give us the fix. By the time they have the fix, we're not interested anymore. It happened to us many times. Do we want to use a specific service? Sorry, the team is.
+Don't want to use it anymore. They had to find another solution because it took you a year or two to give us the text, so.
+
+Deepa Bhat   50:16
+Not you.
+
+Swati Devgan   50:18
+Yeah, the ideal state would be to to to develop the product or the journey in a way that we cater to both, I think, but but fair feedback, yeah.
+
+Deepa Bhat   50:18
+Thanks. Thanks for sharing that.
+Yeah.
+
+Mohamed   50:48
+So that's how AWS thinks, you know, I'll be making money. It doesn't matter if it's secure enough or not, or big companies will use it or not. Eventually I will have the fixes, maybe in two years, at least for those two years. Let me make some money of it.
+
+Swati Devgan   50:48
+Mhm.
+
+Mohamed   51:04
+So that's another approach, so.
+
+Swati Devgan   51:07
+Yeah. Oh, that that was useful. Thank you. Thank you for your time, Mohammed.
+
+Deepa Bhat   51:11
+Thanks. Yeah. Bye-bye.
+
+Mohamed   51:11
+Welcome. All right. Thanks a lot. Just one last if it's for because this did not go that respondent way like that with the the the meeting, it was sent directly to me, not through respondent, right. Will the compensation go directly to respondent just like the same way or?
+
+Swati Devgan   51:12
+Have a good day ahead. Bye bye.
+
+Deepa Bhat   51:31
+Yeah, yeah, don't worry about that mom. But everything like you join this meeting, the invite has come to you. The payment will happen to the portal.
+
+Mohamed   51:32
+OK, OK.
+Uh.
+OK, because usually I get it from respond it was it came directly from you. That's why I wasn't sure. But thank you so perfect.
+
+Deepa Bhat   51:43
+Yeah, yeah. We generally schedule it like via teams 1st and then we kind of update it on respondent once the sessions are over. Yeah, not to worry.
+
+Mohamed   51:47
+I see.
+I see. Perfect. Thank you so much. And anytime you guys need anything, I'm I'm there. Just, you know, can e-mail me. I'll gladly get on sessions.
+
+Deepa Bhat   52:00
+Sure. Thank you so much.
+
+Mohamed   52:01
+Perfect. Thank you. You too. Bye-bye.
+
+Swati Devgan   52:01
+Thank you. Have a good day. Bye bye.
+
+Swati Devgan stopped transcription

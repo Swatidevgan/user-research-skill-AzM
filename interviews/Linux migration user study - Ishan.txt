@@ -1,0 +1,555 @@
+Linux migration user study - Ishan-20260217_113131-Meeting Recording
+17 February 2026, 06:01am
+44m 0s
+
+Swati Devgan started transcription
+
+Swati Devgan   0:03
+To sort of introduce myself and then maybe we can go ahead and you can help me understand how your work looks like and how it is sort of pertinent to the kind of deep dive discussion we are aiming to have today. So hi, I'm Swati. I am a Product Manager on Azure Migrate team within Microsoft Azure.
+
+Ishan Sharma   0:05
+Yeah.
+Oh.
+
+Swati Devgan   0:21
+Of Azure. Just to give you a quick overview of what the product does, I understand maybe you've already used it, but basically it constitutes of like 3 broad stages of customer journey, which is also what a customer who's potentially looking to migrate from on Prem or from.
+
+Ishan Sharma   0:30
+Yeah.
+
+Swati Devgan   0:41
+Other clouds to Azure is looking at. It would be discover, plan and execute migrations and my work stream or this research which I'm conducting for which we're having this conversation today is pertinent to the migrations of Linux OS specifically and.
+Further in conjunction to that, how does the landscape of containers look like today in on Prem and how do customers want to sort of migrate their container instances to cloud? So with that maybe I'll I'll go ahead and if you can just sort of help me understand.
+Your your work area, what is it that you you do and how we can sort of tailor the conversation around that?
+
+Ishan Sharma   1:24
+OK, so I work as a senior software engineer at Cognizant, building cloud native IVR and conversation systems for banking use cases. Most of my work includes.
+Looking after these services that I work on in the Linux environments and which are deployed on the cloud infrastructure as well as on Prem. So it's a mix of both VM and containerized setups. So my focus is on back end architecture performance optimization.
+And making sure that our systems are reliable all the time, particularly for the latency sensitive voice systems. Given the regulated nature of banking, I also ensure that our implementations align with the security best practices.
+Covering different policies like encryption at rest and in transit audit logging and controlled deployment workflows.
+
+Swati Devgan   2:25
+Got it. So does it also specifically entail actually moving on Prem estate, let's say from VMware from or from any other hypervisor stack to cloud? Is that something that you also dabble into?
+
+Ishan Sharma   2:38
+Yes.
+
+Swati Devgan   2:39
+Got it. So I think maybe I'll, I'll start by talking about the OR asking about basically the the deep dive areas where I'm keen to sort of understand and develop more learning.
+
+Ishan Sharma   2:54
+OK.
+
+Swati Devgan   2:55
+Specifically in the context of Linux OS estate, Ishaan, that you must be managing for your clients as part of Cognizant, what are the discovery tools that you or your team essentially uses? What I'm interested in, what are the auth and the credential types that the customers, Linux customers are most comfortable with in terms of?
+
+Ishan Sharma   3:01
+Yeah, yeah.
+So.
+
+Swati Devgan   3:14
+To discovering their estate as they embark on the journey to migrate.
+
+Ishan Sharma   3:20
+So we use a lot of different tools for banking. We use the tools that are that works both for our cloud and on Prem setup. So we use like Linux estates, we rely on a combined.
+Combination of the Azure native capabilities like the Azure magnet for VM assessments along with we have for access. We use SSH based access for deeper system level inspection whenever it is required and also from an.
+Auth standpoint or in a regulated environment that we work in. So we are generally comfortable with key based SSH authentication rather than password based access and we typically have set the.
+Our back control access to Azure AD and which helps us to manage identities for service to service communication between telephony, IVR and the voice agents and least privilege full assignments have also been done so that we control the access to.
+Two different platforms being used simultaneously during the call.
+
+Swati Devgan   4:31
+Got it. So specifically since you've you've worked with Azure Migrate and as part of the user permissions that are required, I think taking a step back, what kind of discovery mechanism with Azure Migrate do you usually?
+
+Ishan Sharma   4:36
+Yeah.
+OK.
+Yeah.
+
+Swati Devgan   4:46
+Deal with because there are a bunch of tools that exist within discovery also online, offline, any any preference in how customers, customer strategic decision making go on these these choices as well is that the case?
+
+Ishan Sharma   4:52
+Hello.
+Yeah. So since our environment is more Azure centric, so we primarily deal with the agentless VM discovery through the Azure Migrate when assessing the Linux workloads that are already virtualized. So the approaches generally prefer because it helps us kind of reduce the operational.
+Overhead and avoid installing agents unless you know deeper dependency mapping is required for say telephony for for our case and for more detailed insights into it like the application dependency mapping or.
+I would say performance profiling. So we have seen that agent based discovery, we use it selectively because it helps our team you know with the process level visibility and see all the network traffic coming in.
+And in a hybrid environment where we touch the endpoints for the API keys for our voice agents, so we combine it with the infrastructure level assessment through Azure Migrate with manual validation over SSH to confirm the OS versions the.
+Package dependencies, running services and I would say storage configurations.
+
+Swati Devgan   6:22
+Got it. So this is more around the authentication mechanism where I see SSH being the most predominant one. What about permissions? There are certain set of permissions that that are mandatory by Azure Migrate Discovery or any other tool that the customer uses.
+
+Ishan Sharma   6:29
+Right.
+
+Swati Devgan   6:39
+So do you, are there any because of the security and compliance mandates that the customer, customer sort of ask for as a as a consequence of that, are the user permissions that are mandatory to sort of give a topology view in discovery?
+Um, change? Or does that sort of go on the decision making?
+
+Ishan Sharma   7:05
+Yeah, so primarily it governs the decision making through Azure Migrate itself, specifically for our server assessments and our dependency mapping components. And for the agency discovery, we also have the.
+Hyper V environments and we also kind of rely on that so that our assessment is much more thorough and we need it, you know, it's all the way out there.
+
+Swati Devgan   7:26
+OK.
+So what? What kind of like permission types for Linux estate the customers are comfortable sharing? There are a bunch of staggered permission types, right? Root, sudo. What is it that the what's the best combination that your customers align with?
+In terms of providing the the access.
+
+Ishan Sharma   7:58
+So they are like not generally comfortable sharing the direct route credentials for discovery. So the more common pattern I would say is providing they provide us a a dedicated service account with pseudo privileges, but those are scoped and audited as well.
+
+Swati Devgan   8:03
+OK.
+I see.
+
+Ishan Sharma   8:15
+So the account usually has enough permissions to help us inspect the system configurations and see all the installed packages, the running services, and the disk layout as well, along with our network settings of course.
+
+Swati Devgan   8:15
+OK.
+Got it. So in terms of the experience of using the Azure Migrate Agentless Appliance Discovery mode that you you're talking about since you've used it quite a lot, Ishan is have you or your customers come across?
+
+Ishan Sharma   8:36
+Yeah.
+Right.
+
+Swati Devgan   8:45
+Any pain points that maybe do because of which you have observed a drop off in the funnel in the sense that maybe the security policies or compliance policies stop them to use the agentless discovery mechanism that Azure Migrate has in the current state. Are there any broad?
+Pain points that you can sort of enumerate, which I can take for us to sort of act upon in terms of, you know, feature enhancements specifically for Linux state.
+
+Ishan Sharma   9:17
+OK, for Linux state I've seen that we have seen some performance related concerns like if there are many VMS, discovery can take longer than expected and customers may perceive it as like complex or heavy during the initial setup phase.
+
+Swati Devgan   9:26
+OK.
+OK.
+
+Ishan Sharma   9:35
+And second, I would say it's more common around the network connectivity and firewall tools. So our application needs proper access to the source environment and in a regulated setup, opening the required ports or enabling any connectivity can take up time to do these.
+Security approvals so that sometimes delays the onboarding as well.
+
+Swati Devgan   9:56
+I see.
+But is that do you think that the time taken to sort of get those approvals so that all the firewalls and the ports are open for accessibility, is that do you think that can be attributed to the the appliance functionality in itself?
+
+Ishan Sharma   10:15
+Oh yes, because sometimes we would, you know, be waiting for the approvals and it affects a lot of our momentum. And since we are request, you know, are requested to open the ports and then allowing the application level connectivity.
+
+Swati Devgan   10:25
+Hello.
+
+Ishan Sharma   10:33
+So and it also triggers a lot of security reviews and takes a lot of back and forth between the change management processes and sometimes a lot of multiple stakeholders approvals because there are a lot of different banking related things that would take access from a lot of different people and it would slow us down.
+
+Swati Devgan   10:36
+Mhm.
+Got it, got it. So these these banking customers that you're talking about specifically in terms of because you're you're managing their estate from the point of view of migrating and modernizing to cloud specifically Azure in your case, how how does the Linux topology looks like? What are the top distros that these?
+
+Ishan Sharma   10:51
+By law, yeah.
+Mhm.
+Yeah.
+
+Swati Devgan   11:11
+Banking customers are using. Where I'm getting at is that how does the spread of the various distributions open source distributions look like? And are there any fundamental challenges to managing this state compared to, let's say, a Windows estate where the diversity is?
+Not that much.
+
+Ishan Sharma   11:33
+So for banking, what I have seen the most common is the CentOS. Since you know in these organizations the Linux estate is usually a mix of the enterprise grade distribution. They use CentOS primarily because of its long term support and the ecosystem.
+As well. So in some cases, especially for newer workloads or cloud native services, Ubuntu LTS is also fairly commonly used because it provides sort of strong package availability and a lot of community support as well.
+
+Swati Devgan   11:53
+OK.
+Good.
+
+Ishan Sharma   12:11
+The topology itself, I would say it's typically there multiple applications over starting Linux VMS and back end services or any other middleware layers and then we have different database nodes.
+Core systems do remain on Prem like for us. I see that networking and telephony services they remain on Prem while the stateless or API driven components here on Azure. So one of the client uses the Azure Open AI API so.
+It's a mix of both VM and then connecting it with the API so that everything works in conduction.
+
+Swati Devgan   12:53
+Got it. You spoke about CentOS, Ishan. That's a little interesting because it has already hit the I'm I'm maneuvering into the end of life, end of support statuses where by the by the virtue of.
+
+Ishan Sharma   12:57
+Yeah, yeah.
+In.
+
+Swati Devgan   13:09
+Diverse set of distros that exist in the market specifically for Linux. We come across the situation with any major OS version, let it be RHEL Ubuntu 18.0420.04 specifically for CentOS because I think about two to three years ago it became end of life. How are the customers?
+
+Ishan Sharma   13:17
+Yeah.
+No.
+
+Swati Devgan   13:28
+Continuing to run these distros and when they my consequent question is when they plan to sort of migrate these to cloud, what kind of OS versioning they want to stick to? They want to carry it over or what? What's the approach they want to take?
+
+Ishan Sharma   13:36
+Mm.
+Since OS is still being used, they rely a lot on the legacy architecture, but it continues to run because I feel that the workloads hosted on it are tied to the applications that were certified against specific OS versions, so.
+
+Swati Devgan   13:51
+I see.
+I see.
+
+Ishan Sharma   14:05
+Revalidating those applications on a newer OS can require a lot of vendor approvals and then a lot of regression testing as well. So it will occupy a lot of their bandwidth of QA teams and I think that formal change management is also a thing.
+Which slows down the upgrade because personally I've seen that it takes a lot of it's extremely slow to run these processes in banking use case since they are much more comfortable on using, you know, legacy architecture.
+
+Swati Devgan   14:39
+Hmm.
+
+Ishan Sharma   14:39
+Since, but now things are slowly changing. They want to migrate to cloud because it gives them much more flexibility. And coming to the version carryover, it does happen during the initial cloud transition that I've seen.
+Mainly to minimize the variables. So the OS modernization, they often treat it as a parallel or a subsequent initiative. They don't see it as a combined with the infrastructure migration.
+Since you know they prioritize stability a bit more rather than giving immediate upgrades to the OS.
+
+Swati Devgan   15:14
+Mm.
+Got it. So if I understand it correctly, once the migration they they carry the OS version as is to Azure or whatever cloud they're moving. Is it like CentOS stream which is which is like a logical conjunction of CentOS or they actually use the CentOS golden image only when they?
+
+Ishan Sharma   15:28
+OK.
+
+Swati Devgan   15:39
+Move to Azure.
+
+Ishan Sharma   15:41
+Um, I usually move the image itself, the golden image. Yeah, yeah.
+
+Swati Devgan   15:44
+As is, as is. OK, got it. And then if at all, if at all afterwards they the customers is are keen to sort of take the decision making of whether they want to move to another image that happens after they migrated completely Cloud to Cloud. Is that is that a fair understanding?
+
+Ishan Sharma   16:04
+Yes, yes.
+
+Swati Devgan   16:05
+Got it, got it. So on this particular aspect, Ishan, I also wanted to sort of deep dive into the the point of view of what are the mechanisms that the customers are using to sort of migrate. There are a bunch of capabilities.
+Out there, are they sort of just using the conventional lift and shift to move these Linux Linux servers to cloud or are they using any other kind of mechanisms or methodologies to move to to cloud? And once you walk me through that process conceptually, if you can focus on the toolkit.
+
+Ishan Sharma   16:43
+Mhm.
+
+Swati Devgan   16:44
+That are being used to execute these migrations that would be great.
+
+Ishan Sharma   16:46
+Sure.
+OK, so yeah, I've seen that in banking. The initial approach that I take is for Linux servers is typically the conventional lift and shift specifically for the legacy or tightly coupled workloads.
+They prioritize it like to move the infrastructure with minimal changes to the application behavior so that they can replicate the VMS into Azure or any other cloud provider using tools like Azure Migrate and keep the OSN configuration.
+Largely in that and for workloads that are more modular or are more API driven, I do see that selective re platforming is done. I would quote an example like moving from self-managed databases to managed services.
+Or containerizing specific packing components. For refactoring, I've not seen it much, but I would say it's much less common in the first phase because you know, combining infrastructure transition with the architectural redesign increases a lot of risk.
+And it can delay or even make the overall system very much unstable as well. So do you do it incrementally or after the workload is much more stable than any provided cloud provider?
+
+Swati Devgan   18:16
+Got it. So in order to achieve this, so as I hear it, I think lift and shift as the first pit stop and then resorting on advanced modernization techniques like replat or code scan based refactoring happens later. That's that's like the cascaded approach.
+
+Ishan Sharma   18:32
+Yes.
+
+Swati Devgan   18:34
+So if you can maybe talk about the toolkits for the first one, I preempt and correct me if I'm wrong, I think the server application IP that Azure Migrate provides would come in handy to sort of replicate the machines. What are the kind of toolkits that if you've come across any other kind of replication toolkits that the government.
+
+Ishan Sharma   18:34
+Right.
+Right.
+
+Swati Devgan   18:53
+Customers prefer apart from or you used apart from Azure Migrate for the first first pit stop and what are the toolkits and techniques customers use to deploy the second-half which is the replat and refactor if you can shed some light on that.
+
+Ishan Sharma   19:09
+On top of the Azure Migrate, I've also seen some customers use Azure Site Recovery for replication, specifically when they want the business continuity alignment alongside the migration happening.
+So in VMware heavy environment, I've seen that native hypervisor snapshots combined with the Azure migrate applications are pretty common and for image based approaches.
+Some teams do prioritize preparing the hardened golden images and use custom images in Azure to recreate the standardized Linux builds rather than, you know, sort of replicating it machine by machine 1 by 1.
+And in case of hybrid setups or where setups are much more complex, I've seen tools like Ansible being used because they're used for the reconstruction of environments in Azure or any other cloud provider instead of the pure application.
+
+Swati Devgan   20:20
+Specifically for Linux, I think is is that the case? Ansible is or is that is that across both the OSS Windows and Linux when when you talk about Ansible toolkits being used?
+
+Ishan Sharma   20:29
+OK.
+Primarily for Linux, I would say a 7030 split Linux and Windows.
+
+Swati Devgan   20:35
+Got it, got it, got it. So these Ansible playbooks, what are they essentially doing? Is it like IAC provisioning to set up the landing zones in cloud in Azure or or there are more scenarios for which these Ansible playbooks are being used?
+
+Ishan Sharma   20:52
+Um, usually for the Azure part itself.
+
+Swati Devgan   20:55
+OK, got it, got it. I was, I was left with one part or one question which was which was there in my laundry list, Ishan, which which was pertaining to the first part of the journey where we were talking about the appliance in detail which you've the agent list discovered.
+
+Ishan Sharma   20:57
+Yeah.
+Sure, yeah.
+
+Swati Devgan   21:15
+Mechanism where you deploy an appliance in the on Prem environment. Uh specifically because because you've done hands on work with deploying this appliance for discovery.
+
+Ishan Sharma   21:23
+Right.
+Yeah.
+
+Swati Devgan   21:26
+There is one hypothesis that we had and I'll state it out loud together. Your perspectives is this appliance is a Windows based appliance. Is that is that something that you've come across where the compatibility or the outlook?
+
+Ishan Sharma   21:34
+OK.
+
+Swati Devgan   21:41
+Of this appliance being Windows based acts as a hindrance for discovering the Linux system because at the end of the day these two OSS are completely different worlds altogether. So is that something that that has come across or any any outlook or perspective on that?
+
+Ishan Sharma   21:59
+I would say like from my experience itself, the fact that the Azure Migrate appliances Windows based has not been a technical blocker as such for discovering Linux systems, but since you discovered discovery in agentless mode relies on hypervisor level.
+CPIs or SSH based credential validation rather than the OS level agents installed inside Linux machines. I see that the underlying OS of the application does not itself interfere with the discovery. That being said, I feel that in the next dominant environments especially.
+
+Swati Devgan   22:34
+OK.
+
+Ishan Sharma   22:39
+That the OPS teams are more comfortable with the Linux tooling. There can be a perception gap of course, because teams sometimes question why a Windows based application is required in an otherwise Linux heavy state.
+And it's, I feel more of an operational alignment or comfort consideration and one of the frictions that I observed a couple of months ago that I observed, you know.
+We have observed things to be the friction about the networking side of things and firewall rules, not because it's just Windows, but because the enterprise environments are very tightly controlled. So compatibility, compatibility issues are there, but there is sort of a perception gap.
+
+Swati Devgan   23:25
+2.
+
+Ishan Sharma   23:30
+Of course.
+
+Swati Devgan   23:32
+Got it. And in your case, considering you are more of a solution architect consultant for these banking customers in terms of the autonomy to make the decision making of which tool to use for what environment at what stage of the migration?
+
+Ishan Sharma   23:39
+Right, right.
+Hmm.
+Yeah.
+
+Swati Devgan   23:50
+Who's the decision maker here? Is it the in-house person, let's say a technical person in your in the in your client's organization or is that you who's basically orchestrating the end to end migrations or your or your seniors? So who is it like?
+
+Ishan Sharma   23:59
+OK.
+
+Swati Devgan   24:07
+If I have to sort of generalize the question, basically, is it the customer itself or the leadership, technical leadership within the customer workplace which is taking these calls or is it the the CSA's or let's say in your case the partners?
+
+Ishan Sharma   24:08
+You.
+Thank you.
+Mhm.
+
+Swati Devgan   24:24
+Cognizant being the partner, they are taking these calls. Who? Who owns the decision making?
+
+Ishan Sharma   24:26
+Thank you.
+So usually I, along with my colleagues and cognizant, we typically evaluate the technical landscape, outlining all the options available and recommend recommend an approach based on risk.
+Banking compliance alignment and the workload characteristics and final decision rests on the client side, internal stakeholders. They're usually senior engineers or engineering directors. Typically they who look after the cloud architecture board or the infrastructure.
+As well. So in many cases, security and compliance teams also require a significant approval since the influence on how these toolings can introduce new connectivity or is how the data movement patterns look like if we are migrating.
+A service or a particular infrastructure of on Prem services so.
+
+Swati Devgan   25:30
+Got it. In terms of managing the stage to migrate to various cloud providers, are you just managing the state for Azure Ishan or the other two competitors are also in perspective like AWS and GCP or?
+
+Ishan Sharma   25:32
+Yeah.
+Yeah.
+For GCPI haven't explored it much, but my most of my work is on Azure itself.
+
+Swati Devgan   25:52
+On Azure, OK, sounds good. Then we can scope our discussion only too. And within that the toolkit consists of Azure Migrate for end to end discovery for server of server replication and in terms of for Linux state, Ansible playbooks play the role of setting up the landing zones.
+
+Ishan Sharma   25:56
+Sure.
+Yeah.
+
+Swati Devgan   26:08
+In terms of once the server has been replicated to Azure, right, I think we we are at a 30 minute mark approximately. I would want to sort of.
+
+Ishan Sharma   26:12
+Good.
+Yeah.
+
+Swati Devgan   26:20
+Reorient the discussion to the containers piece specifically because as of today, because you've you've been using Azure Migrate fairly at a decent depth, container as an instance is not discovered.
+
+Ishan Sharma   26:24
+Sure.
+Correct.
+
+Swati Devgan   26:37
+Based on the inventory that Azure Migrate provides. So however containerization as an approach specifically with Linux OS being the underlying host stack is is fairly prominent out there in the on Prem market. So would you sort of help me understand how the prominence of containers look look like?
+
+Ishan Sharma   26:41
+Hmm.
+
+Swati Devgan   26:57
+In the customers that you work with right from the popular runtimes, Kubernetes and what are the kind of approaches these people are looking at for these instances when they migrate to Azure and if we can connect it to how Azure migrated the tooling can also amplify to cater to these scenarios.
+
+Ishan Sharma   27:14
+Mm-hmm. OK.
+Yes. So container adoption is, it's growing in the manual environments, but I would say it's uneven. Traditional core systems still run on VMS while newer digital facing services like APIs or AI services being offered or the middleware.
+They are more commonly containerized. So in terms of runtime, Docker is still the most common container that was you is being used and from orchestration standpoint, Kubernetes is increasingly prominent that I've seen.
+Especially for the scalable services and stateless services as well. Some customers have seen that they run upstream Kubernetes on Prem, while others use more enterprise distributions like.
+Red Hat Openshift for example for their tight governance and support alignment and in hybrid setups. What I've seen is that they fairly use containers and using.
+Deploying the new workloads on Kubernetes services in Azure and other service providers. This approach, I would say it's incremental because they are, you know.
+They containerize the modular services first and then they validate the CICDN security posture and then gradually expand towards adoption as well and Azure migrate fits really well because.
+A lot of clients are using it and I've seen that preference is given to Azure in many cases, while they sometimes do use GCP, but that is for extremely niche services like speech to text.
+And you know integrating it in their cloud and on Prem infrastructure for the transcription and other things.
+
+Swati Devgan   29:23
+Got it. And in terms of discovering the the servers which which have containers, container nodes deployed and container pods running, is that something that you see as a value that any toolkit that helps with migrations?
+Can be can be valuable to the customers where customers can sort of identify the servers from day zero in terms of the discovery in their on Prem environment.
+
+Ishan Sharma   29:49
+I don't. I'll say that.
+It could be valuable because what I've seen is that in many environments, specifically where the containers for adopted incrementally, visibility is not something which is very centralized so.
+Yeah, we might have like certain Linux VMS acting on a container host, but unless there is a well maintained CMDB or a clustered inventory, that mapping isn't always obvious during the early discovery, so.
+In that case, the toolkit toolkits really help and detect the Kubernetes nodes and surface any active clusters or or workloads from day zero and it will reduce the uncertainty in the assessment phase.
+And in banking, where governance is very strict and documented, they sometimes lag behind implementation and early container awareness as well. So yeah.
+Yeah.
+
+Swati Devgan   31:05
+Got it. And in terms of the targets in Cloud, we'll talk about Azure because that's what you dabble most into. What is the kind of architecture these people are looking at in terms of containerizing? There are a bunch of capabilities available out there in Azure and how?
+
+Ishan Sharma   31:12
+Yeah, yeah.
+
+Swati Devgan   31:23
+How does the choice of these these container services vary as a function of the the architecture that exists in on Prem for the services that are containerized?
+
+Ishan Sharma   31:37
+So in terms of the migrations, the architecture for containers lastly depends on the how mature the on Prem container set up already is if the client is already you know running Kubernetes on Prem specifically for the production grid clusters.
+The natural target is usually Azure Kubernetes Services or any Kubernetes Services provided by cloud providers because it'll it'll help them preserve the orchestration model while offloading the.
+Control plane management. So that'll make the transition more aligned to the architecture rather than doing a complete redesign and for customers that have seen that use standalone Docker post without the full orchestration.
+We often see a decision point. Some move towards AKS to be standardized on Kubernetes file. Others might opt for simpler services like Azure Container instances for their smaller and stateless workloads.
+That's it. Thank you.
+
+Swati Devgan   32:50
+Azure container instancy. OK, got it. ACI. OK, OK, got it. OK, understood. And when it comes to you, you spoke about two distinct topology, right? One is managed by an orchestrator.
+
+Ishan Sharma   32:51
+Yeah, yeah, I see.
+Correct.
+
+Swati Devgan   33:06
+That is Kubernetes in one one. Another approach is standalone, which is relatively lightweight where the topology and the and the the architecture of the web application or the service is not that complex. Standalone containers also exist.
+Is there a distinct across these two approaches? How does the choice of runtime or what is the pattern you've observed? Does that vary? Because Docker D is something that you already mentioned as a popular runtime. There are a few more.
+Uh, out there in the market based on the primary research I've done. So does the choice vary across these two approaches in terms of choosing the runtime?
+
+Ishan Sharma   33:46
+It does based on where the you know, where the organization sees their infrastructure, but it does vary slightly depending on whether it's orchestrated or it's completely standalone.
+But in standalone setups that I've seen specifically on the Linux VMS, Docker engine is more commonly. It's the most common runtime as you've seen and in Kubernetes based environments.
+Specifically for the recent clusters, the runtime often shift towards container rather than a full Docker engine since Kubernetes depreciated the Docker support and move towards CRI.
+Compliant runtime. So in orchestrated environments I've seen that containers are much more common, but I've seen that in enterprise heavy setups where particularly Open Shift is being used.
+
+Swati Devgan   34:39
+Oh.
+
+Ishan Sharma   34:55
+CRIO may also appear as a runtime, but that's more specific to the Red Hat ecosystem. I would say broadly it's more towards the Docker engine where the Kubernetes engine increasingly.
+
+Swati Devgan   35:04
+OK.
+
+Ishan Sharma   35:11
+Uh, relies on the container or the CRIO.
+
+Swati Devgan   35:15
+You got it. You you spoke about Red Hat Open Shift, which is the enterprise grade Kubernetes orchestrator. Do you see that being prominent in the on Prem environments as well, Ishaan, because that's the thrill at the end of the day underlying stack is Kubernetes itself, but our customers.
+
+Ishan Sharma   35:22
+Good.
+Mhm.
+
+Swati Devgan   35:33
+Using the proprietary Red Hat Open Shift to orchestrate and manage container instances as well. Is that a growing trend?
+
+Ishan Sharma   35:43
+I've seen it in a few organizations, but while the mainstream Kubernetes is used in certain setups, I see that a few of those.
+Use the Red Hat OpenShift because it sort of provides them in enterprise supported distribution and it has a lot of vendor pack support that I've seen, so it aligns with some of the governance requirements as well. Oh yeah.
+
+Swati Devgan   36:06
+Got it.
+Good.
+OK, understood. And I'm, I'm a little bit more interested in understanding the landscape of containerization where containers are deployed in a standalone format, no orchestrator whatsoever. How does the manage, what is the management or control plane layer there? Is the volume of container pods here so less that customers are using?
+Using a self managed approach or there they had some sort of custom workflows or to do that.
+
+Ishan Sharma   36:45
+I would say that in these environments without an orchestrator or script straight up, so management is usually sort of much lighter than more VM centric than being very cluster centric.
+
+Swati Devgan   36:59
+Yeah.
+
+Ishan Sharma   37:01
+So typically I would say like these containers are being run on dedicated Linux VMS, the control plane. In that case it isn't a centralized orchestration layer like Kubernetes, it's I would say.
+More often operational script and you know assistant services and CICD pipelines triggering container builds and then restarts. So the volume of containers is generally low to moderate in such setups.
+There are like these are often the single service or small multi container workloads where the full orchestration would be considered operational override for them.
+
+Swati Devgan   37:48
+Got it, got it. And that's why the logical choice of ACI when they're moving to Azure because there is no orchestration layer over there. Also, have you actually executed the container migrations without having the discovery capability today via Azure Migrate at least?
+
+Ishan Sharma   37:54
+Correct.
+Yeah.
+
+Swati Devgan   38:07
+Have you actually executed them on Azure on one of these container based services? And if yes, what has the process been like? How does the execution workflow looks like?
+
+Ishan Sharma   38:21
+Oh.
+I have executed in Azure itself and a couple of years back I did on GCP, but I still don't have a lot of GCP because that was much more specific and later I tend to move towards Azure itself.
+For different clients. So I would say that since for containerized workforce the approach is usually more application and registry driven, not being very infrastructure replicable.
+So in cases where the workload was already containerized on Prem, we have migrated by first externalizing the images into a centralized registry like the ACR, the Azure Container Registry.
+And then redeploying it into the appropriate Azure target services like EKS or the Azure Container apps depending on the complexity of the infrastructure and for standalone Docker host the process.
+Often involves rebuilding or validating the docker files, pushing files to ACR and then defining the new deployment manifest or the hem charts for AKS if moving to the orchestration.
+
+Swati Devgan   39:55
+Got it, got it. I think I've I've got most mostly what I was sort of looking at. So looking at the kind of flow that I was looking looking for in terms of Linux and containers research specifically specifically from the context of migrations and doubling down on Azure.
+Migrate as the the product that I was focusing on. Just to wrap up in the last three to four minutes, any non-negotiables for Linux or container migrations in terms of which are which are absolutely necessary for a migrate toolkit like ours.
+
+Ishan Sharma   40:18
+Thank you.
+
+Swati Devgan   40:32
+Maybe coming from the security and compliance mandates that banking customers that you work with that one should keep in mind and should sort of productize as part of our end to end journey that we in the form of feedback that maybe you can share.
+
+Ishan Sharma   40:49
+Um.
+I would say like from a banking and regulated environment perspective, there are a few non-negotiables. I would say first being the identity driven access control that will get I would say should integrate cleanly with decentralized IM or.
+RBAC or any other managed identities or any service principles and enforcing these privileged access with the full audit logging since they need it for their audit purposes every quarter and static credentials or.
+Broad root level access models would would not be acceptable for them and secondly I feel that encryption by default like both in transit and in rest. So any replication or any metadata collection or.
+The discovery data movement must align with the enterprise encryption standards and allow for the validation of the compliance audits.
+
+Swati Devgan   41:57
+So since you used the discovery service, agentless discovery service, what are the what are the encryption related gaps that you see today? Would you would you be able to eliminate that maybe because of which the customers may may be dropping off from saying that hey we would not use this toolkit because it's not end to end encrypted.
+
+Ishan Sharma   42:15
+Mhm.
+
+Swati Devgan   42:17
+And there is a there is a severe fear of data and security threat.
+
+Ishan Sharma   42:22
+OK.
+One of the gaps I would say is visibility into how discovery metadata is encrypted into transit. While TLS is generally assumed, but customers have seen that they often want explicit validation of cipher standards.
+Or certification, certificate handling and the ability to align with internal cryptographic policies that they have. If that transparency isn't clearly surface, they review it as a bottleneck and other area I would say is the encryption.
+For collected discovery data where the where exactly the metadata is stored and how it is being encrypted, whether customer managed keys are supported and how long the data persist. So they look for key ownership and rotation policies.
+Being much more important in banking. So yeah, I'll see these two points.
+
+Swati Devgan   43:25
+Got it, got it. All right. I think we are at the top of the hour and the conversation has been fairly useful. Ishan, thank you for your time. And I think we we have your contact details as well if if at all in future we want to have another double click on the conversation.
+To understand the landscape more from your experience, uh, we'll we'll reach out to you.
+
+Ishan Sharma   43:46
+Sure.
+Sure. Thank you so much.
+
+Swati Devgan   43:51
+All right. Thank you, Shan. Bye, bye.
+
+Ishan Sharma   43:52
+Bye, bye.
+
+Swati Devgan stopped transcription

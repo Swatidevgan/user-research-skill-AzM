@@ -1,0 +1,565 @@
+Linux migration user study - Robert-20260220_173308-Meeting Recording
+20 February 2026, 12:03pm
+37m 8s
+
+Swati Devgan started transcription
+
+Speaker 1   0:24
+For hypothesis based questions, but like we'll we'll keep the conversation free flowing so that I can learn in an organic manner.
+So all right, so I'm Swati.
+I'm a product manager with Azure migrate which is an endtoend unified service.
+That helps in.
+From on Prem or other clouds to Azure. It essentially consists of three key journeys.
+Which are a function of the three value props that customers are also looking forward to and they're migrating to cloud. It starts with discovery, then deciding plan planning and assessing on how to migrate to cloud.
+Whether AWS, Azure or Google and then of course executing those migrations after you've chosen the cloud cloud targets.
+So specifically, the context of the conversation today is tied to the to the research area that I'm driving within my team, which is to understand and unpack Linux migrations also in an extension, understanding the landscape of containerization and how customers want to take their containerized applications. Or cont.
+To cloud specifically across the three journey points that I spoke about. So within each areas, what are the customer pain points?
+What are the gaps or behavioral patterns in terms of migrations that customers have for Linux in containers?
+So that's the context with that we if you can quickly walk me through.
+
+Rob S   1:52
+OK.
+
+Speaker 1   1:56
+Rule, which is sort of pertinent to this in migration and modernization in general.
+
+Rob S   2:00
+OK, so yeah, I'm the IT and cybersecurity manager for a software company. I'm we are contracted to the US Department of Defense or Department of War. We manage the tactical user systems, both user end points and the cloud back end.
+We previously hosted all of our data within our on Prem data center. This is going back about 6-7 years ago now. So we did migrate everything to, we migrated most of our stuff to the cloud operating in the AWS IO 5.
+Gov Cloud probably about five years ago. Now we started the migration. Some things do remain on prime based on data classification. So the IO5 Gov Cloud supports up to CUI controlled unclassified information.
+And IO 6 cloud would potentially support up to secret data. Right now we've maintained our secret data on Prem, but our S SBU Secured Bound Classified system is now hosted within the Gov cloud.
+
+Speaker 1   3:14
+Got it, got it.
+So speaking about the migration journey that you said you you embarked upon with the US Defense Department about six to seven years ago, if you can help me understand what was the on Prem topology like in terms of the operating system, were there Linux instances?
+If yes, what were the distro types?
+Because there are.
+It's it's a fairly heterogeneous space.
+
+Rob S   3:36
+Yep, Yep.
+
+Speaker 1   3:37
+And then how?
+How did you start the discovery to understand how the on Prem IT estate looks like?
+
+Rob S   3:43
+Yeah, so at the time it was about even split between Windows virtual machines and Linux virtual machines from Windows. We had a lot of Windows Server 2019 at the time as well as domain controllers and stuff like that. And then from a Linux.
+We are mostly operating on CentOS 7 at the time. Since then we have.
+Upgraded off of CentOS 7 just because it's reached end of life. But at the time that's what it was and that was about 55 to 60% of our assets were running off of CentOS.
+
+Speaker 1   4:25
+I'm just because that was one of the areas I wanted to understand a bit more.
+The the the behaviour of Linux distros running into outdated state where the end of life or end of support is fairly repetitive and it happens across like REL Ubuntu CentOS being the the biggest example you spoke about upgrading them if you can help me understand onion clean that.
+
+Rob S   4:43
+Yep.
+
+Speaker 1   4:49
+Process a little bit.
+How did you do it and at what stage of the migrations was it done?
+What were the struggles?
+
+Rob S   4:55
+Yeah, so getting off of previous versions is always a struggle. I'm not going to lie, there are still still there are still set CentOS 7 devices in our infrastructure. Unfortunately, some significant security risk, but it is what it is.
+As we did the migration, we went from CentOS 7 to Red Hat Enterprise Linux 9. That started about two years ago. Typically we would rebuild our assets. We use what's known as TAC, Tactical Assault Kit, which hosts all of our data.
+It's essentially map data, PLI data and gives the users the ability to chat with each other. So a lot of the information that resides on our servers is time sensitive, so we weren't too concerned about losing previous data. So our latest approach has been.
+To start deploying in containers so that we could manage one single container with the different type of software installed within the container. Theoretically, that would give us a better security posture.
+
+   6:03
+Got it.
+
+Rob S   6:07
+But issues that we're running right into is configuration management and making sure that we update and maintain those containers and the security that is required on them.
+
+   6:21
+Got it.
+
+Speaker 1   6:22
+So was this process done before the process of upgrading from Centox to rail 9:00? And then of course containerizing it across with Docker?
+
+Rob S   6:31
+No, it's it's been an ongoing migration, yeah. So all the CentOS seven was initially migrated to the cloud. That was as is. We didn't touch it. Once in the cloud is when we started upgrading from CentOS 7 to RHEL 9.
+
+   6:33
+With.
+Ongoing process.
+Got it.
+As is.
+
+Rob S   6:46
+And then now, in the past six months or so, we've started containerizing everything.
+
+   6:47
+Got it.
+Got it.
+
+Speaker 1   6:54
+And what kind of tools you're using to sort of support these process?
+Are these IIC templates or any other cloud native tools which are helping you sort of remediate this process?
+
+Rob S   7:01
+Yeah. So we've been using, we've been using a lot of the native A WS tools to migrate and deploy our infrastructure to match what was previously on Prem. And then we're using Docker containers and providing our own security template against them. So we're required to meet the.
+This, I don't know what that stands for. STIGS and SRGS, the security technical implementation guides and security requirement guides for hardening our containers. Issue that we're currently running into more of an organizational issue versus a technical issue is that.
+Our engineer, our cloud engineers feel that once a container is hardened, what's inside of it doesn't matter, which is not true. You still need to apply security against the assets within the container. So it's been a configuration management nightmare to make sure that our security posture.
+Has remained at the same level as previous when everything was on Prem or when we were individually hardening each of our assets.
+
+   8:09
+Got it.
+
+Speaker 1   8:09
+So managing updates new critical and security updates and container images is a struggle. Is what I gather is that is that a fair and understand. OK, got it.
+
+Rob S   8:16
+Yes, yes.
+
+Speaker 1   8:20
+Specifically understanding the the journey of containerizing as you move to AWS was an orchestration earlier involved here.
+Were you using any Kubernetes orchestration layer or were you tilted towards serverless options?
+
+Rob S   8:35
+We were using serverless options. We were mostly deploying fresh. Very little Kubernetes has been deployed within our environment.
+
+   8:45
+OK.
+Got it.
+
+Speaker 1   8:46
+And as you reflect back on the journey of sort of which is still ongoing, as I heard from you, the journey of upgrading the the outdated OS versions majorly CentOS, do you think?
+An end to end migration tooling which is helping a customer like you to move from VM Ware to cloud.
+If they should and end to end tooling should sort of aid this process or enhance the the experience of upgrading.
+The Linux OS kernels which are outdated, is their value or customers like yeah.
+
+Rob S   9:18
+Yeah, there would be, there would be a huge value to that. My entire team is only 10 engineers supporting about 150 different virtual assets. So that's part of the reason why the migration has been so slow because we have to still maintain.
+Our system that supports the customer, the army. So we don't really have the actual manpower to stand up another instance and then migrate over versus shutting down completely and doing the upgrade. So we have to maintain multiple environments during the migration process. So any tool that would further.
+Assistant, whether it's AI based or else, we would be open to at a minimum testing it out and see how it meets our requirements.
+It meets our requirements.
+
+   10:09
+Got it.
+
+Speaker 1   10:10
+So in that context, since the answer is an affirmative, just trying to understand what aspects of upgrades upgrading the major OS version upgrade, such as CentOS to rail line, what aspect of it.
+
+   10:24
+What?
+
+Speaker 1   10:24
+Type of jobs can be automated or are are consistent across the 150 virtual servers that you're managing.
+What I'm essentially looking for? Of course I'm not end to end solution izing it, but looking for those scenarios which can be where for which toolkits or templates can be provided which can be used to make this process list time consuming.
+
+Rob S   10:45
+Yeah, yeah. So we have our security requirements. Our Red Hat Enterprise Linux 9 has its own state that's associated with it. So to be able to configure our baseline image of that.
+
+Speaker 1   10:45
+Would you have any perspective on that?
+
+Rob S   11:02
+Operating system would be great. Set of our engineers having to go through command line and manually inputting on the security requirements and the security settings. That's something that could easily be automated. There are different organizations and companies out there that give.
+Um, already pre stinged.
+Containers that you could download, but we found out there there's a lot of other stuff either installed in it or they don't fully meet the Department of Defense requirements. So to be able to identify what things are applicable to us in our environment and then have that automated automatically.
+Applied would be great and then we would come in and install our software on top of that or deploy our software on top of that.
+
+Speaker 1   11:50
+Got it, got it. Got it.
+That that, that helps. I think that helps instead of having a direction in terms of if at all we ever prioritized sort of you know.
+Give some time some sort of handholding for this particular scenario.
+I think that that the inputs would be helpful. Moving to the discovery part of it, based on your experience, Robert, whenever a migration has to be executed, the very first step is.
+To developing a visibility.
+The boundary into what all exists in terms of the IT estate in your on Prem, let's say VM Ware environment for any tooling.
+So basically doing a quick scan analysis of what all inventories, their databases, web app servers, etc.
+That's that's the part we're calling as the discovery stage and for us to be able to do.
+This for any tooling to be able to do this. It is essential to have some accesses some permissions.
+At times, access to the credentials of your servers.
+Or a state as well.
+Just trying to understand what kind of comfort does a customer have in terms of sharing these credentials at guest level or hypervisor level and specifically for the Linux fleet which you were leading the initiative for in terms of migrating?
+What kind of auth mechanisms?
+Linux in the Linux world, people are most comfortable with in terms of sharing, whether user name and password is the most most intuitive one. But there there are other methods also. So just trying to understand.
+And the customer preference Linux customer preference across these two themes.
+
+Rob S   13:25
+Yeah. So I think in my scenario, we would definitely be a little bit more, a lot more hesitant for sharing that, especially if it's not just a tool that's going to be keeping out data contained locally, if it's going to be sharing it through, you said you're with Microsoft with you guys, I think.
+I think there would be a security concern there, knowing the type of assets that the Army is deploying. I think we would rather use an internal tool, whether it's like Nmap or something, to identify our current network infrastructure and then to be able to map it into the cloud. So previously we had a lot of physical.
+Firewalls and different tech stacks to support customer needs, where now since deploying in the cloud, we were able to leverage VPC's virtual private clouds and virtual private networks within the cloud to segregate customer data.
+That's all something that we had to learn how to use on the fly where previously it would be OK. We have this service stack, it's supporting this customer. We have this service stack, it's supporting this customer. So there was physical segregation between.
+The.
+Data in the networks, where in the cloud we're doing it a lot more virtually. So to be able to build out that network, it's something that would benefit us and would have expedited the process. But I think there would definitely be concerns if we were just giving you access to our network and saying, oh, go poke around.
+And see how we're currently establishing our network connections versus what Azure or AWS or whatever cloud client provider recommends is the best path forward for us.
+
+Speaker 1   15:10
+Got it, got it.
+It's basically an offline way of discovery where the cloud provider doesn't have a line of sight into your environment owing to the security and compliance concerns.
+
+Rob S   15:21
+Yeah, I think otherwise, I think there would be a lot of NDAS involved and I don't think there'd be worth the lift. So definitely if it was something that we could run on the client side and then it establishes a network topology or something on its own without sharing out data.
+
+Speaker 1   15:21
+Is is the approach go?
+
+   15:23
+Ahead.
+Got it.
+
+Rob S   15:40
+Be ideal.
+
+   15:41
+Got it, got it.
+
+Speaker 1   15:43
+So moving to the next step of of the journey, which is more around the evaluation of your IT estate and basis that developing a plan to migrate, right.
+What is it?
+What are the parameters that you?
+Looked looked at in on behalf of your client when you were migrating their their on Prem VM Ware Estate to cloud. Cost of course is the most obvious one.
+I'm I'm I'm curious to learn if there are other parameters as well.
+
+Rob S   16:07
+Yeah, um.
+Yeah, actually the opposite of that cost wasn't really important to us just because it's the Department of Defense and if it's the best solution, they were spending the money. So cost was not necessarily taken into a huge account.
+But we wanted to be able to be able to scale our environment as quickly as possible, scale up and scale down depending on customer requirements. So previously we were very limited to what hardware we had available to us on Prem. As we migrated to the cloud, as I said, we were able to mirror environments and build out a.
+VPCS to support onboarding new customers or new customer units. We consider the Army as our customer, but then the Army is made-up of different units. So each unit basically has their own VPC at this point in time. So some of those are permanent customers where.
+The National Guard always has assets deployed within our system and then there's temporary ones that are for specific test events or specific deployments. So our environment is constantly scaling up and down and then also as we move to the cloud, we wanted to use.
+Um, as much as the cloud native tools there were. So for like AWS we wanted to use Cloudwatch, we wanted to use Um.
+Gambler, we wanted to use other native tools that were already in AWS because as I said, we're a very small team. We didn't want to manage additional tools, we didn't want to have to manage additional assets. So that was the big thing that we're looking at, what services were provided by the AWS provider.
+That we could leverage rather than launching our SQL databases. We use AWS RDS going forward. Those type of things is what we had to do investigation on what was available and what was able to replace our existing tech stack. So.
+During that discovery stage, we were able to see like what our network topology was and the asset types. And then in this phase it would be ideal if it said OK, you have SQL databases, we recommend you use RDS or you have.
+Um.
+A vulnerability scanner. We recommend you use the AWS Cloud Security Console. So recommendations like that would have helped us along the line. So it was more of us learning on our own, talking to partner organizations saying, oh, why don't you use this? And we're like, well, we didn't know about it.
+So I think that would be very beneficial to us to be able to analyze what we have and what else is already built into the cloud that could be available to us.
+
+   19:03
+Got got it.
+
+Speaker 1   19:04
+So as I as I hear you basically a strong preference for pass based services where?
+Your team, you and your team has to manage minimal things.
+It's it's AWS which is managing the behind the scenes for these services that got it in extension to that. Once that once you and your team sort of developed a view of.
+
+Rob S   19:18
+Exactly.
+
+   19:27
+The how?
+The how your.
+
+Speaker 1   19:29
+On premise, state is talking to each other having that networking view of sorts.
+And then basis that identifying the right path targets for let's say your databases for your web apps and other services that are running on Prem. This next step is basically executing and sort of.
+Developing these landing zones of sorts with all these past services in AWS, what were the mechanisms or tools that were used to sort of set up your landing zone in AWS?
+
+Rob S   19:59
+Yeah. So as I said previously, our engineers were relying on physical segregation, individual tech stacks for each thing. Going forward, we were.
+Excuse me. Going forward, we wanted to use as much virtual assets as we can. So virtual firewalls using VPCS to set up segregation between different assets, a lot of mirroring and cloning existing architectures to deploy quickly and faster.
+Um.
+We are starting to look at Kubernetes, but we haven't, we aren't quite there yet. That isn't something we're currently leveraging. But then as I said, containerization is a huge thing that we're currently focused on to implement repeatability and having that same security posture on the container, but then still being concerned about what's in the container.
+Right now we're kind of limited from a vulnerability standpoint of container scanning. The tool we were previously using doesn't have access to containers. So right now we're in a discovery phase or research phase to see what is our best option to scan containers, whether it's.
+Burp or another tool out there, so that's where we're at currently.
+
+Speaker 1   21:19
+Got it, got it.
+So a clean redeploy kind of approach where you install everything in cloud.
+
+   21:25
+And.
+
+Speaker 1   21:28
+Is what essentially that was used by your team.
+That begs another follow up question from me.
+
+   21:36
+There are.
+
+Speaker 1   21:36
+I would like to assume and please let me know if I stand corrected here.
+
+   21:39
+But.
+
+Speaker 1   21:40
+There would be some essential system files registries or database or data disks of sorts.
+Which would be pertinent for business continuity purposes as you move to cloud carrying those over as you're redeploying a new landing zone would would be a crucial step. If that's the case, what was the process?
+What kind of tools or technologies that were used to sort of carry just those?
+Pertinent configurations to cloud.
+
+Rob S   22:12
+Yeah, that was actually limited because as I said, our data is time sensitive. So we weren't, we weren't really overly concerned about carrying the actual data over. We did create our own MDM mobile device management solution which allowed.
+
+   22:18
+Time sensitive.
+
+Rob S   22:31
+Other users to provision their device using a QR code which basically set up their VPN connection to our existing environment on Prem versus they would scan the QR code, it would reprovision their device and now it would it be in the new environment basically starting fresh.
+
+Speaker 1   22:50
+Got it, got it.
+Understood. That helps.
+I think also it's a function of the the business or the the client you're serving. The fact that you don't want longevity in terms of the backup data backup.
+
+Rob S   22:59
+Yeah.
+Yeah.
+
+Speaker 1   23:04
+You've been talking about containers.
+Let's let's switch gears and maybe delve into that space a little bit.
+You spoke about how you've provisioned serverless instances in AWS to modernize your containers, which existed in on Prem environment.
+And adopting the Kubernetes based approach has been has been still like work in progress.
+More over there, if you can talk about what are the strategies or reasons behind sort of choosing the former approach over the latter. I understand scale would be one of the things, but?
+Imagine a scenario where the scale increases where the opportunity or the ask to sort of containerize contain having container based pods or instances in an AWS increases.
+Would you ever consider going to a cubanities approach?
+What would be the outlook over there?
+
+Rob S   23:54
+Yeah. As I said, that is something we're currently looking into. Right now we we don't see an immediate requirement of us based on our customers demands. We everything is contract based out five years. So we just want a new contract this past.
+November. So we know what the workload is going to be for about 5 years. So beyond that, we'll probably need it. That's why we're just starting to look into it. But right now there's no immediate requirements for it.
+
+   24:16
+OK.
+
+Speaker 2   24:25
+Got it, got it.
+
+Speaker 1   24:26
+And also in terms of discovering container instances right in in your on Prem environment for within aim to sort of have an idea of which also is our containerized right now and are the best targets to be.
+Cont. Containerized, as you modernize with cloud.
+If you have to have that scanned inventory view of sorts, would you be interested in just having this much information off? Which server is containerized?
+Which has like a Docker D or a container D runtime running on it or provisioning the information of what is running inside the container is also going to be super important for you to make that call. Whether you have, you should modernize it.
+With a container approach in cloud as well.
+
+Rob S   25:13
+Yeah, I think it's a combination of the both. Obviously the software application that's running within the container is going to play a huge role from an availability standpoint. But we we also want to modernize as much as we can because as we said, we're going to be growing, we're going to be scaling up.
+And operating within the container, it gives us an additional level of security, repeatability and it gives us the ability to deploy much faster because now our container's already hard and now we just have to worry about the software that's in it versus starting off with a new image where we're fully responsible for building it up from the ground.
+From an optimization standpoint, if there was analytics or something that could be ran on the assets and say, OK, this is a good candidate to be containerized, we would definitely take that into account.
+
+Speaker 2   26:06
+Got it, got it.
+
+Speaker 1   26:09
+Analytics in terms of saying that, hey, today this is not containerized, but based on the topology, this is a good candidate to be containerized as you move to cloud.
+Got it. Taken a note of it, yeah.
+
+Rob S   26:16
+Yes.
+
+Speaker 2   26:19
+And in terms of?
+
+   26:21
+The.
+
+Speaker 1   26:21
+Fact that you you spoke about even in your on Prem VM Ware environment there were container instances. Just trying to understand the topology of that over there were they were they regulated by orchestration layer like a Kubernetes.
+
+   26:35
+On premise.
+
+Rob S   26:35
+No, when we were on Prem, when we were on Prem, we weren't containerized at all.
+
+   26:35
+And.
+
+Speaker 1   26:40
+How was your team was?
+How exactly was the auto scaling?
+You know, scaling upscaling down based on based mechanisms for these boards or for these containers that were running was taken care or was that, was that not the ask?
+
+Rob S   26:55
+It was very limited as a lot of our infrastructure. We would just take snapshots and stand it up on a new server.
+
+   27:03
+OK.
+Got it.
+
+Speaker 1   27:04
+And what was the underlying Linux underlying host OS kernel that was popularly used to?
+
+   27:10
+Sort of.
+
+Speaker 1   27:13
+Host these containers.
+Was there a preference across Windows, Linux and like any particular container image in terms of the OS?
+
+Rob S   27:20
+Now we're mostly a Linux environment. As I said, I was about to even split when we were on Prem, but since we've migrated to the cloud, it's mostly Linux based.
+
+Speaker 1   27:29
+And which specific publisher? If you don't mind sharing? Is it like predominantly towards rail or is it like a good mix?
+
+Rob S   27:35
+It's REL. It's all REL 9 at this point, except for the few CentOS sevens that remain.
+
+Speaker 1   27:41
+Got it, got it. Understood. Got it.
+I think with that I'm mostly done with the kind of.
+Inputs I was looking for.
+I suspect you've not used Azure native migration tooling ever, because Azure is not your, not your target within AWS. I saw as as you raised your nomination, I saw you've tried AWS transform.
+
+Rob S   27:58
+I have not.
+
+Speaker 1   28:07
+Which is their AI enabled capability to sort of.
+
+Rob S   28:07
+Yep.
+
+   28:10
+Execute migrations.
+
+Speaker 1   28:12
+Would you mind sharing how your experience with that tooling has been considering that's our biggest compete product and what are the, what are the enhancements that you would look forward to in their tooling going forward?
+
+Rob S   28:24
+Yeah, excuse me, I'm getting sick.
+Yeah, so unfortunately I don't have as much hands on experience with it as my team does, but I know based on their SIT reps and their updates to me, it tells they they've reported to me how much easier it makes converting our our existing virtual machines into.
+Containers and deploy in the cloud right now. As I said, it is a configuration nightmare when it comes to deploying into containers right now because we don't really have a repeatable process in place and that's falls more on the organization that we're pulling a container from whoever's ultimately doing the update. So if it's.
+Assigned to John to do an asset, he may pull a container from somewhere he's working and then he might apply his own security settings to meet the stakes, what he feels is relevant. And then if I set assign a role to another engineer, Sean, let's say he might be pulling his container from a different location or.
+Previous version or what he has local to him. So from a deployment standpoint and a repeatability standpoint, we're at a lot of different places from an image, a baseline image and that's something we need to get a better control of and using AWS transform we're we're getting.
+Sorry, we're getting that more repeatable process where we're able to take our existing virtual machines and convert it over to deploy it into a container and ultimately deploy into our cloud where we could use.
+Same network topology where we're using VPCS to segregate different data, but now we're also using shared resources between those different networks.
+
+Speaker 2   30:18
+Got it, got it.
+
+   30:19
+All right.
+
+Speaker 1   30:20
+I think I I just have lost one question because you've had like.
+Good six to seven years of migration experience, Robert, if we had to, we all know that migrating from on Prem to cloud is a fairly time-consuming process.
+So if you have to keep time, the overall time taken to sort of migrate as as a parameter that you're trying to optimize for and then keep into perspective the three stages.
+I spoke about where you discover your estate.
+Make sense of what all is running in your in your environment through the network, network port connections and then of course you reach the deciding plan stage where you decide what is to be moved, how and when.
+And to what target?
+And then of course executing the migrations in three stages.
+You've you've gone through all the three stages.
+If you can help me in understanding or provide some feedback which I can take as a as a note.
+On what are the areas or pain points that an end to end toolkit like ours should focus on in terms of enhancing the customer experience if that would be great, yeah.
+
+Rob S   31:26
+Yeah, yeah, I I I think assistance at the planning stage is by far the most important. Based on your existing system, you should have pretty good asset management and know how what's deployed, how it's configured.
+Normal CICD and CS software configuration protocols say that you're supposed to be updating your network diagrams. So your discovery stage, you should have a pretty good grasp because it's important to know what you have so you can protect it.
+So I think in that position we were fairly good. We could have used more help at the planning stage knowing, OK, this is what we have in our existing, here's our existing network diagrams. How can we make them better as we migrate? Let's improve like everybody knows that there's deadlines and urgent requirements, so a lot.
+A lot of times, once the infrastructure's stood up, you try to deploy something new as quickly as possible, and it may not be the smartest or the best way to do it. So during that planning stage, take what you previously had and make it better. Correct it. OK, that was a fix at the time. It was an urgent fix that got implemented or.
+Urgent network configuration that met the customer's need and it worked at the time, but here's the proper way we should be doing it. So be open to revamping your network to better utilize your resources. So as that will give you we focus on.
+
+   32:47
+Cortana.
+
+Rob S   32:59
+Yeah, yeah. Confidentiality, integrity and availability. So during that planning stage, you have to take all those into account and know that the new network that you're building out in the virtual or cloud environment is going to meet your functional and security needs.
+And potentially be saving you money. And that goes into the planning that I said, OK, here's an existing asset you had. Here's a recommended service that's already provided by the cloud provider that you could also leverage. So it's one less thing you have to manage, one less point of potential weakness in your system.
+And you you leverage the cloud provider's capability, which is probably easier to integrate with your existing tech environment and manage going forward. So definitely planning and then deployment, anything that can be automated and repeatable is great.
+And I think that's ultimately where everyone needs to get is that repeatability process and that's where a I heavily comes in. A lot of technologies or just people have a whole see a I as a negative thing that's replacing our jobs. I truly see it as a job enhancement.
+
+   33:51
+Got you.
+
+Rob S   34:10
+If you know how to use it to make your day-to-day workload more efficient, so you're able to do stuff better, faster, repeatable processes.
+
+Speaker 1   34:24
+OK, I think that helps.
+That helps in setting context.
+Robert, there was one thing which is specific to what you said and since I have like a few minutes, maybe I would just like to sort of follow up on that since you said an on Prem in my sorry in in AWS environment most of your Linux Mach.
+
+Speaker 2   34:42
+Are from rail.
+
+   34:43
+Do you?
+
+Speaker 1   34:44
+Does your customer have an active Red Hat license for a premium customer support experience so.
+
+Rob S   34:49
+Yes. Uh, for customer support, no.
+
+Speaker 1   34:53
+That but but the active vendor.
+My sense is there, right?
+
+Rob S   34:55
+Yes.
+
+Speaker 1   34:57
+So that's because when when as a customer, when you have an active vendor license, even either for Ubuntu or Red Hat, that also comes with enhanced toolkits of sorts for configuration management, monitoring, observability.
+
+Rob S   35:11
+OK.
+
+Speaker 1   35:13
+Have those tool kits or playbooks and simple playbooks are fairly popular when it comes to Red Hat tool kit, right?
+Have they have those tool kits been important in terms of?
+Meeting or enhancing your migration journey.
+
+Rob S   35:25
+Yeah.
+Yeah, so we definitely have used Ansible playbooks for configuration management and deploying configuration requirements. So yeah, they have been extremely beneficial, especially when we're deploying at a larger scale and are repeatable. So we had to deploy multiple servers or containers of the same thing to be able to.
+Leverage those Ansible playbooks. We meet the settings on one and we're able to push it out to all of our endpoints or all of our assets. We consider endpoints more physical devices.
+
+Speaker 2   35:57
+Got it, got it.
+
+Speaker 1   36:00
+So when when it comes to sort of redeploying or installing your artifacts in AWS, that's where these playbooks have been handy.
+Got it, got it.
+
+Rob S   36:09
+Yep.
+
+Speaker 1   36:10
+That, that, that helps as well.
+So yeah, I think with that I'm done with what I was looking for.
+
+   36:16
+Thank you.
+
+Speaker 1   36:17
+Thank you for your time, Robert.
+
+Rob S   36:18
+OK.
+
+Speaker 1   36:19
+It was an immensely useful conversation.
+Yeah. Have a good, good day ahead.
+
+Rob S   36:24
+Great. All right. Feel free to reach out if you have any follow on questions. I'm always available.
+
+   36:28
+Yeah, absolutely.
+Absolutely, yeah.
+
+Speaker 1   36:29
+I think I'll take a note of.
+There are a lot of initiatives that are going on within our team to understand the landscape of security and compliance practices.
+How they sort of go on setting up your moves to Azure to to cloud in general and considering your customer base as such, which?
+
+Rob S   36:39
+OK.
+
+Speaker 1   36:48
+Is US defense, which must be really high on high, on security and compliance mandates.
+
+Rob S   36:50
+Yep.
+
+Speaker 1   36:53
+I think I'll I'll take a note of your e-mail ID and if at all any of my colleagues, fellow PMS would want to reach out, maybe they can reach out to you in future for a conversation, yeah.
+
+Rob S   37:01
+OK, great. All right. Sounds good. Thank you.
+
+Speaker 1   37:04
+All right. Have a good day.
+
+   37:05
+Bye bye.
+
+Rob S   37:05
+Alright, you too. Bye.
